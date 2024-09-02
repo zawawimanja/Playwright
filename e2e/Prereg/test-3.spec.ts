@@ -11,6 +11,17 @@ test('Prereg PK OD', async ({ page }) => {
   await page.getByPlaceholder('Password').fill('u@T_afzan');
   await page.getByRole('button', { name: 'Sign In' }).click();
 
+
+  await page.waitForSelector(".ap-Menu")
+  await expect(page.locator('.ap-Menu')).toBeVisible();
+  await expect(page.locator('#page-builder-root')).toContainText('HomePre-RegistrationHUK Pre-RegistrationCreate RevisionMy CasesAppointmentsInsured Person SearchToolsSSNCommon ListingPermanent RepresentativeAnnual DeclarationReemployment Scheduler');
+
+  //await page.waitForSelector("#baristaPageOut #formPreview")
+  await page.frameLocator('#baristaPageOut').locator('#formPreview').waitFor();
+  await expect(page.frameLocator('#baristaPageOut').getByRole('heading', { name: 'Home Page' })).toBeVisible();
+  await expect(page.frameLocator('#baristaPageOut').locator('#previewPanel')).toContainText('Home Page');
+
+
   await expect(page.getByRole('link', { name: 'Pre-Registration', exact: true })).toBeVisible();
   await expect(page.locator('#page-builder-root')).toContainText('Pre-Registration');
   await page.getByRole('link', { name: 'Pre-Registration', exact: true }).click();
@@ -27,7 +38,21 @@ test('Prereg PK OD', async ({ page }) => {
   const page1 = await page1Promise;
 
 
+
+  await page1.waitForSelector('loading', { timeout: 600000 });
+  await page1.getByLabel('loading').isVisible
+
+  await page1.waitForSelector('#formPreview', { timeout: 60000 });
+  await expect(page1.locator('#formPreview')).toBeVisible();
+
+
+  await expect(page1.getByRole('button', { name: 'Remarks', exact: true })).toBeVisible();
+  await expect(page1.locator('#sectionTabs')).toContainText('Remarks');
+
+  await expect(page1.getByRole('button', { name: 'Insured Person Information' })).toBeVisible();
+  await expect(page1.locator('#sectionTabs')).toContainText('Insured Person Information');
   await page1.getByRole('button', { name: 'Insured Person Information' }).click();
+
   await page1.getByLabel('Notice and Benefit Claim Form Received Date*').click();
   await page1.locator('#ui-datepicker-div').getByRole('combobox').nth(1).selectOption('2020');
   await page1.getByRole('link', { name: '1', exact: true }).click();
@@ -44,8 +69,16 @@ test('Prereg PK OD', async ({ page }) => {
   await page1.getByLabel('Postcode*').click();
   await page1.getByLabel('Postcode*').fill('51000');
   await page1.getByLabel('Nationality*').selectOption('201749');
+
+
+  await expect(page1.getByRole('button', { name: 'Employer Information' })).toBeVisible();
+  await expect(page1.locator('#sectionTabs')).toContainText('Employer Information');
   await page1.getByRole('button', { name: 'Employer Information' }).click();
 
+
+
+  await expect(page1.getByRole('button', { name: 'Occupational Disease' })).toBeVisible();
+  await expect(page1.locator('#sectionTabs')).toContainText('Occupational Disease Information');
   await page1.getByRole('button', { name: 'Occupational Disease' }).click();
   await page1.getByLabel('Description of Occupational').click();
   await page1.getByLabel('Description of Occupational').fill('test');
@@ -54,6 +87,10 @@ test('Prereg PK OD', async ({ page }) => {
   await page1.getByLabel('Please explain symptoms /').click();
   await page1.getByLabel('Please explain symptoms /').fill('test');
 
+
+
+  await expect(page1.getByRole('button', { name: 'Medical Certificate' })).toBeVisible();
+  await expect(page1.locator('#sectionTabs')).toContainText('Medical Certificate Information');
   await page1.getByRole('button', { name: 'Medical Certificate' }).click();
   await page1.locator('#ctrlField976').getByRole('button', { name: 'Add Record' }).click();
   await page1.getByRole('textbox').first().click();
@@ -66,12 +103,20 @@ test('Prereg PK OD', async ({ page }) => {
   await page1.getByRole('button', { name: 'OK' }).click();
   await page1.getByRole('combobox').nth(3).selectOption('2020');
 
-
+  await expect(page1.locator('#sectionTabs')).toContainText('Wages Information');
+  await expect(page1.getByRole('button', { name: 'Wages Information' })).toBeVisible();
   await page1.getByRole('button', { name: 'Wages Information' }).click();
 
+
+
+  await expect(page1.getByRole('button', { name: 'Preferred SOCSO Office' })).toBeVisible();
+  await expect(page1.locator('#sectionTabs')).toContainText('Preferred SOCSO Office');
   await page1.getByRole('button', { name: 'Preferred SOCSO Office' }).click();
   await page1.getByLabel('SOCSO Office*').selectOption('200402');
 
+
+  await expect(page1.getByRole('button', { name: 'Certification by Employer' })).toBeVisible();
+  await expect(page1.locator('#sectionTabs')).toContainText('Certification by Employer');
   await page1.getByRole('button', { name: 'Certification by Employer' }).click(); await page1.getByLabel('State*').selectOption('200710');
   await page1.getByLabel('Name*').click();
   await page1.getByLabel('Name*').fill('MAT');
@@ -83,6 +128,8 @@ test('Prereg PK OD', async ({ page }) => {
 
 
 
+  await expect(page1.getByRole('button', { name: 'Bank Information' })).toBeVisible();
+  await expect(page1.locator('#sectionTabs')).toContainText('Bank Information');
   await page1.getByRole('button', { name: 'Bank Information' }).click();
   await page1.getByLabel('Account No.*', { exact: true }).selectOption('Yes');
   await page1.getByLabel('Bank Location*').selectOption('204101');
@@ -94,9 +141,20 @@ test('Prereg PK OD', async ({ page }) => {
   await page1.getByLabel('Bank Branch*').fill('KL');
 
 
+  await expect(page1.getByRole('button', { name: 'Confirmation of Insured' })).toBeVisible();
+  await expect(page1.locator('#sectionTabs')).toContainText('Confirmation of Insured Person/Dependants/Claimant');
   await page1.getByRole('button', { name: 'Confirmation of Insured' }).click();
   await page1.getByLabel('Completed').check();
+
+
+
+  await expect(page1.getByRole('button', { name: 'Supporting Document' })).toBeVisible();
+  await expect(page1.locator('#sectionTabs')).toContainText('Supporting Document');
   await page1.getByRole('button', { name: 'Supporting Document' }).click();
+
+
+  await expect(page1.getByRole('button', { name: 'Preview & Submission' })).toBeVisible();
+  await expect(page1.locator('#sectionTabs')).toContainText('Preview & Submission');
   await page1.getByRole('button', { name: 'Preview & Submission' }).click();
   await page1.getByRole('button', { name: 'Show Preview' }).click();
   await page1.getByLabel('loading').isVisible
