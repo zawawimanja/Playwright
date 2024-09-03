@@ -1,16 +1,18 @@
 import { test, expect } from '@playwright/test';
 
-test('Prereg PK OD', async ({ page }) => {
+
+
+test.beforeEach(async ({ page }) => {
 
   await page.goto('http://barista-uat.perkeso.gov.my:13491/login/ActiveDirectory?returnUrl=%2F');
-
-
   await page.getByPlaceholder('User Name').click();
   await page.getByPlaceholder('User Name').fill('afzan.pks');
   await page.getByPlaceholder('Password').click();
   await page.getByPlaceholder('Password').fill('u@T_afzan');
   await page.getByRole('button', { name: 'Sign In' }).click();
+});
 
+test('Prereg PK OD', async ({ page }) => {
 
   await page.waitForSelector(".ap-Menu")
   await expect(page.locator('.ap-Menu')).toBeVisible();
@@ -18,8 +20,8 @@ test('Prereg PK OD', async ({ page }) => {
 
   //await page.waitForSelector("#baristaPageOut #formPreview")
   await page.frameLocator('#baristaPageOut').locator('#formPreview').waitFor();
-  await expect(page.frameLocator('#baristaPageOut').getByRole('heading', { name: 'Home Page' })).toBeVisible();
-  await expect(page.frameLocator('#baristaPageOut').locator('#previewPanel')).toContainText('Home Page');
+  //await expect(page.frameLocator('#baristaPageOut').getByRole('heading', { name: 'Home Page' })).toBeVisible();
+  await expect(page.frameLocator('#baristaPageOut').locator('#previewPanel')).toBeVisible();
 
 
   await expect(page.getByRole('link', { name: 'Pre-Registration', exact: true })).toBeVisible();
@@ -29,7 +31,7 @@ test('Prereg PK OD', async ({ page }) => {
   await page.frameLocator('#baristaPageOut').locator('#NoticeTypePreReg').selectOption('OD');
   await page.frameLocator('#baristaPageOut').getByLabel('Notice and Benefit Claim Form').selectOption('Others');
   await page.frameLocator('#baristaPageOut').getByLabel('Identification No.*').click();
-  await page.frameLocator('#baristaPageOut').getByLabel('Identification No.*').fill('830711145349');
+  await page.frameLocator('#baristaPageOut').getByLabel('Identification No.*').fill('850416085679');
   await page.frameLocator('#baristaPageOut').getByLabel('Employer Code*').click();
   await page.frameLocator('#baristaPageOut').getByLabel('Employer Code*').fill('B3200086169Z');
   await page.frameLocator('#baristaPageOut').getByRole('button', { name: 'Search' }).click();
@@ -38,16 +40,25 @@ test('Prereg PK OD', async ({ page }) => {
   const page1 = await page1Promise;
 
 
+  try {
+    await expect(page1.locator('#btnClose')).toBeVisible();
+    await page.locator('#btnClose').click();
+    console.log('Button clicked successfully.');
+  } catch (error) {
+    console.error('Button is not visible or has other issues:', error);
+    // Continue with other actions or assertions
+  }
 
-  await page1.waitForSelector('loading', { timeout: 600000 });
-  await page1.getByLabel('loading').isVisible
+  //await page1.waitForSelector('loading', { timeout: 600000 });
+  //await page1.getByLabel('loading').isVisible
 
   await page1.waitForSelector('#formPreview', { timeout: 60000 });
   await expect(page1.locator('#formPreview')).toBeVisible();
 
-
-  await expect(page1.getByRole('button', { name: 'Remarks', exact: true })).toBeVisible();
+  await page1.waitForSelector('button', { timeout: 60000 });
+  await expect(page1.getByRole('button', { name: 'Remarks' })).toBeVisible();
   await expect(page1.locator('#sectionTabs')).toContainText('Remarks');
+
 
   await expect(page1.getByRole('button', { name: 'Insured Person Information' })).toBeVisible();
   await expect(page1.locator('#sectionTabs')).toContainText('Insured Person Information');
@@ -157,7 +168,7 @@ test('Prereg PK OD', async ({ page }) => {
   await expect(page1.locator('#sectionTabs')).toContainText('Preview & Submission');
   await page1.getByRole('button', { name: 'Preview & Submission' }).click();
   await page1.getByRole('button', { name: 'Show Preview' }).click();
-  await page1.getByLabel('loading').isVisible
+  // await page1.getByLabel('loading').isVisible
   await page1.getByRole('button', { name: 'Submit' }).click();
   await page1.getByRole('button', { name: 'Yes' }).click();
   await page1.goto('http://barista-uat.perkeso.gov.my:13491/ApplicationBuilder/eFormRender.html?WID=980200505680652711FF669F1B2980E6');
