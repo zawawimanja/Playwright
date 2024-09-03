@@ -39,24 +39,17 @@ test('Prereg PK OD', async ({ page }) => {
   await page.frameLocator('#baristaPageOut').getByRole('button', { name: 'Next' }).click();
   const page1 = await page1Promise;
 
-
-  try {
-    await expect(page1.locator('#btnClose')).toBeVisible();
-    await page.locator('#btnClose').click();
-    console.log('Button clicked successfully.');
-  } catch (error) {
-    console.error('Button is not visible or has other issues:', error);
-    // Continue with other actions or assertions
-  }
-
-  //await page1.waitForSelector('loading', { timeout: 600000 });
-  //await page1.getByLabel('loading').isVisible
+  await page1.waitForLoadState('load'); // Wait until the "load" event
 
   await page1.waitForSelector('#formPreview', { timeout: 60000 });
   await expect(page1.locator('#formPreview')).toBeVisible();
 
-  await page1.waitForSelector('button', { timeout: 60000 });
-  await expect(page1.getByRole('button', { name: 'Remarks' })).toBeVisible();
+  await page1.locator('#btnClose').click();
+
+  await page1.waitForLoadState('load'); // Wait until the "load" event
+
+  await page1.waitForSelector('#sectionTabs', { state: 'visible', timeout: 600000 });
+  await expect(page1.getByRole('button', { name: 'Remarks', exact: true })).toBeVisible();
   await expect(page1.locator('#sectionTabs')).toContainText('Remarks');
 
 
