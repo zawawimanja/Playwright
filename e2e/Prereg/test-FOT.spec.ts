@@ -1,15 +1,12 @@
 import { test, expect } from '@playwright/test';
-
+import { LoginPage } from '../../pages/login';
 
 
 test.beforeEach(async ({ page }) => {
 
-  await page.goto('http://barista-uat.perkeso.gov.my:13491/login/ActiveDirectory?returnUrl=%2F');
-  await page.getByPlaceholder('User Name').click();
-  await page.getByPlaceholder('User Name').fill('afzan.pks');
-  await page.getByPlaceholder('Password').click();
-  await page.getByPlaceholder('Password').fill('u@T_afzan');
-  await page.getByRole('button', { name: 'Sign In' }).click();
+  const loginPage = new LoginPage(page);
+  await loginPage.navigateToLogin();
+  await loginPage.login("afzan.pks", "u@T_afzan");
 });
 
 test('Prereg PK FOT', async ({ page }) => {
