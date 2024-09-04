@@ -69,7 +69,6 @@ test('Prereg PK FOT', async ({ page }) => {
   await page1.waitForSelector('#sectionTabs', { state: 'visible', timeout: 600000 });
   await expect(page1.getByRole('button', { name: 'Remarks', exact: true })).toBeVisible();
   await expect(page1.locator('#sectionTabs')).toContainText('Remarks');
-  await page1.getByRole('button', { name: 'Remarks' }).click();
 
   await page1.getByRole('button', { name: 'Case Information' }).click();
 
