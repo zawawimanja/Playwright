@@ -9,7 +9,7 @@ test.beforeEach(async ({ page }) => {
   await loginPage.login("afzan.pks", "u@T_afzan");
 });
 
-test('Prereg PK FOT', async ({ page }) => {
+test('Prereg PK PKT', async ({ page }) => {
 
   await page.waitForSelector(".ap-Menu")
   await expect(page.locator('.ap-Menu')).toBeVisible();
@@ -36,13 +36,8 @@ test('Prereg PK FOT', async ({ page }) => {
   await expect(page.frameLocator('#baristaPageOut').locator('#ctrlField781')).toContainText('Does Insured Person Still in Employment?');
   await page.frameLocator('#baristaPageOut').getByLabel('Does Insured Person Still in').selectOption('Yes');
 
-
-
-  await page.frameLocator('#baristaPageOut').getByLabel('Notice and Benefit Claim Form').selectOption('Others');
-
-  await page.frameLocator('#baristaPageOut').getByLabel('Identification No.*').click();
   await page.frameLocator('#baristaPageOut').getByLabel('Identification No.*').fill('850416085679');
-
+  await page.frameLocator('#baristaPageOut').getByLabel('Notice and Benefit Claim Form').selectOption('Others');
 
 
   await page.frameLocator('#workbasket').locator('#ctrlField800').click();
