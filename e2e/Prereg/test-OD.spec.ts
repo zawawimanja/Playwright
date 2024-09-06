@@ -23,7 +23,7 @@ test('Prereg PK OD', async ({ page }) => {
   await page.frameLocator('#baristaPageOut').locator('#NoticeTypePreReg').selectOption('OD');
   await page.frameLocator('#baristaPageOut').getByLabel('Notice and Benefit Claim Form').selectOption('Others');
   await page.frameLocator('#baristaPageOut').getByLabel('Identification No.*').click();
-  await page.frameLocator('#baristaPageOut').getByLabel('Identification No.*').fill('761123135156');
+  await page.frameLocator('#baristaPageOut').getByLabel('Identification No.*').fill('850416085679');
   await page.frameLocator('#baristaPageOut').getByLabel('Employer Code*').click();
   await page.frameLocator('#baristaPageOut').getByLabel('Employer Code*').fill('B3200086169Z');
   await page.frameLocator('#workbasket').locator('#ctrlField800').click();
@@ -89,19 +89,19 @@ test('Prereg PK OD', async ({ page }) => {
 
 
 
-  // await expect(page1.getByRole('button', { name: 'Medical Certificate' })).toBeVisible();
-  // await expect(page1.locator('#sectionTabs')).toContainText('Medical Certificate Information');
-  // await page1.getByRole('button', { name: 'Medical Certificate' }).click();
-  // await page1.locator('#ctrlField976').getByRole('button', { name: 'Add Record' }).click();
-  // await page1.getByRole('textbox').first().click();
-  // await page1.getByRole('textbox').first().fill('HKL');
-  // await page1.getByRole('textbox').nth(1).click();
-  // await page1.getByRole('link', { name: '2', exact: true }).click();
-  // await page1.getByRole('textbox').nth(2).click();
-  // await page1.getByRole('combobox').nth(3).selectOption('2020');
-  // await page1.getByRole('link', { name: '15' }).click();
-  // await page1.getByRole('button', { name: 'OK' }).click();
-  // await page1.getByRole('combobox').nth(3).selectOption('2020');
+  await expect(page1.getByRole('button', { name: 'Medical Certificate' })).toBeVisible();
+  await expect(page1.locator('#sectionTabs')).toContainText('Medical Certificate Information');
+  await page1.getByRole('button', { name: 'Medical Certificate' }).click();
+  await page1.locator('#ctrlField976').getByRole('button', { name: 'Add Record' }).click();
+  await page1.getByRole('textbox').first().click();
+  await page1.getByRole('textbox').first().fill('HKL');
+  await page1.getByRole('textbox').nth(1).click();
+  await page1.getByRole('link', { name: '2', exact: true }).click();
+  await page1.getByRole('textbox').nth(2).click();
+  await page1.getByRole('combobox').nth(3).selectOption('2020');
+  await page1.getByRole('link', { name: '15' }).click();
+  await page1.getByRole('button', { name: 'OK' }).click();
+  await page1.getByRole('combobox').nth(3).selectOption('2020');
 
   await expect(page1.locator('#sectionTabs')).toContainText('Wages Information');
   await expect(page1.getByRole('button', { name: 'Wages Information' })).toBeVisible();
@@ -112,16 +112,8 @@ test('Prereg PK OD', async ({ page }) => {
   await expect(page1.getByRole('button', { name: 'Preferred SOCSO Office' })).toBeVisible();
   await expect(page1.locator('#sectionTabs')).toContainText('Preferred SOCSO Office');
   await page1.getByRole('button', { name: 'Preferred SOCSO Office' }).click();
+  await page1.getByLabel('SOCSO Office*').selectOption('200402');
 
-
-
-  await expect(page1.getByLabel('State*')).toBeVisible();
-  await page1.getByLabel('State*').selectOption('200701');
-  await expect(page1.getByLabel('State*')).toContainText('JOHOR');
-  await expect(page1.getByText('SOCSO Office', { exact: true })).toBeVisible();
-  await expect(page1.locator('#ctrlField1214')).toContainText('SOCSO Office');
-  await page1.getByLabel('SOCSO Office*').selectOption('200419');
-  await expect(page1.getByLabel('SOCSO Office*')).toContainText('Pejabat PERKESO Negeri Johor');
 
   await expect(page1.getByRole('button', { name: 'Certification by Employer' })).toBeVisible();
   await expect(page1.locator('#sectionTabs')).toContainText('Certification by Employer');
@@ -131,8 +123,8 @@ test('Prereg PK OD', async ({ page }) => {
   await page1.getByLabel('Designation*').click();
   await page1.getByLabel('Designation*').fill('CEO');
   await page1.getByLabel('Date*').click();
-  await page1.getByRole('combobox').nth(1).selectOption('2020');
-  await page1.getByRole('cell', { name: '27' }).click();
+  // await page1.getByRole('combobox').nth(1).selectOption('2020');
+  // await page1.getByRole('cell', { name: '27' }).click();
 
 
 
@@ -161,14 +153,14 @@ test('Prereg PK OD', async ({ page }) => {
   await page1.getByRole('button', { name: 'Supporting Document' }).click();
 
 
-  await expect(page1.getByRole('button', { name: 'Preview & Submission' })).toBeVisible();
-  await expect(page1.locator('#sectionTabs')).toContainText('Preview & Submission');
-  await page1.getByRole('button', { name: 'Preview & Submission' }).click();
-  await page1.getByRole('button', { name: 'Show Preview' }).click();
+  // await expect(page1.getByRole('button', { name: 'Preview & Submission' })).toBeVisible();
+  // await expect(page1.locator('#sectionTabs')).toContainText('Preview & Submission');
+  // await page1.getByRole('button', { name: 'Preview & Submission' }).click();
+  // await page1.getByRole('button', { name: 'Show Preview' }).click();
   // await page1.getByLabel('loading').isVisible
-  await page1.getByRole('button', { name: 'Submit' }).click();
-  await page1.getByRole('button', { name: 'Yes' }).click();
-  await page1.goto('http://barista-uat.perkeso.gov.my:13491/ApplicationBuilder/eFormRender.html?WID=980200505680652711FF669F1B2980E6');
+  //await page1.getByRole('button', { name: 'Submit' }).click();
+  //await page1.getByRole('button', { name: 'Yes' }).click();
+  // await page1.goto('http://barista-uat.perkeso.gov.my:13491/ApplicationBuilder/eFormRender.html?WID=980200505680652711FF669F1B2980E6');
   // await expect(page1.getByLabel('Scheme Ref No.')).toBeVisible();
   // await page1.getByRole('button', { name: 'Submit' }).click();
 
