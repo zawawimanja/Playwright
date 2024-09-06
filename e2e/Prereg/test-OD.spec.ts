@@ -1,15 +1,8 @@
 import { test, expect } from '@playwright/test';
-
-
+import { login } from '../../utils/base'; // Import from base.ts
 
 test.beforeEach(async ({ page }) => {
-
-  await page.goto('http://barista-uat.perkeso.gov.my:13491/login/ActiveDirectory?returnUrl=%2F');
-  await page.getByPlaceholder('User Name').click();
-  await page.getByPlaceholder('User Name').fill('afzan.pks');
-  await page.getByPlaceholder('Password').click();
-  await page.getByPlaceholder('Password').fill('u@T_afzan');
-  await page.getByRole('button', { name: 'Sign In' }).click();
+  await login(page, "afzan.pks", "u@T_afzan");
 });
 
 test('Prereg PK OD', async ({ page }) => {
@@ -18,9 +11,8 @@ test('Prereg PK OD', async ({ page }) => {
   await expect(page.locator('.ap-Menu')).toBeVisible();
   await expect(page.locator('#page-builder-root')).toContainText('HomePre-RegistrationHUK Pre-RegistrationCreate RevisionMy CasesAppointmentsInsured Person SearchToolsSSNCommon ListingPermanent RepresentativeAnnual DeclarationReemployment Scheduler');
 
-  //await page.waitForSelector("#baristaPageOut #formPreview")
+
   await page.frameLocator('#baristaPageOut').locator('#formPreview').waitFor();
-  //await expect(page.frameLocator('#baristaPageOut').getByRole('heading', { name: 'Home Page' })).toBeVisible();
   await expect(page.frameLocator('#baristaPageOut').locator('#previewPanel')).toBeVisible();
 
 
@@ -31,9 +23,10 @@ test('Prereg PK OD', async ({ page }) => {
   await page.frameLocator('#baristaPageOut').locator('#NoticeTypePreReg').selectOption('OD');
   await page.frameLocator('#baristaPageOut').getByLabel('Notice and Benefit Claim Form').selectOption('Others');
   await page.frameLocator('#baristaPageOut').getByLabel('Identification No.*').click();
-  await page.frameLocator('#baristaPageOut').getByLabel('Identification No.*').fill('891007146398');
+  await page.frameLocator('#baristaPageOut').getByLabel('Identification No.*').fill('850416085679');
   await page.frameLocator('#baristaPageOut').getByLabel('Employer Code*').click();
   await page.frameLocator('#baristaPageOut').getByLabel('Employer Code*').fill('B3200086169Z');
+  await page.frameLocator('#workbasket').locator('#ctrlField800').click();
   await page.frameLocator('#baristaPageOut').getByRole('button', { name: 'Search' }).click();
   const page1Promise = page.waitForEvent('popup');
   await page.frameLocator('#baristaPageOut').getByRole('button', { name: 'Next' }).click();
@@ -44,9 +37,12 @@ test('Prereg PK OD', async ({ page }) => {
   await page1.waitForSelector('#formPreview', { timeout: 60000 });
   await expect(page1.locator('#formPreview')).toBeVisible();
 
-  await page1.locator('#btnClose').click();
+  await page1.waitForSelector('#btnClose', { timeout: 60000 });
+  await expect(page1.locator('#btnClose')).toBeVisible();
 
+  await page1.locator('#btnClose').click();
   await page1.waitForLoadState('load'); // Wait until the "load" event
+
 
   await page1.waitForSelector('#sectionTabs', { state: 'visible', timeout: 600000 });
   await expect(page1.getByRole('button', { name: 'Remarks', exact: true })).toBeVisible();
@@ -56,7 +52,7 @@ test('Prereg PK OD', async ({ page }) => {
   await expect(page1.getByRole('button', { name: 'Insured Person Information' })).toBeVisible();
   await expect(page1.locator('#sectionTabs')).toContainText('Insured Person Information');
   await page1.getByRole('button', { name: 'Insured Person Information' }).click();
-
+  await page1.getByRole('button', { name: 'Insured Person Information' }).click();
   await page1.getByLabel('Notice and Benefit Claim Form Received Date*').click();
   await page1.locator('#ui-datepicker-div').getByRole('combobox').nth(1).selectOption('2020');
   await page1.getByRole('link', { name: '1', exact: true }).click();
@@ -99,13 +95,13 @@ test('Prereg PK OD', async ({ page }) => {
   await page1.locator('#ctrlField976').getByRole('button', { name: 'Add Record' }).click();
   await page1.getByRole('textbox').first().click();
   await page1.getByRole('textbox').first().fill('HKL');
-  // await page1.getByRole('textbox').nth(1).click();
-  // await page1.getByRole('link', { name: '2', exact: true }).click();
-  // await page1.getByRole('textbox').nth(2).click();
-  // await page1.getByRole('combobox').nth(3).selectOption('2020');
-  // await page1.getByRole('link', { name: '15' }).click();
-  // await page1.getByRole('button', { name: 'OK' }).click();
-
+  await page1.getByRole('textbox').nth(1).click();
+  await page1.getByRole('link', { name: '2', exact: true }).click();
+  await page1.getByRole('textbox').nth(2).click();
+  await page1.getByRole('combobox').nth(3).selectOption('2020');
+  await page1.getByRole('link', { name: '15' }).click();
+  await page1.getByRole('button', { name: 'OK' }).click();
+  await page1.getByRole('combobox').nth(3).selectOption('2020');
 
   await expect(page1.locator('#sectionTabs')).toContainText('Wages Information');
   await expect(page1.getByRole('button', { name: 'Wages Information' })).toBeVisible();
@@ -116,7 +112,6 @@ test('Prereg PK OD', async ({ page }) => {
   await expect(page1.getByRole('button', { name: 'Preferred SOCSO Office' })).toBeVisible();
   await expect(page1.locator('#sectionTabs')).toContainText('Preferred SOCSO Office');
   await page1.getByRole('button', { name: 'Preferred SOCSO Office' }).click();
-  await page1.getByLabel('State*').selectOption('200710');
   await page1.getByLabel('SOCSO Office*').selectOption('200402');
 
 
