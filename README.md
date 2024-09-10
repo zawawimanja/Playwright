@@ -1,6 +1,7 @@
 
 ## Test Steps
 1.  Current using recording
+2.  Convert to POM
 
 ## Future Improvement 
 1. Using BDD
