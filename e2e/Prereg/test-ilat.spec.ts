@@ -1,19 +1,14 @@
 import { test, expect } from '@playwright/test';
-
+import { login } from '../../utils/base'; // Import from base.ts
+import { PreregistrationPage } from '../../pages/prereg';
 
 
 test.beforeEach(async ({ page }) => {
-
-  await page.goto('http://barista-uat.perkeso.gov.my:13491/login/ActiveDirectory?returnUrl=%2F');
-  await page.getByPlaceholder('User Name').click();
-  await page.getByPlaceholder('User Name').fill('afzan.pks');
-  await page.getByPlaceholder('Password').click();
-  await page.getByPlaceholder('Password').fill('u@T_afzan');
-  await page.getByRole('button', { name: 'Sign In' }).click();
+  await login(page, "afzan.pks", "u@T_afzan");
 });
 
 test('Prereg PK ILAT', async ({ page }) => {
-
+  const preRegistrationPage = new PreregistrationPage(page);
   await page.waitForLoadState('networkidle'); // Wait until network activity is idle
   await page.frameLocator('#baristaPageOut').locator('#formPreview').isVisible();
   await expect(page.frameLocator('#baristaPageOut').getByRole('heading', { name: 'Home Page' })).toBeVisible();
@@ -30,7 +25,9 @@ test('Prereg PK ILAT', async ({ page }) => {
   await expect(page.frameLocator('#baristaPageOut').locator('h2')).toContainText('Pre-Registration');
   await expect(page.frameLocator('#baristaPageOut').getByRole('heading', { name: 'Search Insured Person &' })).toBeVisible();
   await expect(page.frameLocator('#baristaPageOut').locator('#Heading31')).toContainText('Search Insured Person & Employer Registration Status');
-  await page.frameLocator('#baristaPageOut').locator('#NoticeTypePreReg').selectOption('ILAT');
+
+  preRegistrationPage.selectNoticeType('ILAT')
+
   await expect(page.frameLocator('#baristaPageOut').locator('#ctrlField596').getByText('Notice Type')).toBeVisible();
   await expect(page.frameLocator('#baristaPageOut').locator('#ctrlField596')).toContainText('Notice Type');
   await expect(page.frameLocator('#baristaPageOut').locator('#ctrlField597').getByText('Identification Type')).toBeVisible();
