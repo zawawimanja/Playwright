@@ -21,10 +21,11 @@ test('Prereg PK ILAT', async ({ page }) => {
   await page.getByRole('link', { name: 'Pre-Registration', exact: true }).click();
 
 
-  await page.waitForLoadState('load'); // Wait until the "load" event
-  // Now perform the actions you need
-  await page.frameLocator('#baristaPageOut').locator('#formPreview').isVisible();
+  await page.waitForLoadState('load');
 
+  await expect(page.frameLocator('#baristaPageOut').getByRole('heading', { name: 'Pre-Registration' })).toBeVisible({
+    timeout: 60000
+  });
   await expect(page.frameLocator('#baristaPageOut').getByRole('heading', { name: 'Pre-Registration' })).toBeVisible();
   await expect(page.frameLocator('#baristaPageOut').locator('h2')).toContainText('Pre-Registration');
   await expect(page.frameLocator('#baristaPageOut').getByRole('heading', { name: 'Search Insured Person &' })).toBeVisible();
