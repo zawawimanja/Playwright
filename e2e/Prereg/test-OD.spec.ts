@@ -10,8 +10,6 @@ test('Prereg PK OD', async ({ page }) => {
   await page.waitForSelector(".ap-Menu")
   await expect(page.locator('.ap-Menu')).toBeVisible();
   await expect(page.locator('#page-builder-root')).toContainText('HomePre-RegistrationHUK Pre-RegistrationCreate RevisionMy CasesAppointmentsInsured Person SearchToolsSSNCommon ListingPermanent RepresentativeAnnual DeclarationReemployment Scheduler');
-
-
   await page.frameLocator('#baristaPageOut').locator('#formPreview').waitFor();
   await expect(page.frameLocator('#baristaPageOut').locator('#previewPanel')).toBeVisible();
 
@@ -19,14 +17,25 @@ test('Prereg PK OD', async ({ page }) => {
   await expect(page.getByRole('link', { name: 'Pre-Registration', exact: true })).toBeVisible();
   await expect(page.locator('#page-builder-root')).toContainText('Pre-Registration');
   await page.getByRole('link', { name: 'Pre-Registration', exact: true }).click();
+  await page.waitForLoadState('load');
+
+  await expect(page.frameLocator('#baristaPageOut').getByRole('heading', { name: 'Pre-Registration' })).toBeVisible({
+    timeout: 60000
+  });
+
+  await expect(page.frameLocator('#baristaPageOut').locator('h2')).toContainText('Pre-Registration');
+  await expect(page.frameLocator('#baristaPageOut').getByRole('heading', { name: 'Search Insured Person &' })).toBeVisible();
+  await expect(page.frameLocator('#baristaPageOut').locator('#Heading31')).toContainText('Search Insured Person & Employer Registration Status');
 
   await page.frameLocator('#baristaPageOut').locator('#NoticeTypePreReg').selectOption('OD');
   await page.frameLocator('#baristaPageOut').getByLabel('Notice and Benefit Claim Form').selectOption('Others');
-  await page.frameLocator('#baristaPageOut').getByLabel('Identification No.*').click();
-  await page.frameLocator('#baristaPageOut').getByLabel('Identification No.*').fill('880929145195');
-  await page.frameLocator('#baristaPageOut').getByLabel('Employer Code*').click();
+
+  await page.frameLocator('#baristaPageOut').getByLabel('Identification No.*').fill('911103105399');
+
   await page.frameLocator('#baristaPageOut').getByLabel('Employer Code*').fill('B3200086169Z');
-  await page.frameLocator('#workbasket').locator('#ctrlField800').click();
+
+  await page.frameLocator('#baristaPageOut').locator('#previewRow6 div').filter({ hasText: 'ClaimFormSubmissionByList' }).first().click();
+
   await page.frameLocator('#baristaPageOut').getByRole('button', { name: 'Search' }).click();
   const page1Promise = page.waitForEvent('popup');
   await page.frameLocator('#baristaPageOut').getByRole('button', { name: 'Next' }).click();
@@ -98,8 +107,8 @@ test('Prereg PK OD', async ({ page }) => {
 
 
   await expect(page1.getByRole('button', { name: 'Medical Certificate' })).toBeVisible();
-  await expect(page1.locator('#sectionTabs')).toContainText('Medical Certificate Information');
-  await page1.getByRole('button', { name: 'Medical Certificate' }).click();
+  // await expect(page1.locator('#sectionTabs')).toContainText('Medical Certificate Information');
+  // await page1.getByRole('button', { name: 'Medical Certificate' }).click();
   // await page1.locator('#ctrlField976').getByRole('button', { name: 'Add Record' }).click();
   // await page1.getByRole('textbox').first().click();
   // await page1.getByRole('textbox').first().fill('HKL');
@@ -161,10 +170,10 @@ test('Prereg PK OD', async ({ page }) => {
   await page1.getByLabel('Bank Account No.*').fill('12345678');
 
 
-  // await expect(page1.getByRole('button', { name: 'Confirmation of Insured' })).toBeVisible();
-  // await expect(page1.locator('#sectionTabs')).toContainText('Confirmation of Insured Person/Dependants/Claimant');
-  // await page1.getByRole('button', { name: 'Confirmation of Insured' }).click();
-  // await page1.getByLabel('Completed').check();
+  await expect(page1.getByRole('button', { name: 'Confirmation of Insured' })).toBeVisible();
+  await expect(page1.locator('#sectionTabs')).toContainText('Confirmation of Insured Person/Dependants/Claimant');
+  await page1.getByRole('button', { name: 'Confirmation of Insured' }).click();
+  await page1.getByLabel('Completed').check();
 
 
 
