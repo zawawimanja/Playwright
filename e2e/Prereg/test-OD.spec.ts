@@ -1,22 +1,23 @@
 import { test, expect } from '@playwright/test';
 import { login } from '../../utils/base'; // Import from base.ts
+import { PreregistrationPage } from '../../pages/prereg';
+import { LeftTabPage } from '../../pages/left_tab';
+
 
 test.beforeEach(async ({ page }) => {
   await login(page, "afzan.pks", "u@T_afzan");
 });
 
 test('Prereg PK OD', async ({ page }) => {
+  const preRegistrationPage = new PreregistrationPage(page);
+  const leftTabPage = new LeftTabPage(page);
 
-  await page.waitForSelector(".ap-Menu")
-  await expect(page.locator('.ap-Menu')).toBeVisible();
-  await expect(page.locator('#page-builder-root')).toContainText('HomePre-RegistrationHUK Pre-RegistrationCreate RevisionMy CasesAppointmentsInsured Person SearchToolsSSNCommon ListingPermanent RepresentativeAnnual DeclarationReemployment Scheduler');
-  await page.frameLocator('#baristaPageOut').locator('#formPreview').waitFor();
-  await expect(page.frameLocator('#baristaPageOut').locator('#previewPanel')).toBeVisible();
-
-
-  await expect(page.getByRole('link', { name: 'Pre-Registration', exact: true })).toBeVisible();
-  await expect(page.locator('#page-builder-root')).toContainText('Pre-Registration');
-  await page.getByRole('link', { name: 'Pre-Registration', exact: true }).click();
+  await expect(leftTabPage.leftBar).toBeVisible();
+  expect(leftTabPage.pageBuilderRoot).toContainText(
+    'HomePre-RegistrationHUK Pre-RegistrationCreate RevisionMy CasesAppointmentsInsured Person SearchToolsSSNCommon ListingPermanent RepresentativeAnnual DeclarationReemployment Scheduler'
+  );
+  await expect(leftTabPage.preregistrationLink).toBeVisible();
+  leftTabPage.clickPreregistration();
   await page.waitForLoadState('load');
 
   await expect(page.frameLocator('#baristaPageOut').getByRole('heading', { name: 'Pre-Registration' })).toBeVisible({

@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test';
 import { login } from '../../utils/base'; // Import from base.ts
 import { PreregistrationPage } from '../../pages/prereg';
-
+import { LeftTabPage } from '../../pages/left_tab';
 
 test.beforeEach(async ({ page }) => {
   await login(page, "afzan.pks", "u@T_afzan");
@@ -9,23 +9,23 @@ test.beforeEach(async ({ page }) => {
 
 test('Prereg PK ILAT', async ({ page }) => {
   const preRegistrationPage = new PreregistrationPage(page);
-  await page.waitForLoadState('networkidle'); // Wait until network activity is idle
-  await page.frameLocator('#baristaPageOut').locator('#formPreview').isVisible();
-  await expect(page.frameLocator('#baristaPageOut').getByRole('heading', { name: 'Home Page' })).toBeVisible();
-  await expect(page.frameLocator('#baristaPageOut').locator('#previewPanel')).toContainText('Home Page');
-  await page.getByRole('link', { name: 'Pre-Registration', exact: true }).click();
+  const leftTabPage = new LeftTabPage(page);
 
-
+  await expect(leftTabPage.leftBar).toBeVisible();
+  expect(leftTabPage.pageBuilderRoot).toContainText(
+    'HomePre-RegistrationHUK Pre-RegistrationCreate RevisionMy CasesAppointmentsInsured Person SearchToolsSSNCommon ListingPermanent RepresentativeAnnual DeclarationReemployment Scheduler'
+  );
+  await expect(leftTabPage.preregistrationLink).toBeVisible();
+  leftTabPage.clickPreregistration();
   await page.waitForLoadState('load');
 
   await expect(page.frameLocator('#baristaPageOut').getByRole('heading', { name: 'Pre-Registration' })).toBeVisible({
     timeout: 60000
   });
-  await expect(page.frameLocator('#baristaPageOut').getByRole('heading', { name: 'Pre-Registration' })).toBeVisible();
+
   await expect(page.frameLocator('#baristaPageOut').locator('h2')).toContainText('Pre-Registration');
   await expect(page.frameLocator('#baristaPageOut').getByRole('heading', { name: 'Search Insured Person &' })).toBeVisible();
   await expect(page.frameLocator('#baristaPageOut').locator('#Heading31')).toContainText('Search Insured Person & Employer Registration Status');
-
   preRegistrationPage.selectNoticeType('ILAT')
 
   await expect(page.frameLocator('#baristaPageOut').locator('#ctrlField596').getByText('Notice Type')).toBeVisible();
