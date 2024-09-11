@@ -1,10 +1,12 @@
 
 ## Test Steps
 1.  Current using recording
+2.  Convert to POM
 
 ## Future Improvement 
 1. Using BDD
 
-## Problem load page
-1.  set config file global timeout
-2.  in test use load and timeout.
+## How to Automate
+1.  Collect locator
+2.  Run Basic Test
+3.  Advance OOP
