@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test';
 import { login } from '../../utils/base'; // Import from base.ts
-
-
+import { PreregistrationPage } from '../../pages/prereg';
+import { LeftTabPage } from '../../pages/left_tab';
 
 test.beforeEach(async ({ page }) => {
   await login(page, "afzan.pks", "u@T_afzan");
@@ -9,13 +9,15 @@ test.beforeEach(async ({ page }) => {
 
 test('Prereg PK Accident', async ({ page }) => {
 
-  await page.waitForSelector('#baristaPageOut', { state: 'visible', timeout: 600000 });
-  await page.frameLocator('#baristaPageOut').locator('#formPreview').isVisible();
-  await expect(page.frameLocator('#baristaPageOut').getByRole('heading', { name: 'Home Page' })).toBeVisible();
-  await expect(page.frameLocator('#baristaPageOut').locator('#previewPanel')).toContainText('Home Page');
-  await page.getByRole('link', { name: 'Pre-Registration', exact: true }).click();
+  const preRegistrationPage = new PreregistrationPage(page);
+  const leftTabPage = new LeftTabPage(page);
 
-
+  await expect(leftTabPage.leftBar).toBeVisible();
+  expect(leftTabPage.pageBuilderRoot).toContainText(
+    'HomePre-RegistrationHUK Pre-RegistrationCreate RevisionMy CasesAppointmentsInsured Person SearchToolsSSNCommon ListingPermanent RepresentativeAnnual DeclarationReemployment Scheduler'
+  );
+  await expect(leftTabPage.preregistrationLink).toBeVisible();
+  leftTabPage.clickPreregistration();
   await page.waitForLoadState('load'); // Wait until the "load" event
   // Now perform the actions you need
   await page.waitForSelector('#baristaPageOut', { state: 'visible', timeout: 600000 });
