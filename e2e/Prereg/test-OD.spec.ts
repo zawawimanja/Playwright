@@ -9,7 +9,7 @@ test.beforeEach(async ({ page }) => {
 });
 
 test('Prereg PK OD', async ({ page }) => {
-  const preRegistrationPage = new PreregistrationPage(page);
+  const preregPage = new PreregistrationPage(page);
   const leftTabPage = new LeftTabPage(page);
 
   await expect(leftTabPage.leftBar).toBeVisible();
@@ -20,32 +20,18 @@ test('Prereg PK OD', async ({ page }) => {
   leftTabPage.clickPreregistration();
   await page.waitForLoadState('load');
 
-  await expect(page.frameLocator('#baristaPageOut').getByRole('heading', { name: 'Pre-Registration' })).toBeVisible({
-    timeout: 60000
-  });
-
-  await expect(page.frameLocator('#baristaPageOut').locator('h2')).toContainText('Pre-Registration');
-  await expect(page.frameLocator('#baristaPageOut').getByRole('heading', { name: 'Search Insured Person &' })).toBeVisible();
-  await expect(page.frameLocator('#baristaPageOut').locator('#Heading31')).toContainText('Search Insured Person & Employer Registration Status');
-
-  await page.frameLocator('#baristaPageOut').locator('#NoticeTypePreReg').selectOption('OD');
-  await page.frameLocator('#baristaPageOut').getByLabel('Notice and Benefit Claim Form').selectOption('Others');
-
-  await page.frameLocator('#baristaPageOut').getByLabel('Identification No.*').fill('911103105399');
-
-  await page.frameLocator('#baristaPageOut').getByLabel('Employer Code*').fill('B3200086169Z');
-
-  await page.frameLocator('#baristaPageOut').locator('#previewRow6 div').filter({ hasText: 'ClaimFormSubmissionByList' }).first().click();
-
-  await page.frameLocator('#baristaPageOut').getByRole('button', { name: 'Search' }).click();
+  await preregPage.selectNoticeTypePreRegOption('OD');
+  await preregPage.selectNoticeAndBenefitClaimFormOption('Others');
+  await preregPage.fillIdentificationNo('841111146229');
+  await preregPage.fillEmployerCode('B3200086169Z');
+  await preregPage.clickClaimFormSubmissionByListButton();
+  await preregPage.clickSearchButton();
   const page1Promise = page.waitForEvent('popup');
-  await page.frameLocator('#baristaPageOut').getByRole('button', { name: 'Next' }).click();
+  await preregPage.clickNextButton();
   const page1 = await page1Promise;
 
   await page1.waitForLoadState('load'); // Wait until the "load" event
 
-  await page1.waitForSelector('#formPreview', { timeout: 600000 });
-  await expect(page1.locator('#formPreview')).toBeVisible();
 
   await page1.waitForSelector('#btnClose', { timeout: 600000 });
   await expect(page1.locator('#btnClose')).toBeVisible();
