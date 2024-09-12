@@ -9,35 +9,90 @@ export class PreregistrationPage {
         this.page = page;
     }
 
-
-    async selectNoticeType(username: string) {
-
-        await this.page.frameLocator('#baristaPageOut').locator('#NoticeTypePreReg').selectOption(username);
+    private get baristaPageOut() {
+        return this.page.frameLocator('#baristaPageOut');
     }
 
-    async selectDoesInsuredPersonStillinEmployment(username: string) {
-        await this.page.getByPlaceholder('User Name').fill(username);
+    private get preRegistrationHeading() {
+        return this.baristaPageOut.locator('h2');
     }
 
-    async selectNoticeandBenefitClaimFormSubmissionby(username: string) {
-        await this.page.getByPlaceholder('User Name').fill(username);
+    private get searchInsuredPersonHeading() {
+        return this.baristaPageOut.getByRole('heading', { name: 'Search Insured Person &' });
     }
 
-    async selectIdentificationType(username: string) {
-        await this.page.getByPlaceholder('User Name').fill(username);
+    private get searchInsuredPersonEmployerRegistrationStatusHeading() {
+        return this.baristaPageOut.locator('#Heading31');
     }
 
-    async setIdentificationNo(username: string) {
-        await this.page.getByPlaceholder('User Name').fill(username);
+    private get noticeTypePreRegSelect() {
+        return this.baristaPageOut.locator('#NoticeTypePreReg');
     }
 
-    async setEmployerCode(password: string) {
-        await this.page.getByPlaceholder('Password').fill(password);
+    private get noticeAndBenefitClaimFormSelect() {
+        return this.baristaPageOut.getByLabel('Notice and Benefit Claim Form');
     }
 
-    async clickSearch() {
-        await this.page.getByRole('button', { name: 'Sign In' }).click();
+    private get identificationNoInput() {
+        return this.baristaPageOut.getByLabel('Identification No.*');
     }
+
+    private get employerCodeInput() {
+        return this.baristaPageOut.getByLabel('Employer Code*');
+    }
+
+    private get claimFormSubmissionByListButton() {
+        return this.baristaPageOut.locator('#previewRow6 div').filter({ hasText: 'ClaimFormSubmissionByList' }).first();
+    }
+
+    private get searchButton() {
+        return this.baristaPageOut.getByRole('button', { name: 'Search' });
+    }
+
+    private get nextButton() {
+        return this.baristaPageOut.getByRole('button', { name: 'Next' });
+    }
+
+    async selectNoticeTypePreRegOption(option: string) {
+        await this.noticeTypePreRegSelect.selectOption(option);
+    }
+
+    async selectNoticeAndBenefitClaimFormOption(option: string) {
+        await this.noticeAndBenefitClaimFormSelect.selectOption(option);
+    }
+
+    async fillIdentificationNo(input: string) {
+        await this.identificationNoInput.fill(input);
+    }
+
+    async fillEmployerCode(input: string) {
+        await this.employerCodeInput.fill(input);
+    }
+
+    async clickClaimFormSubmissionByListButton() {
+        await this.claimFormSubmissionByListButton.click();
+    }
+
+    async clickSearchButton() {
+        await this.searchButton.click();
+    }
+
+    async clickNextButton() {
+        await this.nextButton.click();
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

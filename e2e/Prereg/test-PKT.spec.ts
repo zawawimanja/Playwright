@@ -1,25 +1,25 @@
 import { test, expect } from '@playwright/test';
-import { LoginPage } from '../../pages/login';
-
+import { login } from '../../utils/base'; // Import from base.ts
+import { PreregistrationPage } from '../../pages/prereg';
+import { LeftTabPage } from '../../pages/left_tab';
 
 test.beforeEach(async ({ page }) => {
-
-  const loginPage = new LoginPage(page);
-  await loginPage.navigateToLogin();
-  await loginPage.login("afzan.pks", "u@T_afzan");
+  await login(page, "afzan.pks", "u@T_afzan");
 });
+
 
 test('Prereg PK PKT', async ({ page }) => {
 
-  await page.waitForSelector(".ap-Menu")
-  await expect(page.locator('.ap-Menu')).toBeVisible();
-  await expect(page.locator('#page-builder-root')).toContainText('HomePre-RegistrationHUK Pre-RegistrationCreate RevisionMy CasesAppointmentsInsured Person SearchToolsSSNCommon ListingPermanent RepresentativeAnnual DeclarationReemployment Scheduler');
+  const preRegistrationPage = new PreregistrationPage(page);
+  const leftTabPage = new LeftTabPage(page);
 
-  //await page.waitForSelector("#baristaPageOut #formPreview")
-  await page.frameLocator('#baristaPageOut').locator('#formPreview').waitFor();
-  //await expect(page.frameLocator('#baristaPageOut').getByRole('heading', { name: 'Home Page' })).toBeVisible();
-  await expect(page.frameLocator('#baristaPageOut').locator('#previewPanel')).toBeVisible();
-
+  await expect(leftTabPage.leftBar).toBeVisible();
+  expect(leftTabPage.pageBuilderRoot).toContainText(
+    'HomePre-RegistrationHUK Pre-RegistrationCreate RevisionMy CasesAppointmentsInsured Person SearchToolsSSNCommon ListingPermanent RepresentativeAnnual DeclarationReemployment Scheduler'
+  );
+  await expect(leftTabPage.preregistrationLink).toBeVisible();
+  leftTabPage.clickPreregistration();
+  await page.waitForLoadState('load');
 
   await expect(page.getByRole('link', { name: 'Pre-Registration', exact: true })).toBeVisible();
   await expect(page.locator('#page-builder-root')).toContainText('Pre-Registration');

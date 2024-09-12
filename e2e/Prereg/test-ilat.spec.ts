@@ -7,6 +7,7 @@ test.beforeEach(async ({ page }) => {
   await login(page, "afzan.pks", "u@T_afzan");
 });
 
+
 test('Prereg PK ILAT', async ({ page }) => {
   const preRegistrationPage = new PreregistrationPage(page);
   const leftTabPage = new LeftTabPage(page);
