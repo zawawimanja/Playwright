@@ -2,7 +2,7 @@ import { test, expect } from '@playwright/test';
 import { login } from '../../utils/base'; // Import from base.ts
 import { PreregistrationPage } from '../../pages/prereg';
 import { LeftTabPage } from '../../pages/left_tab';
-
+import { DraftPage } from '../../pages/draft';
 
 test.beforeEach(async ({ page }) => {
   await login(page, "afzan.pks", "u@T_afzan");
@@ -11,6 +11,9 @@ test.beforeEach(async ({ page }) => {
 test('Prereg PK OD', async ({ page }) => {
   const preregPage = new PreregistrationPage(page);
   const leftTabPage = new LeftTabPage(page);
+
+  await page.waitForLoadState('load'); // Wait until the "load" event
+
 
   await expect(leftTabPage.leftBar).toBeVisible();
   expect(leftTabPage.pageBuilderRoot).toContainText(
@@ -30,14 +33,18 @@ test('Prereg PK OD', async ({ page }) => {
   await preregPage.clickNextButton();
   const page1 = await page1Promise;
 
-  await page1.waitForLoadState('load'); // Wait until the "load" event
+
+
+
 
 
   await page1.waitForSelector('#btnClose', { timeout: 600000 });
-  await expect(page1.locator('#btnClose')).toBeVisible();
 
-  await page1.locator('#btnClose').click();
-  await page1.waitForLoadState('load'); // Wait until the "load" event
+  const draftPage = new DraftPage(page1);
+
+  await draftPage.clickCloseButton();
+
+
 
 
   await page1.waitForSelector('[role="button"][name="Remarks"]', { timeout: 60000 });
