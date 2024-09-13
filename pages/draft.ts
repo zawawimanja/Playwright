@@ -9,14 +9,16 @@ export class DraftPage {
         this.page = page;
     }
 
-    private get closeButton() {
+    get closeButton() {
+  
         return this.page.locator('#btnClose');
-        //await page1.locator('#btnClose').click();
     }
 
     async clickCloseButton() {
         await this.closeButton.click();
     }
+
+
 
 
 }
