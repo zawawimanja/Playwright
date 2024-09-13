@@ -3,6 +3,8 @@ import { login } from '../../utils/base'; // Import from base.ts
 import { PreregistrationPage } from '../../pages/prereg';
 import { LeftTabPage } from '../../pages/left_tab';
 import { DraftPage } from '../../pages/draft';
+import { RemarksPage } from '../../pages/remarks';
+import { InsuredPersonInfoPage } from '../../pages/insured_person_info';
 
 test.beforeEach(async ({ page }) => {
   await login(page, "afzan.pks", "u@T_afzan");
@@ -11,17 +13,17 @@ test.beforeEach(async ({ page }) => {
 test('Prereg PK OD', async ({ page }) => {
   const preregPage = new PreregistrationPage(page);
   const leftTabPage = new LeftTabPage(page);
+  const TIMEOUT = 120000;
 
-  await page.waitForLoadState('load'); // Wait until the "load" event
 
-
+  await leftTabPage.leftBar.waitFor();
   await expect(leftTabPage.leftBar).toBeVisible();
   expect(leftTabPage.pageBuilderRoot).toContainText(
     'HomePre-RegistrationHUK Pre-RegistrationCreate RevisionMy CasesAppointmentsInsured Person SearchToolsSSNCommon ListingPermanent RepresentativeAnnual DeclarationReemployment Scheduler'
   );
   await expect(leftTabPage.preregistrationLink).toBeVisible();
   leftTabPage.clickPreregistration();
-  await page.waitForLoadState('load');
+
 
   await preregPage.selectNoticeTypePreRegOption('OD');
   await preregPage.selectNoticeAndBenefitClaimFormOption('Others');
@@ -33,53 +35,30 @@ test('Prereg PK OD', async ({ page }) => {
   await preregPage.clickNextButton();
   const page1 = await page1Promise;
 
-
-
-
-
-
-  await page1.waitForSelector('#btnClose', { timeout: 600000 });
-
   const draftPage = new DraftPage(page1);
-
+  await draftPage.closeButton.waitFor();
   await draftPage.clickCloseButton();
 
 
+  const remarksPage = new RemarksPage(page1);
+  await expect(remarksPage.remarksButton).toBeVisible();
+  await expect(remarksPage.sectionTabs).toContainText('Remarks');
+  await remarksPage.remarksButton.waitFor();
+  await remarksPage.addRemarksButton.click();
+  await remarksPage.textbox.fill('test');
+  await remarksPage.saveRemarksButton.click();
 
-
-  await page1.waitForSelector('[role="button"][name="Remarks"]', { timeout: 60000 });
-  await expect(page1.getByRole('button', { name: 'Remarks', exact: true })).toBeVisible();
-  await expect(page1.locator('#sectionTabs')).toContainText('Remarks');
-  await page1.getByRole('button', { name: 'Add Remarks' }).click();
-  await page1.getByRole('textbox').fill('test');
-  await page1.getByRole('button', { name: 'Save Remarks' }).click();
-
-
-  await page1.waitForLoadState('load'); // Wait until the "load" event
-
-  await page1.waitForSelector('[role="button"][name="Insured Person Information"]', { timeout: 60000 });
-
-  await expect(page1.getByRole('button', { name: 'Insured Person Information' })).toBeVisible();
-  await expect(page1.locator('#sectionTabs')).toContainText('Insured Person Information');
-
-  await page1.getByRole('button', { name: 'Insured Person Information' }).click();
-
-  await page1.getByLabel('Notice and Benefit Claim Form Received Date*').click();
-  await page1.locator('#ui-datepicker-div').getByRole('combobox').nth(1).selectOption('2020');
-  await page1.getByRole('link', { name: '1', exact: true }).click();
-  await page1.getByLabel('Occupation(Based on Form 34)*').click();
-  await page1.getByLabel('Occupation(Based on Form 34)*').fill('CS');
-  await page1.getByLabel('Address*').click();
-  await page1.getByLabel('Address*').fill('Taman Abadi');
-  await page1.locator('#AddressInsuredPersonInfo2').click();
-  await page1.locator('#AddressInsuredPersonInfo2').fill('Lorong 10');
-  await page1.locator('#AddressInsuredPersonInfo3').click();
-  await page1.locator('#AddressInsuredPersonInfo3').fill('Jalan 1');
-  await page1.getByLabel('State*').selectOption('200714');
-  await page1.getByLabel('City*').selectOption('201460');
-  await page1.getByLabel('Postcode*').click();
-  await page1.getByLabel('Postcode*').fill('51000');
-  await page1.getByLabel('Nationality*').selectOption('201749');
+  const insuredPersonInfoPage = new InsuredPersonInfoPage(page1);
+  await insuredPersonInfoPage.clickInsuredPersonInfoButton();
+  await insuredPersonInfoPage.noticeAndBenefitClaimFormReceivedDateInput.click()
+  await insuredPersonInfoPage.selectDate('2020');
+  await insuredPersonInfoPage.fillOccupation('CS');
+  await insuredPersonInfoPage.fillAddress(2, 'Lorong 10');
+  await insuredPersonInfoPage.fillAddress(3, 'Jalan 1');
+  await insuredPersonInfoPage.selectState('200714');
+  await insuredPersonInfoPage.selectCity('201460');
+  await insuredPersonInfoPage.fillPostcode('51000');
+  await insuredPersonInfoPage.selectNationality('201749');
 
 
   await expect(page1.getByRole('button', { name: 'Employer Information' })).toBeVisible();

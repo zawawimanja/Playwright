@@ -22,6 +22,7 @@ export class LeftTabPage {
 
 
     get leftBar() {
+    
         return this.page.locator('.ap-Menu')
     }
 
