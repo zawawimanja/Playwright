@@ -13,6 +13,10 @@ export class PreregistrationPage {
         return this.page.frameLocator('#baristaPageOut');
     }
 
+    private get workbasket() {
+        return this.page.frameLocator('#workbasket');
+    }
+
     private get preRegistrationHeading() {
         return this.baristaPageOut.locator('h2');
     }
@@ -81,20 +85,88 @@ export class PreregistrationPage {
         await this.nextButton.click();
     }
 
+    
+
+  get accidentDateFrame() {
+    return this.page.frameLocator('#baristaPageOut');
+  }
+
+  get accidentDateLabel() {
+    return this.accidentDateFrame.getByLabel('Accident Date*');
+  }
+
+  get accidentDateComboBox() {
+    return this.accidentDateFrame.getByRole('combobox').nth(3);
+  }
+
+  get accidentTimeLabel() {
+    return this.accidentDateFrame.getByLabel('Accident Time*');
+  }
+
+  get accidentTimeComboBox() {
+    return this.accidentDateFrame.getByRole('combobox').nth(2);
+  }
+
+  get identificationTypeLabel() {
+    return this.accidentDateFrame.getByLabel('Identification Type*');
+  }
+
+  get identificationTypeComboBox() {
+    return this.accidentDateFrame.getByRole('combobox').nth(1);
+  }
+
+  get identificationNoLabel() {
+    return this.accidentDateFrame.getByLabel('Identification No.*');
+  }
+
+  get identificationNoTextField() {
+    return this.accidentDateFrame.getByLabel('Identification No.*');
+  }
+
+  async selectAccidentDate(date) {
+    await this.accidentDateComboBox.selectOption(date);
+  }
+
+  async selectAccidentTime(time) {
+    await this.accidentTimeComboBox.selectOption(time);
+  }
+
+  async selectIdentificationType(type) {
+    await this.identificationTypeComboBox.selectOption(type);
+  }
 
 
+  async fillAccidentDate(): Promise<void> {
+    await this.workbasket.getByLabel('Accident Date*').click();
+    await this.workbasket.getByRole('combobox').nth(3).selectOption('2020');
+  }
 
+     async fillAccidentTime(): Promise<void> {
+    await this.workbasket.getByLabel('Accident Time*').click();
+    await this.baristaPageOut.getByLabel('Accident Time*').click();
+    await this.baristaPageOut.locator('dd').filter({ hasText: '12 am01 am02 am03 am04 am05' }).getByRole('combobox').selectOption('15');
+  }
 
-
-
-
-
-
-
-
-
-
-
-
+    async clickLink1() {
+    await this.workbasket.getByRole('link', { name: '1', exact: true }).click();
+  }
 
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

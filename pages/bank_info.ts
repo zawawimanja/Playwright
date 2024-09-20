@@ -58,6 +58,11 @@ export class BankInformationPage {
     return this.page.locator('#BankNameLB');
   }
 
+
+    get bankNameSelectAccident() {
+    return this.page.locator('#BankNameLocalBank');
+  }
+
   /**
    * Bank Swift Code label element
    */
@@ -129,6 +134,10 @@ export class BankInformationPage {
    */
   async selectBankName(option) {
     await this.bankNameSelect.selectOption(option);
+  }
+
+  async selectBankNameAccident(option) {
+    await this.bankNameSelectAccident.selectOption(option);
   }
 
   /**

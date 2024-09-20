@@ -119,10 +119,10 @@ await supportingDocumentPage.clickSupportingDocumentButton();
 
 const previewSubmissionPage = new PreviewSubmissionPage(page1);
 await previewSubmissionPage.clickPreviewSubmissionButton();
-await previewSubmissionPage.clickShowPreviewButton();
-// await previewSubmissionPage.clickSubmitButton();
-// await previewSubmissionPage.clickYesButton();
-// await previewSubmissionPage.navigateToEFormRenderPage();
+//await previewSubmissionPage.clickShowPreviewButton();
+await previewSubmissionPage.clickSubmitButton();
+await previewSubmissionPage.clickYesButton();
+await previewSubmissionPage.navigateToEFormRenderPage();
 
 
 
