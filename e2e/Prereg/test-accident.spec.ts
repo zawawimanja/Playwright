@@ -47,7 +47,7 @@ await preregPage.fillAccidentTime();
   await preregPage.selectIdentificationType('2');
     await preregPage.fillIdentificationNo('891007146398');
 
-  await preregPage.fillIdentificationNo('961130086256');
+  await preregPage.fillIdentificationNo('831230146249');
   await preregPage.fillEmployerCode('B3200086169Z');
 
 
@@ -100,6 +100,7 @@ await preferredSOCSOOfficePage.clickPreferredSOCSOOfficeButton();
 
 const certificationByEmployerPage = new CertificationByEmployerPage(page1);
 await certificationByEmployerPage.clickCertificationByEmployerButton();
+
 await certificationByEmployerPage.fillName('MAT');
 await certificationByEmployerPage.fillDesignation('CEO');
 
