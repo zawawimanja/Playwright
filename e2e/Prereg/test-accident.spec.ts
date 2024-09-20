@@ -2,95 +2,141 @@ import { test, expect } from '@playwright/test';
 import { login } from '../../utils/base'; // Import from base.ts
 import { PreregistrationPage } from '../../pages/prereg';
 import { LeftTabPage } from '../../pages/left_tab';
+import { DraftPage } from '../../pages/draft';
+import { RemarksPage } from '../../pages/remarks';
+import { PreviewSubmissionPage } from '../../pages/preview_submission';
+import { OccupationalDiseasePage } from '../../pages/od_info';
+import { EmployerInfoPage } from '../../pages/employer_info';
+import { MedicalCertificatePage } from '../../pages/mc_info';
+import { WagesInfoPage } from '../../pages/wages_info';
+import { InsuredPersonInfoPage } from '../../pages/insured_person_info';
+import { PreferredSOCSOOfficePage } from '../../pages/socso_office';
+import { CertificationByEmployerPage } from '../../pages/cert_employer';
+import { BankInformationPage } from '../../pages/bank_info';
+import { SupportingDocumentPage } from '../../pages/support_doc';
+import { ConfirmationOfInsuredPage } from '../../pages/confirm_person';
 
 test.beforeEach(async ({ page }) => {
   await login(page, "afzan.pks", "u@T_afzan");
 });
 
 test('Prereg PK Accident', async ({ page }) => {
-
-  const preRegistrationPage = new PreregistrationPage(page);
+  const preregPage = new PreregistrationPage(page);
   const leftTabPage = new LeftTabPage(page);
+ 
 
+
+  await leftTabPage.leftBar.waitFor();
   await expect(leftTabPage.leftBar).toBeVisible();
   expect(leftTabPage.pageBuilderRoot).toContainText(
     'HomePre-RegistrationHUK Pre-RegistrationCreate RevisionMy CasesAppointmentsInsured Person SearchToolsSSNCommon ListingPermanent RepresentativeAnnual DeclarationReemployment Scheduler'
   );
   await expect(leftTabPage.preregistrationLink).toBeVisible();
   leftTabPage.clickPreregistration();
-  await page.waitForLoadState('load'); // Wait until the "load" event
-  // Now perform the actions you need
-  await page.waitForSelector('#baristaPageOut', { state: 'visible', timeout: 600000 });
-  await page.frameLocator('#baristaPageOut').locator('#formPreview').isVisible();
 
-  await expect(page.frameLocator('#baristaPageOut').getByRole('heading', { name: 'Pre-Registration' })).toBeVisible();
-  await expect(page.frameLocator('#baristaPageOut').locator('h2')).toContainText('Pre-Registration');
-  await expect(page.frameLocator('#baristaPageOut').getByRole('heading', { name: 'Search Insured Person &' })).toBeVisible();
-  await expect(page.frameLocator('#baristaPageOut').locator('#Heading31')).toContainText('Search Insured Person & Employer Registration Status');
 
-  await expect(page.frameLocator('#baristaPageOut').locator('#ctrlField596').getByText('Notice Type')).toBeVisible();
-  await expect(page.frameLocator('#baristaPageOut').locator('#ctrlField596')).toContainText('Notice Type');
-  await page.frameLocator('#baristaPageOut').locator('#NoticeTypePreReg').selectOption('Accident');
+  await preregPage.selectNoticeTypePreRegOption('Accident');
+
+await preregPage.fillAccidentDate();
+await preregPage.clickLink1();
+await preregPage.fillAccidentTime();
 
 
 
+ 
+  await preregPage.selectIdentificationType('2');
+    await preregPage.fillIdentificationNo('891007146398');
+
+  await preregPage.fillIdentificationNo('961130086256');
+  await preregPage.fillEmployerCode('B3200086169Z');
 
 
-  await expect(page.frameLocator('#baristaPageOut').locator('#ctrlField751').getByText('Accident Date')).toBeVisible();
-  await expect(page.frameLocator('#baristaPageOut').locator('#ctrlField751')).toContainText('Accident Date');
-  await page.frameLocator('#baristaPageOut').getByLabel('Accident Date*').click();
-  await page.frameLocator('#baristaPageOut').getByRole('combobox').nth(3).selectOption('2020');
-  await page.frameLocator('#baristaPageOut').getByRole('combobox').nth(2).selectOption('7');
-  await page.frameLocator('#baristaPageOut').getByRole('link', { name: '4', exact: true }).click();
+  await page.frameLocator('#baristaPageOut').locator('#row7column3').click();
+  
+
+  await preregPage.clickSearchButton();
+  const page1Promise = page.waitForEvent('popup');
+  await preregPage.clickNextButton();
+  const page1 = await page1Promise;
+
+
+  const remarksPage = new RemarksPage(page1);
+   await remarksPage.remarksButton.waitFor();
+  await expect(remarksPage.remarksButton).toBeVisible();
+  await expect(remarksPage.sectionTabs).toContainText('Remarks');
+  await remarksPage.remarksButton.waitFor();
+  await remarksPage.addRemarksButton.click();
+  await remarksPage.textbox.fill('test');
+  await remarksPage.saveRemarksButton.click();
+
+  const insuredPersonInfoPage = new InsuredPersonInfoPage(page1);
+  await insuredPersonInfoPage.clickInsuredPersonInfoButton();
+  await insuredPersonInfoPage.noticeAndBenefitClaimFormReceivedDateInput.click()
+  await insuredPersonInfoPage.selectDate('2020');
+  await insuredPersonInfoPage.fillOccupation('CS');
+  await insuredPersonInfoPage.fillAddress(2, 'Lorong 10');
+  await insuredPersonInfoPage.fillAddress(3, 'Jalan 1');
+  await insuredPersonInfoPage.selectState('200714');
+  await insuredPersonInfoPage.selectCity('201460');
+  await insuredPersonInfoPage.fillPostcode('51000');
+  await insuredPersonInfoPage.selectNationality('201749');
+
+
+const employerInfoPage = new EmployerInfoPage(page1);
+await employerInfoPage.clickEmployerInfoButton();
+
+//reference notice information
+//accident information
+
+
+const medicalCertificatePage = new MedicalCertificatePage(page1);
+await medicalCertificatePage.clickMedicalCertificateButton();
+
+const wagesInfoPage = new WagesInfoPage(page1);
+await wagesInfoPage.clickWagesInfoButton();
+
+const preferredSOCSOOfficePage = new PreferredSOCSOOfficePage(page1);
+await preferredSOCSOOfficePage.clickPreferredSOCSOOfficeButton();
+
+const certificationByEmployerPage = new CertificationByEmployerPage(page1);
+await certificationByEmployerPage.clickCertificationByEmployerButton();
+await certificationByEmployerPage.fillName('MAT');
+await certificationByEmployerPage.fillDesignation('CEO');
+
+const bankInformationPage = new BankInformationPage(page1);
+await bankInformationPage.clickBankInformationButton();
+
+  await bankInformationPage.accountNoSelect.waitFor();
+  await expect(bankInformationPage.accountNoSelect).toBeVisible();
+await bankInformationPage.selectAccountNo('Yes');
+await bankInformationPage.selectBankLocation('204101');
+
+  
+await bankInformationPage.selectBankNameAccident('802121');
+await bankInformationPage.selectBankAccountType('204401');
+await bankInformationPage.fillBankBranch('KL');
+await bankInformationPage.fillBankAccountNo('12345678');
 
 
 
-  await expect(page.frameLocator('#baristaPageOut').locator('#ctrlField767').getByText('Accident Time')).toBeVisible();
-  await expect(page.frameLocator('#baristaPageOut').locator('#ctrlField767')).toContainText('Accident Time');
-  await page.frameLocator('#baristaPageOut').getByLabel('Accident Time*').click();
-  await page.frameLocator('#baristaPageOut').locator('dd').filter({ hasText: '12 am01 am02 am03 am04 am05' }).getByRole('combobox').selectOption('13');
-  await page.frameLocator('#baristaPageOut').getByRole('combobox').nth(3).selectOption('16');
-  await page.frameLocator('#baristaPageOut').getByRole('combobox').nth(4).selectOption('15');
+  
+const confirmationOfInsuredPage = new ConfirmationOfInsuredPage(page1);
 
 
 
-  await page.frameLocator('#baristaPageOut').locator('#row5column3').click();
+await confirmationOfInsuredPage.clickConfirmationOfInsuredButton();
+await confirmationOfInsuredPage.checkCompletedCheckbox();
 
+  const supportingDocumentPage = new SupportingDocumentPage(page1);
+await supportingDocumentPage.clickSupportingDocumentButton();
 
-  await expect(page.frameLocator('#baristaPageOut').locator('#ctrlField597').getByText('Identification Type')).toBeVisible();
-  await expect(page.frameLocator('#baristaPageOut').locator('#ctrlField597')).toContainText('Identification Type');
-  await page.frameLocator('#baristaPageOut').getByLabel('Identification Type*').selectOption('2');
+const previewSubmissionPage = new PreviewSubmissionPage(page1);
+await previewSubmissionPage.clickPreviewSubmissionButton();
+//await previewSubmissionPage.clickShowPreviewButton();
+// await previewSubmissionPage.clickSubmitButton();
+// await previewSubmissionPage.clickYesButton();
+// await previewSubmissionPage.navigateToEFormRenderPage();
 
-
-  await expect(page.frameLocator('#baristaPageOut').locator('#ctrlField634').getByText('Identification No.')).toBeVisible();
-  await expect(page.frameLocator('#baristaPageOut').locator('#ctrlField634')).toContainText('Identification No.');
-  await page.frameLocator('#baristaPageOut').getByLabel('Identification No.*').click()
-  await page.frameLocator('#baristaPageOut').getByLabel('Identification No.*').fill('891007146398');
-
-
-
-  await expect(page.frameLocator('#baristaPageOut').getByText('Employer Code*')).toBeVisible();
-  await expect(page.frameLocator('#baristaPageOut').locator('#ctrlField641')).toContainText('Employer Code');
-  await page.frameLocator('#baristaPageOut').getByLabel('Employer Code*').click()
-  await page.frameLocator('#baristaPageOut').getByLabel('Employer Code*').fill('B3200086169Z');
-  await page.frameLocator('#workbasket').locator('#ctrlField800').click();
-
-  await page.frameLocator('#baristaPageOut').getByRole('button', { name: 'Search' }).click();
-
-
-
-  // const page1Promise = page.waitForEvent('popup');
-  // await page.frameLocator('#baristaPageOut').getByRole('button', { name: 'Next' }).click();
-  // const page1 = await page1Promise;
-
-  // await page1.waitForSelector('#formPreview', { state: 'visible' });
-
-  // await expect(page1.locator('#formPreview')).toBeVisible();
-
-  // await page.waitForLoadState('load'); // Wait until the "load" event
-
-  // await page1.waitForSelector('#sectionTabs', { state: 'visible', timeout: 600000 });
-  // await expect(page1.locator('#sectionTabs')).toContainText('Remarks');
 
 
 });
