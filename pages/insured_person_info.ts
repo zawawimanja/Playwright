@@ -22,6 +22,11 @@ export class InsuredPersonInfoPage {
     return this.page.getByLabel('Occupation(Based on Form 34)*');
   }
 
+
+  get occupationInputILAT() {
+    return this.page.getByLabel('Occupation (Based on Notice');
+  }
+
   getAddressInput(fieldNumber) {
     return this.page.locator(`#AddressInsuredPersonInfo${fieldNumber}`);
   }
@@ -56,6 +61,10 @@ export class InsuredPersonInfoPage {
 
   async fillOccupation(occupation) {
     await this.occupationInput.fill(occupation);
+  }
+
+   async fillOccupationILAT(occupation) {
+    await this.occupationInputILAT.fill(occupation);
   }
 
   async fillAddress(fieldNumber, value) {
