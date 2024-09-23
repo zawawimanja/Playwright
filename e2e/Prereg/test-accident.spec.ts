@@ -15,8 +15,8 @@ import { CertificationByEmployerPage } from '../../pages/cert_employer';
 import { BankInformationPage } from '../../pages/bank_info';
 import { SupportingDocumentPage } from '../../pages/support_doc';
 import { ConfirmationOfInsuredPage } from '../../pages/confirm_person';
-import { CalendarPage} from '../../utils/calendar';
-import { TimePage} from '../../utils/time';
+import { CalendarPage } from '../../utils/calendar';
+import { TimePage } from '../../utils/time';
 import { time } from 'console';
 
 test.beforeEach(async ({ page }) => {
@@ -26,8 +26,8 @@ test.beforeEach(async ({ page }) => {
 test('Prereg PK Accident', async ({ page }) => {
   const preregPage = new PreregistrationPage(page);
   const leftTabPage = new LeftTabPage(page);
- const calendarPage = new CalendarPage(page);
- const timePage = new TimePage(page);
+  const calendarPage = new CalendarPage(page);
+  const timePage = new TimePage(page);
 
   await leftTabPage.leftBar.waitFor();
   await expect(leftTabPage.leftBar).toBeVisible();
@@ -41,8 +41,8 @@ test('Prereg PK Accident', async ({ page }) => {
   await preregPage.selectNoticeTypePreRegOption('Accident');
   await preregPage.accidentDateLabel.click();
 
-await calendarPage.selectDate('2020', '4');
-await calendarPage.selectDay('8');
+  await calendarPage.selectDate('2020', '4');
+  await calendarPage.selectDay('8');
 
 
 
@@ -51,32 +51,31 @@ await calendarPage.selectDay('8');
 
 
 
- 
-await preregPage.accidentTimeLabel.click();
+  await preregPage.accidentTimeLabel.click();
 
-//await timePage.selectTime('12', '01', 'am');
-// await timePage.selectOption(3, '2');
-// await timePage.selectOption(4, '3');
 
- await page.frameLocator('#baristaPageOut').locator('dd').filter({ hasText: '12 am01 am02 am03 am04 am05' }).getByRole('combobox').selectOption('1');
-// await page.frameLocator('#baristaPageOut').getByRole('combobox').nth(3).selectOption('2');
-// await page.frameLocator('#baristaPageOut').getByRole('combobox').nth(4).selectOption('3');
+
+  await timePage.selectTimeOption('1', '2', '3');
 
 
 
 
 
 
- 
+
+
+
+
+
   await preregPage.selectIdentificationType('2');
-    await preregPage.fillIdentificationNo('891007146398');
+  await preregPage.fillIdentificationNo('891007146398');
 
   await preregPage.fillIdentificationNo('831230146249');
   await preregPage.fillEmployerCode('B3200086169Z');
 
 
   await page.frameLocator('#baristaPageOut').locator('#row7column3').click();
-  
+
 
   await preregPage.clickSearchButton();
   const page1Promise = page.waitForEvent('popup');
@@ -85,7 +84,7 @@ await preregPage.accidentTimeLabel.click();
 
 
   const remarksPage = new RemarksPage(page1);
-   await remarksPage.remarksButton.waitFor();
+  await remarksPage.remarksButton.waitFor();
   await expect(remarksPage.remarksButton).toBeVisible();
   await expect(remarksPage.sectionTabs).toContainText('Remarks');
   await remarksPage.remarksButton.waitFor();
@@ -106,61 +105,61 @@ await preregPage.accidentTimeLabel.click();
   await insuredPersonInfoPage.selectNationality('201749');
 
 
-const employerInfoPage = new EmployerInfoPage(page1);
-await employerInfoPage.clickEmployerInfoButton();
+  const employerInfoPage = new EmployerInfoPage(page1);
+  await employerInfoPage.clickEmployerInfoButton();
 
-//reference notice information
-//accident information
+  //reference notice information
+  //accident information
 
 
-const medicalCertificatePage = new MedicalCertificatePage(page1);
-await medicalCertificatePage.clickMedicalCertificateButton();
+  const medicalCertificatePage = new MedicalCertificatePage(page1);
+  await medicalCertificatePage.clickMedicalCertificateButton();
 
-const wagesInfoPage = new WagesInfoPage(page1);
-await wagesInfoPage.clickWagesInfoButton();
+  const wagesInfoPage = new WagesInfoPage(page1);
+  await wagesInfoPage.clickWagesInfoButton();
 
-const preferredSOCSOOfficePage = new PreferredSOCSOOfficePage(page1);
-await preferredSOCSOOfficePage.clickPreferredSOCSOOfficeButton();
+  const preferredSOCSOOfficePage = new PreferredSOCSOOfficePage(page1);
+  await preferredSOCSOOfficePage.clickPreferredSOCSOOfficeButton();
 
-const certificationByEmployerPage = new CertificationByEmployerPage(page1);
-await certificationByEmployerPage.clickCertificationByEmployerButton();
+  const certificationByEmployerPage = new CertificationByEmployerPage(page1);
+  await certificationByEmployerPage.clickCertificationByEmployerButton();
 
-await certificationByEmployerPage.fillName('MAT');
-await certificationByEmployerPage.fillDesignation('CEO');
+  await certificationByEmployerPage.fillName('MAT');
+  await certificationByEmployerPage.fillDesignation('CEO');
 
-const bankInformationPage = new BankInformationPage(page1);
-await bankInformationPage.clickBankInformationButton();
+  const bankInformationPage = new BankInformationPage(page1);
+  await bankInformationPage.clickBankInformationButton();
 
   await bankInformationPage.accountNoSelect.waitFor();
   await expect(bankInformationPage.accountNoSelect).toBeVisible();
-await bankInformationPage.selectAccountNo('Yes');
-await bankInformationPage.selectBankLocation('204101');
-
-  
-await bankInformationPage.selectBankNameAccident('802121');
-await bankInformationPage.selectBankAccountType('204401');
-await bankInformationPage.fillBankBranch('KL');
-await bankInformationPage.fillBankAccountNo('12345678');
+  await bankInformationPage.selectAccountNo('Yes');
+  await bankInformationPage.selectBankLocation('204101');
 
 
-
-  
-const confirmationOfInsuredPage = new ConfirmationOfInsuredPage(page1);
+  await bankInformationPage.selectBankNameAccident('802121');
+  await bankInformationPage.selectBankAccountType('204401');
+  await bankInformationPage.fillBankBranch('KL');
+  await bankInformationPage.fillBankAccountNo('12345678');
 
 
 
-await confirmationOfInsuredPage.clickConfirmationOfInsuredButton();
-await confirmationOfInsuredPage.checkCompletedCheckbox();
+
+  const confirmationOfInsuredPage = new ConfirmationOfInsuredPage(page1);
+
+
+
+  await confirmationOfInsuredPage.clickConfirmationOfInsuredButton();
+  await confirmationOfInsuredPage.checkCompletedCheckbox();
 
   const supportingDocumentPage = new SupportingDocumentPage(page1);
-await supportingDocumentPage.clickSupportingDocumentButton();
+  await supportingDocumentPage.clickSupportingDocumentButton();
 
-const previewSubmissionPage = new PreviewSubmissionPage(page1);
-await previewSubmissionPage.clickPreviewSubmissionButton();
-//await previewSubmissionPage.clickShowPreviewButton();
-// await previewSubmissionPage.clickSubmitButton();
-// await previewSubmissionPage.clickYesButton();
-// await previewSubmissionPage.navigateToEFormRenderPage();
+  const previewSubmissionPage = new PreviewSubmissionPage(page1);
+  await previewSubmissionPage.clickPreviewSubmissionButton();
+  //await previewSubmissionPage.clickShowPreviewButton();
+  // await previewSubmissionPage.clickSubmitButton();
+  // await previewSubmissionPage.clickYesButton();
+  // await previewSubmissionPage.navigateToEFormRenderPage();
 
 
 

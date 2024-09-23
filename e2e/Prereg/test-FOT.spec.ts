@@ -20,7 +20,7 @@ test.beforeEach(async ({ page }) => {
   await login(page, "afzan.pks", "u@T_afzan");
 });
 
-test('Prereg PK ILAT', async ({ page }) => {
+test('Prereg PK FOT', async ({ page }) => {
   const preregPage = new PreregistrationPage(page);
   const leftTabPage = new LeftTabPage(page);
  
@@ -35,7 +35,7 @@ test('Prereg PK ILAT', async ({ page }) => {
   leftTabPage.clickPreregistration();
 
 
-  await preregPage.selectNoticeTypePreRegOption('OD');
+  await preregPage.selectNoticeTypePreRegOption('Death - FOT');
   await preregPage.selectNoticeAndBenefitClaimFormOption('Others');
   await preregPage.fillIdentificationNo('961130086256');
   await preregPage.fillEmployerCode('B3200086169Z');
@@ -45,9 +45,10 @@ test('Prereg PK ILAT', async ({ page }) => {
   await preregPage.clickNextButton();
   const page1 = await page1Promise;
 
-  const draftPage = new DraftPage(page1);
-  await draftPage.closeButton.waitFor();
-  await draftPage.clickCloseButton();
+  // need to check if exist
+  // const draftPage = new DraftPage(page1);
+  // await draftPage.closeButton.waitFor();
+  // await draftPage.clickCloseButton();
 
   const remarksPage = new RemarksPage(page1);
   await expect(remarksPage.remarksButton).toBeVisible();
@@ -73,15 +74,12 @@ test('Prereg PK ILAT', async ({ page }) => {
 const employerInfoPage = new EmployerInfoPage(page1);
 await employerInfoPage.clickEmployerInfoButton();
 
-const occupationalDiseasePage = new OccupationalDiseasePage(page1);
-await occupationalDiseasePage.clickOccupationalDiseaseButton();
-await occupationalDiseasePage.fillDescriptionOfOccupational('test');
-await occupationalDiseasePage.fillSpecifyDutiesAndHow('test');
-await occupationalDiseasePage.fillPleaseExplainSymptoms('test');
+//Death Info
+//Dependent Info
+//FPM Info
 
 
-const medicalCertificatePage = new MedicalCertificatePage(page1);
-await medicalCertificatePage.clickMedicalCertificateButton();
+
 
 const wagesInfoPage = new WagesInfoPage(page1);
 await wagesInfoPage.clickWagesInfoButton();
@@ -94,25 +92,9 @@ await certificationByEmployerPage.clickCertificationByEmployerButton();
 await certificationByEmployerPage.fillName('MAT');
 await certificationByEmployerPage.fillDesignation('CEO');
 
-const bankInformationPage = new BankInformationPage(page1);
-await bankInformationPage.clickBankInformationButton();
-
-  await bankInformationPage.accountNoSelect.waitFor();
-  await expect(bankInformationPage.accountNoSelect).toBeVisible();
-await bankInformationPage.selectAccountNo('Yes');
-await bankInformationPage.selectBankLocation('204101');
-await bankInformationPage.selectBankName('802121');
-await bankInformationPage.selectBankAccountType('204401');
-await bankInformationPage.fillBankBranch('KL');
-await bankInformationPage.fillBankAccountNo('12345678');
-
-  
-const confirmationOfInsuredPage = new ConfirmationOfInsuredPage(page1);
+//Confirmation of Dependent/Claimant
 
 
-
-await confirmationOfInsuredPage.clickConfirmationOfInsuredButton();
-await confirmationOfInsuredPage.checkCompletedCheckbox();
 
   const supportingDocumentPage = new SupportingDocumentPage(page1);
 await supportingDocumentPage.clickSupportingDocumentButton();
