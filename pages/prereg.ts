@@ -45,6 +45,11 @@ export class PreregistrationPage {
         return this.baristaPageOut.getByLabel('Employer Code*');
     }
 
+     private get accidentDate() {
+        return this.baristaPageOut.getByLabel('Accident Date*').click();
+    }
+
+
     private get claimFormSubmissionByListButton() {
         return this.baristaPageOut.locator('#previewRow6 div').filter({ hasText: 'ClaimFormSubmissionByList' }).first();
     }
@@ -85,15 +90,23 @@ export class PreregistrationPage {
         await this.nextButton.click();
     }
 
+
+    
+
     
 
   get accidentDateFrame() {
     return this.page.frameLocator('#baristaPageOut');
   }
 
+
+
   get accidentDateLabel() {
     return this.accidentDateFrame.getByLabel('Accident Date*');
   }
+
+ 
+  
 
   get accidentDateComboBox() {
     return this.accidentDateFrame.getByRole('combobox').nth(3);
