@@ -1,38 +1,42 @@
 import { Page } from '@playwright/test';
 
-
 export class TimePage {
-    private page: Page;
+  private page: Page;
 
-
-    constructor(page: Page) {
-        this.page = page;
-
-    }
-
-
-    private get baristaPageOut() {
-        return this.page.frameLocator('#baristaPageOut');
-    }
-
-    async selectDate(year: string, month: string) {
-        await this.baristaPageOut.getByRole('combobox').nth(3).selectOption(year);
-        await this.baristaPageOut.getByRole('combobox').nth(2).selectOption(month);
-  
-       
-     
-
-        
-    }
-
-
-
-
-      async selectTime(hour: string, minute: string, period: string) {
-    await this.baristaPageOut.locator('dd').filter({ hasText: `${hour} am${minute} am${period} am` }).getByRole('combobox').selectOption('1');
+  constructor(page: Page) {
+    this.page = page;
   }
 
-  async selectOption(index: number, value: string) {
-    await this.baristaPageOut.getByRole('combobox').nth(index).selectOption(value);
+  private get baristaPageOut() {
+    return this.page.frameLocator('#baristaPageOut');
   }
+
+  private get timeComboBox() {
+    return this.baristaPageOut.locator('dd').filter({ hasText: '12 am01 am02 am03 am04 am05' }).getByRole('combobox');
+  }
+
+  async selectTimeOption(hour: string,minutes: string,second: string,) {
+    await this.timeComboBox.selectOption(hour);
+    await this.timeComboBox2.selectOption(minutes);
+     await this.timeComboBox3.selectOption(second);
+
+  }
+
+  private get timeComboBox2() {
+    return this.baristaPageOut.getByRole('combobox').nth(3);
+  }
+
+  private get timeComboBox3() {
+    return this.baristaPageOut.getByRole('combobox').nth(4);
+  }
+
+    async selectTimeOption2(option: string) {
+    await this.timeComboBox2.selectOption(option);
+  }
+
+  async selectTimeOption3(option: string) {
+    await this.timeComboBox3.selectOption(option);
+  }
+
+
 }
