@@ -2,10 +2,10 @@ import { test, expect } from '@playwright/test';
 import { login } from '../../utils/base'; // Import from base.ts
 import { PreregistrationPage } from '../../pages/prereg';
 import { LeftTabPage } from '../../pages/left_tab';
-import { DraftPage } from '../../pages/draft';
+
 import { RemarksPage } from '../../pages/remarks';
 import { PreviewSubmissionPage } from '../../pages/preview_submission';
-import { OccupationalDiseasePage } from '../../pages/od_info';
+
 import { EmployerInfoPage } from '../../pages/employer_info';
 import { MedicalCertificatePage } from '../../pages/mc_info';
 import { WagesInfoPage } from '../../pages/wages_info';
@@ -15,6 +15,9 @@ import { CertificationByEmployerPage } from '../../pages/cert_employer';
 import { BankInformationPage } from '../../pages/bank_info';
 import { SupportingDocumentPage } from '../../pages/support_doc';
 import { ConfirmationOfInsuredPage } from '../../pages/confirm_person';
+import { CalendarPage} from '../../utils/calendar';
+import { TimePage} from '../../utils/time';
+import { time } from 'console';
 
 test.beforeEach(async ({ page }) => {
   await login(page, "afzan.pks", "u@T_afzan");
@@ -23,8 +26,8 @@ test.beforeEach(async ({ page }) => {
 test('Prereg PK Accident', async ({ page }) => {
   const preregPage = new PreregistrationPage(page);
   const leftTabPage = new LeftTabPage(page);
- 
-
+ const calendarPage = new CalendarPage(page);
+ const timePage = new TimePage(page);
 
   await leftTabPage.leftBar.waitFor();
   await expect(leftTabPage.leftBar).toBeVisible();
@@ -36,10 +39,31 @@ test('Prereg PK Accident', async ({ page }) => {
 
 
   await preregPage.selectNoticeTypePreRegOption('Accident');
+  await preregPage.accidentDateLabel.click();
 
-await preregPage.fillAccidentDate();
-await preregPage.clickLink1();
-await preregPage.fillAccidentTime();
+await calendarPage.selectDate('2020', '4');
+await calendarPage.selectDay('8');
+
+
+
+
+
+
+
+
+ 
+await preregPage.accidentTimeLabel.click();
+
+//await timePage.selectTime('12', '01', 'am');
+// await timePage.selectOption(3, '2');
+// await timePage.selectOption(4, '3');
+
+ await page.frameLocator('#baristaPageOut').locator('dd').filter({ hasText: '12 am01 am02 am03 am04 am05' }).getByRole('combobox').selectOption('1');
+// await page.frameLocator('#baristaPageOut').getByRole('combobox').nth(3).selectOption('2');
+// await page.frameLocator('#baristaPageOut').getByRole('combobox').nth(4).selectOption('3');
+
+
+
 
 
 
