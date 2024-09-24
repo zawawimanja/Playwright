@@ -44,29 +44,8 @@ test('Prereg PK Accident', async ({ page }) => {
   await calendarPage.selectDate('2020', '4');
   await calendarPage.selectDay('8');
 
-
-
-
-
-
-
-
   await preregPage.accidentTimeLabel.click();
-
-
-
   await timePage.selectTimeOption('1', '2', '3');
-
-
-
-
-
-
-
-
-
-
-
   await preregPage.selectIdentificationType('2');
   await preregPage.fillIdentificationNo('891007146398');
 

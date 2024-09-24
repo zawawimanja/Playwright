@@ -62,6 +62,9 @@ export class PreregistrationPage {
     return this.baristaPageOut.getByRole('button', { name: 'Next' });
   }
 
+
+  
+
   async selectNoticeTypePreRegOption(option: string) {
     await this.noticeTypePreRegSelect.selectOption(option);
   }
@@ -116,8 +119,16 @@ export class PreregistrationPage {
   }
 
   get identificationTypeLabel() {
-    return this.accidentDateFrame.getByLabel('Identification Type*');
+    return this.workbasket.getByLabel('Identification Type*');
   }
+
+    get insuredPersonEmployment() {
+    return this.accidentDateFrame.getByLabel('Does Insured Person Still in');
+  }
+
+
+
+  
 
   get identificationTypeComboBox() {
     return this.accidentDateFrame.getByRole('combobox').nth(1);
@@ -140,8 +151,13 @@ export class PreregistrationPage {
   }
 
   async selectIdentificationType(type) {
-    await this.identificationTypeComboBox.selectOption(type);
+    await this.identificationTypeLabel.selectOption(type);
   }
+
+  async selectInsuredPersonEmployment(type) {
+    await this.insuredPersonEmployment.selectOption(type)
+  }
+
 
 
   async fillAccidentDate(): Promise<void> {
