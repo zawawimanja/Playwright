@@ -23,6 +23,13 @@ export class PreviewSubmissionPage {
     return this.page.locator('#sectionTabs');
   }
 
+   get formPreviewSite() {
+    return this.page.locator('#formPreviewSite');
+  }
+
+
+  
+
   /**
    * Show Preview button
    */
@@ -41,10 +48,10 @@ export class PreviewSubmissionPage {
    * Submit button
    */
   get submitButton() {
-    return this.page.getByRole('button', { name: 'Submit' });
+    return this.formPreviewSite.getByRole('button', { name: 'Submit' });
   }
 
-  /**
+    /**
    * Yes button
    */
   get yesButton() {
