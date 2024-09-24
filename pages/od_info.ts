@@ -30,6 +30,17 @@ private page: Page;
     return this.page.getByLabel('Description of Occupational');
   }
 
+
+   get diseaseRelatedEmployment() {
+    return this.page.getByLabel('Is the disease related to');
+  }
+
+
+    async selectDiseaseRelatedEMploymentOption(option: string) {
+    await this.diseaseRelatedEmployment.selectOption(option);
+  }
+
+
   /**
    * Specify duties and how input field
    */

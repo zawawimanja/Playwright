@@ -69,15 +69,13 @@ await preregPage.fillEmployerCode('B3200086169Z');
   await insuredPersonInfoPage.clickInsuredPersonInfoButton();
   await insuredPersonInfoPage.noticeAndBenefitClaimFormReceivedDateInput.click()
 
-   await calendarPage.selectDate('2020', '4');
-  await calendarPage.selectDay('8');
+   await calendarPage.selectDateInsuredPersonPage('2020', '4');
+  await calendarPage.selectDayInsuredPersonPage('8');
+
   await insuredPersonInfoPage.fillOccupation('CS');
-
-
-  await page6.getByLabel('Occupation', { exact: true }).selectOption('1000005');
-  await page6.getByLabel('SubOccupation').selectOption('1001043');
-
-  await page6.getByLabel('Sub Occupational List').selectOption('1004273');
+  await insuredPersonInfoPage.selectOccupation('1000002');
+    await insuredPersonInfoPage.selectSubOccupation('1001132');
+      await insuredPersonInfoPage.selectSubOccupationalList('1002058');
 
 
   await insuredPersonInfoPage.fillAddress(2, 'Lorong 10');
@@ -95,6 +93,10 @@ await preregPage.fillEmployerCode('B3200086169Z');
   const occupationalDiseasePage = new OccupationalDiseasePage(page1);
   await occupationalDiseasePage.clickOccupationalDiseaseButton();
   await occupationalDiseasePage.fillDescriptionOfOccupational('test');
+
+  await occupationalDiseasePage.selectDiseaseRelatedEMploymentOption("Yes");
+
+
   await occupationalDiseasePage.fillSpecifyDutiesAndHow('test');
   await occupationalDiseasePage.fillPleaseExplainSymptoms('test');
 
