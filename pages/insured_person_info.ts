@@ -66,30 +66,6 @@ export class InsuredPersonInfoPage {
 
 
   
-  getSubOccupation() {
-    return this.page.getByLabel('SubOccupation');
-  }
-
-  
-  getSubOccupationalList() {
-    return this.page.getByLabel('Sub Occupational List');
-  }
-
-
-  async selectOccupation(state) {
-    await this.getOccupation().selectOption(state);
-  }
-
-
-  
-
-    async selectSubOccupation(state) {
-    await this.getSubOccupation().selectOption(state);
-  }
-
-    async selectSubOccupationalList(state) {
-    await this.getSubOccupationalList().selectOption(state);
-  }
 
 
   async fillOccupation(occupation) {
@@ -97,9 +73,6 @@ export class InsuredPersonInfoPage {
   }
 
   
-  getOccupation() {
-    return this.page.getByLabel('Occupation');
-  }
 
 
   
