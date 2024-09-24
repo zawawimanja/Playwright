@@ -31,7 +31,9 @@ private page: Page;
   }
 
 
+
  get diseaseRelatedEmployment() {
+
     return this.page.getByLabel('Is the disease related to');
   }
 
@@ -39,7 +41,6 @@ private page: Page;
     async selectDiseaseRelatedEMploymentOption(option: string) {
     await this.diseaseRelatedEmployment.selectOption(option);
   }
-
 
 
 

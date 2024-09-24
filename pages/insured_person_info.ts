@@ -59,6 +59,39 @@ export class InsuredPersonInfoPage {
     await this.page.locator('#ui-datepicker-div').getByRole('combobox').nth(1).selectOption(date);
   }
 
+
+    getOccupation() {
+    return this.page.getByLabel('Occupation', { exact: true })
+  }
+
+
+  
+  getSubOccupation() {
+    return this.page.getByLabel('SubOccupation');
+  }
+
+  
+  getSubOccupationalList() {
+    return this.page.getByLabel('Sub Occupational List');
+  }
+
+
+  async selectOccupation(state) {
+    await this.getOccupation().selectOption(state);
+  }
+
+
+  
+
+    async selectSubOccupation(state) {
+    await this.getSubOccupation().selectOption(state);
+  }
+
+    async selectSubOccupationalList(state) {
+    await this.getSubOccupationalList().selectOption(state);
+  }
+
+
   async fillOccupation(occupation) {
     await this.occupationInput.fill(occupation);
   }

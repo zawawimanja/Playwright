@@ -69,23 +69,20 @@ await preregPage.fillEmployerCode('B3200086169Z');
   await insuredPersonInfoPage.clickInsuredPersonInfoButton();
   await insuredPersonInfoPage.noticeAndBenefitClaimFormReceivedDateInput.click()
 
-   await calendarPage.selectDate('2020', '4');
-  await calendarPage.selectDay('8');
+
+   await calendarPage.selectDateInsuredPersonPage('2020', '4');
+  await calendarPage.selectDayInsuredPersonPage('8');
+
+
+
+
   await insuredPersonInfoPage.fillOccupation('CS');
-<<<<<<< HEAD
   await insuredPersonInfoPage.selectOccupation('1000002');
     await insuredPersonInfoPage.selectSubOccupation('1001132');
       await insuredPersonInfoPage.selectSubOccupationalList('1002058');
-=======
 
 
-  await page6.getByLabel('Occupation', { exact: true }).selectOption('1000005');
-  await page6.getByLabel('SubOccupation').selectOption('1001043');
 
-  await page6.getByLabel('Sub Occupational List').selectOption('1004273');
-
-
->>>>>>> 36cf3128eb24ed764b747012b3aec996531ec5b2
   await insuredPersonInfoPage.fillAddress(2, 'Lorong 10');
   await insuredPersonInfoPage.fillAddress(3, 'Jalan 1');
   await insuredPersonInfoPage.selectState('200714');
@@ -95,27 +92,20 @@ await preregPage.fillEmployerCode('B3200086169Z');
 
 
 
-<<<<<<< HEAD
-const occupationalDiseasePage = new OccupationalDiseasePage(page1);
-await occupationalDiseasePage.clickOccupationalDiseaseButton();
-await occupationalDiseasePage.fillDescriptionOfOccupational('test');
 
-await occupationalDiseasePage.selectDiseaseRelatedEMploymentOption("Yes");
-
-
-
-await occupationalDiseasePage.fillSpecifyDutiesAndHow('test');
-await occupationalDiseasePage.fillPleaseExplainSymptoms('test');
-=======
   const employerInfoPage = new EmployerInfoPage(page1);
   await employerInfoPage.clickEmployerInfoButton();
 
   const occupationalDiseasePage = new OccupationalDiseasePage(page1);
   await occupationalDiseasePage.clickOccupationalDiseaseButton();
   await occupationalDiseasePage.fillDescriptionOfOccupational('test');
+
+  await occupationalDiseasePage.selectDiseaseRelatedEMploymentOption("Yes");
+
+
   await occupationalDiseasePage.fillSpecifyDutiesAndHow('test');
   await occupationalDiseasePage.fillPleaseExplainSymptoms('test');
->>>>>>> 36cf3128eb24ed764b747012b3aec996531ec5b2
+
 
 
   const medicalCertificatePage = new MedicalCertificatePage(page1);
