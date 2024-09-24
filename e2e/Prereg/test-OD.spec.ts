@@ -46,10 +46,9 @@ test('Prereg PK OD', async ({ page }) => {
   const page1 = await page1Promise;
 
   const draftPage = new DraftPage(page1);
-  await draftPage.closeButton.waitFor();
-  await draftPage.clickCloseButton();
 
   const remarksPage = new RemarksPage(page1);
+  
   await expect(remarksPage.remarksButton).toBeVisible();
   await expect(remarksPage.sectionTabs).toContainText('Remarks');
   await remarksPage.remarksButton.waitFor();
@@ -62,6 +61,9 @@ test('Prereg PK OD', async ({ page }) => {
   await insuredPersonInfoPage.noticeAndBenefitClaimFormReceivedDateInput.click()
   await insuredPersonInfoPage.selectDate('2020');
   await insuredPersonInfoPage.fillOccupation('CS');
+  await insuredPersonInfoPage.selectOccupation('1000002');
+    await insuredPersonInfoPage.selectSubOccupation('1001132');
+      await insuredPersonInfoPage.selectSubOccupationalList('1002058');
   await insuredPersonInfoPage.fillAddress(2, 'Lorong 10');
   await insuredPersonInfoPage.fillAddress(3, 'Jalan 1');
   await insuredPersonInfoPage.selectState('200714');
@@ -76,6 +78,11 @@ await employerInfoPage.clickEmployerInfoButton();
 const occupationalDiseasePage = new OccupationalDiseasePage(page1);
 await occupationalDiseasePage.clickOccupationalDiseaseButton();
 await occupationalDiseasePage.fillDescriptionOfOccupational('test');
+
+await occupationalDiseasePage.selectDiseaseRelatedEMploymentOption("Yes");
+
+
+
 await occupationalDiseasePage.fillSpecifyDutiesAndHow('test');
 await occupationalDiseasePage.fillPleaseExplainSymptoms('test');
 
