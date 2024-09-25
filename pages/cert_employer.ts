@@ -31,6 +31,11 @@ export class CertificationByEmployerPage {
     return this.page.getByLabel('Name*');
   }
 
+
+   get calendar() {
+    return this.page.getByLabel('Date*');
+  }
+
   /**
    * Designation input field
    */

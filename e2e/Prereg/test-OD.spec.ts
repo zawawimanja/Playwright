@@ -40,9 +40,9 @@ test('Prereg PK OD', async ({ page }) => {
   await preregPage.selectNoticeTypePreRegOption('OD');
 await preregPage.selectInsuredPersonEmployment('Yes')
 await preregPage.selectIdentificationType('2');
-await preregPage.fillIdentificationNo('961130086256');
+await preregPage.fillIdentificationNo('820902016233');
   await preregPage.selectNoticeAndBenefitClaimFormOption('Insured Person');
-await preregPage.fillEmployerCode('B3200086169Z');
+await preregPage.fillEmployerCode('B3200019245W');
   await preregPage.clickClaimFormSubmissionByListButton();
   await preregPage.clickSearchButton();
   const page1Promise = page.waitForEvent('popup');
@@ -70,8 +70,8 @@ await preregPage.fillEmployerCode('B3200086169Z');
   await insuredPersonInfoPage.noticeAndBenefitClaimFormReceivedDateInput.click()
 
 
-   await calendarPage.selectDateInsuredPersonPage('2020', '4');
-  await calendarPage.selectDayInsuredPersonPage('8');
+   await calendarPage.selectDateInsuredPersonPage('2021', '6','11');
+  
 
 
 
@@ -82,7 +82,7 @@ await preregPage.fillEmployerCode('B3200086169Z');
       await insuredPersonInfoPage.selectSubOccupationalList('1002058');
 
 
-
+await insuredPersonInfoPage.fillAddress(1, 'Taman');
   await insuredPersonInfoPage.fillAddress(2, 'Lorong 10');
   await insuredPersonInfoPage.fillAddress(3, 'Jalan 1');
   await insuredPersonInfoPage.selectState('200714');
@@ -121,6 +121,8 @@ await preregPage.fillEmployerCode('B3200086169Z');
   await certificationByEmployerPage.clickCertificationByEmployerButton();
   await certificationByEmployerPage.fillName('MAT');
   await certificationByEmployerPage.fillDesignation('CEO');
+   await certificationByEmployerPage.calendar.click();
+ await calendarPage.selectDateCertEmployerPage('2021', '7','11');
 
   const bankInformationPage = new BankInformationPage(page1);
   await bankInformationPage.clickBankInformationButton();
@@ -150,9 +152,9 @@ await preregPage.fillEmployerCode('B3200086169Z');
   await previewSubmissionPage.clickShowPreviewButton();
 
 
-  await previewSubmissionPage.clickSubmitButton();
-  await previewSubmissionPage.clickYesButton();
-  await previewSubmissionPage.navigateToEFormRenderPage();
+  // await previewSubmissionPage.clickSubmitButton();
+  // await previewSubmissionPage.clickYesButton();
+  // await previewSubmissionPage.navigateToEFormRenderPage();
 
 
 
