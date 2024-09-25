@@ -38,11 +38,11 @@ test('Prereg PK OD', async ({ page }) => {
 
 
   await preregPage.selectNoticeTypePreRegOption('OD');
-await preregPage.selectInsuredPersonEmployment('Yes')
-await preregPage.selectIdentificationType('2');
-await preregPage.fillIdentificationNo('820902016233');
+  await preregPage.selectInsuredPersonEmployment('Yes')
+  await preregPage.selectIdentificationType('2');
+  await preregPage.fillIdentificationNo('920308145380');
   await preregPage.selectNoticeAndBenefitClaimFormOption('Insured Person');
-await preregPage.fillEmployerCode('B3200019245W');
+  await preregPage.fillEmployerCode('B3401010420M');
   await preregPage.clickClaimFormSubmissionByListButton();
   await preregPage.clickSearchButton();
   const page1Promise = page.waitForEvent('popup');
@@ -54,7 +54,7 @@ await preregPage.fillEmployerCode('B3200019245W');
     await draftPage.closeButton.waitFor();
     await draftPage.clickCloseButton();
   }
- 
+
   const remarksPage = new RemarksPage(page1);
   await remarksPage.remarksButton.waitFor();
   await expect(remarksPage.remarksButton).toBeVisible();
@@ -70,19 +70,19 @@ await preregPage.fillEmployerCode('B3200019245W');
   await insuredPersonInfoPage.noticeAndBenefitClaimFormReceivedDateInput.click()
 
 
-   await calendarPage.selectDateInsuredPersonPage('2021', '6','11');
-  
+  await calendarPage.selectDateInsuredPersonPage('2021', '6', '11');
+
 
 
 
 
   await insuredPersonInfoPage.fillOccupation('CS');
   await insuredPersonInfoPage.selectOccupation('1000002');
-    await insuredPersonInfoPage.selectSubOccupation('1001132');
-      await insuredPersonInfoPage.selectSubOccupationalList('1002058');
+  await insuredPersonInfoPage.selectSubOccupation('1001132');
+  await insuredPersonInfoPage.selectSubOccupationalList('1002058');
 
 
-await insuredPersonInfoPage.fillAddress(1, 'Taman');
+  await insuredPersonInfoPage.fillAddress1('Taman');
   await insuredPersonInfoPage.fillAddress(2, 'Lorong 10');
   await insuredPersonInfoPage.fillAddress(3, 'Jalan 1');
   await insuredPersonInfoPage.selectState('200714');
@@ -111,6 +111,22 @@ await insuredPersonInfoPage.fillAddress(1, 'Taman');
   const medicalCertificatePage = new MedicalCertificatePage(page1);
   await medicalCertificatePage.clickMedicalCertificateButton();
 
+await page1.locator('#ctrlField976').getByRole('button', { name: 'Add Record' }).click();
+
+//  await page1.locator('#NameandAddressofClinicHospitalwhichProvidesTreatment-61c8429e-953f-4cdb-903b-e0914766a424').click();
+//  await page1.locator('#NameandAddressofClinicHospitalwhichProvidesTreatment-61c8429e-953f-4cdb-903b-e0914766a424').fill('HKL');
+
+    await page1.getByRole('textbox').nth(1).click();
+  await calendarPage.selectDateInsuredPersonPage('2021', '6', '11');
+
+
+
+  await calendarPage.selectDateMCEndDate('2021', '7', '11');
+  await medicalCertificatePage.submitButton().click();
+
+
+
+
   const wagesInfoPage = new WagesInfoPage(page1);
   await wagesInfoPage.clickWagesInfoButton();
 
@@ -121,14 +137,18 @@ await insuredPersonInfoPage.fillAddress(1, 'Taman');
   await certificationByEmployerPage.clickCertificationByEmployerButton();
   await certificationByEmployerPage.fillName('MAT');
   await certificationByEmployerPage.fillDesignation('CEO');
-   await certificationByEmployerPage.calendar.click();
- await calendarPage.selectDateCertEmployerPage('2021', '7','11');
+  await certificationByEmployerPage.calendar.click();
+  await calendarPage.selectDateInsuredPersonPage('2021', '7', '11');
 
   const bankInformationPage = new BankInformationPage(page1);
   await bankInformationPage.clickBankInformationButton();
 
   await bankInformationPage.accountNoSelect.waitFor();
   await expect(bankInformationPage.accountNoSelect).toBeVisible();
+await bankInformationPage.accountNoSelect.click();
+
+
+await page1.getByLabel('Account No.*', { exact: true }).selectOption('Yes');
   await bankInformationPage.selectAccountNo('Yes');
   await bankInformationPage.selectBankLocation('204101');
   await bankInformationPage.selectBankName('802121');

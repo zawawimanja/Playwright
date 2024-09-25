@@ -31,6 +31,12 @@ export class InsuredPersonInfoPage {
     return this.page.locator(`#AddressInsuredPersonInfo${fieldNumber}`);
   }
 
+    getAddressInputFirst() {
+    return this.page.getByLabel('Address*');
+  }
+
+   
+
   getStateSelect() {
     return this.page.getByLabel('State*');
   }
@@ -107,6 +113,10 @@ export class InsuredPersonInfoPage {
 
   async fillAddress(fieldNumber, value) {
     await this.getAddressInput(fieldNumber).fill(value);
+  }
+
+  async fillAddress1(value) {
+    await this.getAddressInputFirst().fill(value);
   }
 
   async selectState(state) {

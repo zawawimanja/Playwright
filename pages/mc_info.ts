@@ -27,5 +27,11 @@ export class MedicalCertificatePage {
   async clickMedicalCertificateButton() {
     await this.medicalCertificateButton.click();
   }
+
+    submitButton() {
+        return this.page.getByRole('button', { name: 'OK' });
+    }
+
+ 
 }
 
