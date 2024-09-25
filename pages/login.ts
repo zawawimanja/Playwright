@@ -10,7 +10,7 @@ export class LoginPage {
     }
 
     async navigateToLogin() {
-        await this.page.goto('http://barista-uat.perkeso.gov.my:13491/login/ActiveDirectory?returnUrl=%2F');
+        await this.page.goto('http://barista-sandbox.perkeso.gov.my:13491/');
     }
 
     async setUsername(username: string) {
