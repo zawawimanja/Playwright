@@ -41,8 +41,13 @@ test('Prereg PK Accident', async ({ page }) => {
   await preregPage.selectNoticeTypePreRegOption('Accident');
   await preregPage.accidentDateLabel.click();
 
-  await calendarPage.selectDate('2020', '4');
-  await calendarPage.selectDay('8');
+
+await page.frameLocator('#baristaPageOut').getByLabel('Accident Date*').click();
+await page.frameLocator('#baristaPageOut').getByRole('combobox').nth(3).selectOption('2020');
+await page.frameLocator('#baristaPageOut').getByRole('combobox').nth(2).selectOption('7');
+await page.frameLocator('#baristaPageOut').getByRole('link', { name: '5', exact: true }).click();
+  await calendarPage.selectDatePrereg('2021', '6', '11');
+ 
 
   await preregPage.accidentTimeLabel.click();
   await timePage.selectTimeOption('1', '2', '3');
