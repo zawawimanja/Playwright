@@ -14,6 +14,32 @@ export class MedicalCertificatePage {
     return this.page.getByRole('button', { name: 'Medical Certificate' });
   }
 
+
+
+  get addRecordButton() {
+    return this.page.locator('#ctrlField976').getByRole('button', { name: 'Add Record' });
+  }
+
+  get clinicHospitalInput() {
+    return this.page.locator('input[type="text"][class*="textInput"][style*="width: 90.49%;"][style*="float: left;"]:not([disabled])');
+  }
+
+  async addRecord() {
+    await this.addRecordButton.click();
+  }
+
+  async enterClinicHospitalName(name: string) {
+    await this.clinicHospitalInput.click();
+    await this.clinicHospitalInput.fill(name);
+  }
+
+
+
+  
+
+
+
+
   /**
    * Section tabs element
    */

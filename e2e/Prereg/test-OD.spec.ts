@@ -40,9 +40,9 @@ test('Prereg PK OD', async ({ page }) => {
   await preregPage.selectNoticeTypePreRegOption('OD');
   await preregPage.selectInsuredPersonEmployment('Yes')
   await preregPage.selectIdentificationType('2');
-  await preregPage.fillIdentificationNo('920308145380');
+  await preregPage.fillIdentificationNo('810311025075');
   await preregPage.selectNoticeAndBenefitClaimFormOption('Insured Person');
-  await preregPage.fillEmployerCode('B3401010420M');
+  await preregPage.fillEmployerCode('E1100060790X');
   await preregPage.clickClaimFormSubmissionByListButton();
   await preregPage.clickSearchButton();
   const page1Promise = page.waitForEvent('popup');
@@ -70,12 +70,7 @@ test('Prereg PK OD', async ({ page }) => {
   await insuredPersonInfoPage.noticeAndBenefitClaimFormReceivedDateInput.click()
 
 
-  await calendarPage.selectDateInsuredPersonPage('2021', '6', '11');
-
-
-
-
-
+  await calendarPage.selectDateInsuredPersonPage('2018', '9', '10');
   await insuredPersonInfoPage.fillOccupation('CS');
   await insuredPersonInfoPage.selectOccupation('1000002');
   await insuredPersonInfoPage.selectSubOccupation('1001132');
@@ -111,18 +106,31 @@ test('Prereg PK OD', async ({ page }) => {
   const medicalCertificatePage = new MedicalCertificatePage(page1);
   await medicalCertificatePage.clickMedicalCertificateButton();
 
-await page1.locator('#ctrlField976').getByRole('button', { name: 'Add Record' }).click();
 
-//  await page1.locator('#NameandAddressofClinicHospitalwhichProvidesTreatment-61c8429e-953f-4cdb-903b-e0914766a424').click();
-//  await page1.locator('#NameandAddressofClinicHospitalwhichProvidesTreatment-61c8429e-953f-4cdb-903b-e0914766a424').fill('HKL');
+//1st mc
+  await medicalCertificatePage.addRecord();
+  await medicalCertificatePage.enterClinicHospitalName('kl');
+  
+  await page1.getByRole('textbox').nth(1).click();
+  await calendarPage.selectDateInsuredPersonPage('2018', '8', '8');
 
-    await page1.getByRole('textbox').nth(1).click();
-  await calendarPage.selectDateInsuredPersonPage('2021', '6', '11');
-
-
-
-  await calendarPage.selectDateMCEndDate('2021', '7', '11');
+  await calendarPage.selectDateMCEndDate('2018', '9', '22');
   await medicalCertificatePage.submitButton().click();
+
+  //2nd mc
+  await medicalCertificatePage.addRecord();
+  await medicalCertificatePage.enterClinicHospitalName('kl');
+
+await page1.locator('#StartDate-adaedf7c-c3f8-477c-852e-c61ecbe51c1c').click();
+
+  await page1.getByRole('textbox').nth(1).click();
+  await calendarPage.selectDateInsuredPersonPage('2018', '9', '23');
+
+  await calendarPage.selectDateMCEndDate('2018', '10', '22');
+  await medicalCertificatePage.submitButton().click();
+
+
+
 
 
 
