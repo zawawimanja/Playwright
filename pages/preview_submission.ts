@@ -16,6 +16,14 @@ export class PreviewSubmissionPage {
     return this.page.getByRole('button', { name: 'Preview & Submission' });
   }
 
+    /**
+   * Click on the Preview & Submission button
+   */
+  async clickPreviewSubmissionButton() {
+    await this.previewSubmissionButton.click();
+  }
+
+
   /**
    * Section tabs element
    */
@@ -58,12 +66,6 @@ export class PreviewSubmissionPage {
     return this.page.getByRole('button', { name: 'Yes' });
   }
 
-  /**
-   * Click on the Preview & Submission button
-   */
-  async clickPreviewSubmissionButton() {
-    await this.previewSubmissionButton.click();
-  }
 
   /**
    * Click on the Show Preview button
