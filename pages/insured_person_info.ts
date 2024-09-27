@@ -10,6 +10,10 @@ export class InsuredPersonInfoPage {
     return this.page.getByRole('button', { name: 'Insured Person Information' });
   }
 
+    get insuredPersonInfoButtonRPO() {
+    return this.page.getByRole('button', { name: 'Insured Person Info' });
+  }
+
   get sectionTabs() {
     return this.page.locator('#sectionTabs');
   }
@@ -60,6 +64,11 @@ export class InsuredPersonInfoPage {
   async clickInsuredPersonInfoButton() {
     await this.insuredPersonInfoButton.click();
   }
+
+  async clickInsuredPersonInfoButtonRPO() {
+    await this.insuredPersonInfoButtonRPO.click();
+  }
+
 
   async selectDate(date) {
     await this.page.locator('#ui-datepicker-div').getByRole('combobox').nth(1).selectOption(date);

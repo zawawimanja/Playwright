@@ -58,9 +58,17 @@ export class PreregistrationPage {
     return this.baristaPageOut.getByRole('button', { name: 'Search' });
   }
 
+    private get createRevisionButton() {
+    return this.baristaPageOut.getByRole('button', { name: 'Create Revision' })
+   
+  }
+
+
   private get nextButton() {
     return this.baristaPageOut.getByRole('button', { name: 'Next' });
   }
+
+
 
 
   
@@ -88,6 +96,14 @@ export class PreregistrationPage {
   async clickSearchButton() {
     await this.searchButton.click();
   }
+
+    async clickCreateRevisionButton() {
+    await this.createRevisionButton.click();
+  }
+
+
+
+ 
 
   async clickNextButton() {
     await this.nextButton.click();
@@ -174,6 +190,38 @@ export class PreregistrationPage {
   async clickLink1() {
     await this.workbasket.getByRole('link', { name: '1', exact: true }).click();
   }
+
+   private get revisionTypeLocator() {
+    return this.baristaPageOut.locator('#RevisionType');
+  }
+
+  private get searchByLocator() {
+    return this.baristaPageOut.getByLabel('Search By');
+  }
+
+  private get schemeRefNoLocator() {
+    return this.baristaPageOut.getByLabel('Scheme Reference Number');
+  }
+
+  private get searchButtonLocator() {
+    return this.baristaPageOut.getByRole('button', { name: 'Search' });
+  }
+
+  async selectRevisionType(option: string) {
+    await this.revisionTypeLocator.selectOption(option);
+  }
+
+  async setSearchByOption(option: string) {
+    await this.searchByLocator.selectOption(option);
+  }
+
+  async enterSchemeRefNo(value: string) {
+    await this.schemeRefNoLocator.fill(value);
+  }
+
+
+
+  
 
 }
 
