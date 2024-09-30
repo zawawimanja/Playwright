@@ -41,9 +41,9 @@ test("Prereg PK OD", async ({ page }) => {
   await preregPage.fillEmployerCode("B3401010420M");
   await preregPage.clickClaimFormSubmissionByListButton();
   await preregPage.clickSearchButton();
-  const page1Promise = page.waitForEvent("popup");
+  const pagePromise = page.waitForEvent("popup");
   await preregPage.clickNextButton();
-  const page1 = await page1Promise;
+  const page1 = await pagePromise;
 
   const draftPage = new DraftPage(page1);
   if ((await draftPage.closeButton.count()) > 0) {
