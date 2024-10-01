@@ -36,9 +36,9 @@ test("Prereg PK OD", async ({ page }) => {
   await preregPage.selectNoticeTypePreRegOption("OD");
   await preregPage.selectInsuredPersonEmployment("Yes");
   await preregPage.selectIdentificationType("2");
-  await preregPage.fillIdentificationNo("801126086066");
+  await preregPage.fillIdentificationNo("820902016233");
   await preregPage.selectNoticeAndBenefitClaimFormOption("Insured Person");
-  await preregPage.fillEmployerCode("B3401010420M");
+  await preregPage.fillEmployerCode("B3200019245W");
   await preregPage.clickClaimFormSubmissionByListButton();
   await preregPage.clickSearchButton();
   const pagePromise = page.waitForEvent("popup");
@@ -65,7 +65,7 @@ test("Prereg PK OD", async ({ page }) => {
   await insuredPersonInfoPage.clickInsuredPersonInfoButton();
   await insuredPersonInfoPage.noticeAndBenefitClaimFormReceivedDateInput.click();
 
-  await calendarPage.selectDateInsuredPersonPage("2018", "9", "10");
+  await calendarPage.selectDateInsuredPersonPage("2021", "6", "11");
   await insuredPersonInfoPage.fillOccupation("CS");
   await insuredPersonInfoPage.selectOccupation("1000002");
   await insuredPersonInfoPage.selectSubOccupation("1001132");
@@ -98,10 +98,10 @@ test("Prereg PK OD", async ({ page }) => {
   await medicalCertificatePage.enterClinicHospitalName("kl");
 
   await page1.getByRole("textbox").nth(1).click();
-  await calendarPage.selectDateInsuredPersonPage("2018", "8", "8");
+  await calendarPage.selectDateInsuredPersonPage("2021", "6", "12");
 
   await page1.getByRole("textbox").nth(2).click();
-  await calendarPage.selectDateMCEndDate("2018", "9", "22");
+  await calendarPage.selectDateMCEndDate("2021", "6", "16");
   await medicalCertificatePage.submitButton().click();
 
   //2nd mc
@@ -110,11 +110,11 @@ test("Prereg PK OD", async ({ page }) => {
 
   await calendarPage.startDateInput.click();
 
-  await calendarPage.selectDateInsuredPersonPage("2018", "9", "8");
+  await calendarPage.selectDateInsuredPersonPage("2021", "6", "21");
 
   await calendarPage.endDateInput.click();
 
-  await calendarPage.selectDateMCEndDate("2018", "10", "22");
+  await calendarPage.selectDateMCEndDate("2021", "7", "26");
   await medicalCertificatePage.submitButton().click();
 
   const wagesInfoPage = new WagesInfoPage(page1);
