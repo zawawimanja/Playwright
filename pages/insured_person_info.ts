@@ -1,60 +1,57 @@
-import { Page } from '@playwright/test';
+import { Page } from "@playwright/test";
 
 export class InsuredPersonInfoPage {
- private page: Page;
+  private page: Page;
   constructor(page: Page) {
     this.page = page;
   }
 
   get insuredPersonInfoButton() {
-    return this.page.getByRole('button', { name: 'Insured Person Information' });
+    return this.page.getByRole("button", { name: "Insured Person Information" });
   }
 
-    get insuredPersonInfoButtonRPO() {
-    return this.page.getByRole('button', { name: 'Insured Person Info' });
+  get insuredPersonInfoButtonRPO() {
+    return this.page.getByRole("button", { name: "Insured Person Info" });
   }
 
   get sectionTabs() {
-    return this.page.locator('#sectionTabs');
+    return this.page.locator("#sectionTabs");
   }
 
   get noticeAndBenefitClaimFormReceivedDateInput() {
-    return this.page.getByLabel('Notice and Benefit Claim Form Received Date*');
+    return this.page.getByLabel("Notice and Benefit Claim Form Received Date*");
   }
 
   get occupationInput() {
-    return this.page.getByLabel('Occupation(Based on Form 34)*');
+    return this.page.getByLabel("Occupation(Based on Form 34)*");
   }
 
-
   get occupationInputILAT() {
-    return this.page.getByLabel('Occupation (Based on Notice');
+    return this.page.getByLabel("Occupation (Based on Notice");
   }
 
   getAddressInput(fieldNumber) {
     return this.page.locator(`#AddressInsuredPersonInfo${fieldNumber}`);
   }
 
-    getAddressInputFirst() {
-    return this.page.getByLabel('Address*');
+  getAddressInputFirst() {
+    return this.page.getByLabel("Address*");
   }
 
-   
-
   getStateSelect() {
-    return this.page.getByLabel('State*');
+    return this.page.getByLabel("State*");
   }
 
   getCitySelect() {
-    return this.page.getByLabel('City*');
+    return this.page.getByLabel("City*");
   }
 
   getPostcodeInput() {
-    return this.page.getByLabel('Postcode*');
+    return this.page.getByLabel("Postcode*");
   }
 
   getNationalitySelect() {
-    return this.page.getByLabel('Nationality*');
+    return this.page.getByLabel("Nationality*");
   }
 
   async waitForInsuredPersonInfoButton() {
@@ -69,54 +66,39 @@ export class InsuredPersonInfoPage {
     await this.insuredPersonInfoButtonRPO.click();
   }
 
-
   async selectDate(date) {
-    await this.page.locator('#ui-datepicker-div').getByRole('combobox').nth(1).selectOption(date);
+    await this.page.locator("#ui-datepicker-div").getByRole("combobox").nth(1).selectOption(date);
   }
 
-
-    getOccupation() {
-    return this.page.getByLabel('Occupation', { exact: true })
+  getOccupation() {
+    return this.page.getByLabel("Occupation", { exact: true });
   }
-
-
-  
-
 
   async fillOccupation(occupation) {
     await this.occupationInput.fill(occupation);
   }
 
-  
-
-
-  
   getSubOccupation() {
-    return this.page.getByLabel('SubOccupation');
+    return this.page.getByLabel("SubOccupation");
   }
 
-  
   getSubOccupationalList() {
-    return this.page.getByLabel('Sub Occupational List');
+    return this.page.getByLabel("Sub Occupational List");
   }
-
 
   async selectOccupation(state) {
     await this.getOccupation().selectOption(state);
   }
 
-    async selectSubOccupation(state) {
+  async selectSubOccupation(state) {
     await this.getSubOccupation().selectOption(state);
   }
 
-    async selectSubOccupationalList(state) {
+  async selectSubOccupationalList(state) {
     await this.getSubOccupationalList().selectOption(state);
   }
 
-  
-
-
-   async fillOccupationILAT(occupation) {
+  async fillOccupationILAT(occupation) {
     await this.occupationInputILAT.fill(occupation);
   }
 
