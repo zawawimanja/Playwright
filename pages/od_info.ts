@@ -1,11 +1,9 @@
-import { Page } from '@playwright/test';
+import { Page } from "@playwright/test";
 
 export class OccupationalDiseasePage {
+  private page: Page;
 
-private page: Page;
-
-
-    constructor(page: Page) {
+  constructor(page: Page) {
     this.page = page;
   }
 
@@ -13,49 +11,43 @@ private page: Page;
    * Occupational Disease button
    */
   get occupationalDiseaseButton() {
-    return this.page.getByRole('button', { name: 'Occupational Disease' });
+    return this.page.getByRole("button", { name: "Occupational Disease" });
   }
 
   /**
    * Section tabs element
    */
   get sectionTabs() {
-    return this.page.locator('#sectionTabs');
+    return this.page.locator("#sectionTabs");
   }
 
   /**
    * Description of Occupational input field
    */
   get descriptionOfOccupationalInput() {
-    return this.page.getByLabel('Description of Occupational');
+    return this.page.getByLabel("Description of Occupational");
   }
 
-
-
- get diseaseRelatedEmployment() {
-
-    return this.page.getByLabel('Is the disease related to');
+  get diseaseRelatedEmployment() {
+    return this.page.getByLabel("Is the disease related to");
   }
 
-
-    async selectDiseaseRelatedEMploymentOption(option: string) {
+  async selectDiseaseRelatedEMploymentOption(option: string) {
     await this.diseaseRelatedEmployment.selectOption(option);
   }
-
-
 
   /**
    * Specify duties and how input field
    */
   get specifyDutiesAndHowInput() {
-    return this.page.getByLabel('Specify duties and how');
+    return this.page.getByLabel("Specify duties and how");
   }
 
   /**
    * Please explain symptoms / input field
    */
   get pleaseExplainSymptomsInput() {
-    return this.page.getByLabel('Please explain symptoms /');
+    return this.page.getByLabel("Please explain symptoms /");
   }
 
   /**
@@ -63,6 +55,10 @@ private page: Page;
    */
   async clickOccupationalDiseaseButton() {
     await this.occupationalDiseaseButton.click();
+  }
+
+  async selectCausativeAgentOption() {
+    await this.page.getByLabel("Causative Agent - Prevention*").selectOption("10401");
   }
 
   /**

@@ -28,10 +28,10 @@ import { CalendarPage } from "../../../utils/calendar";
 
 test.beforeEach(async ({ page }) => {
   await login(page, "uat_muthu", "u@T_muthu");
-  await login(page, "uat_akaw", "u@T_akaw");
+  // await login(page, "uat_akaw", "u@T_akaw");
 });
 
-test("Prereg PK OD", async ({ page }) => {
+test("Prereg IO OD", async ({ page }) => {
   const preregPage = new PreregistrationPage(page);
   const leftTabPage = new LeftTabPage(page);
 
@@ -47,8 +47,15 @@ test("Prereg PK OD", async ({ page }) => {
   await page.getByRole("link", { name: "My Cases" }).click();
 
   await page.frameLocator("#baristaPageOut").getByText("My Cases").click();
-  await page.frameLocator("#baristaPageOut").getByText("E11NTO20240010014").click();
-  await page.frameLocator("#baristaPageOut").getByRole("gridcell", { name: "Occupational Disease Notice" }).click();
+  // Locate the frame first
+  const frame = page.frameLocator("#baristaPageOut");
+
+  // Find the row that contains the specific text
+  const row = await frame.locator(`tr:has-text("E11NTO20240010024")`).first();
+
+  // Click on the grid cell within that row
+  await row.getByRole("gridcell", { name: "Occupational Disease Notice" }).click();
+
   const pagePromise = page.waitForEvent("popup");
   await page.frameLocator("#baristaPageOut").getByText("Open Task").click();
   const page2 = await pagePromise;
@@ -65,70 +72,60 @@ test("Prereg PK OD", async ({ page }) => {
   await expect(remarksPage.sectionTabs).toContainText("Remarks");
   await remarksPage.remarksButton.waitFor();
   await remarksPage.addRemarksButton.click();
-  await remarksPage.textbox.fill("test");
+  await remarksPage.textboxIO.fill("test io");
+
   await remarksPage.saveRemarksButton.click();
 
-  // await page2.getByRole("button", { name: "Preparer Information" }).click();
   const preparerInformationPage = new PreparerInformationPage(page2);
   await preparerInformationPage.clickpreparerInformationButton();
 
-  //await page2.getByRole("button", { name: "Case Information" }).click();
   const caseInformationPage = new CaseInformationPage(page2);
   caseInformationPage.clickCaseInformationButton();
 
-  //await page2.getByRole("button", { name: "Insured Person Information" }).click();
   const insuredPersonInfoPage = new InsuredPersonInfoPage(page2);
   await insuredPersonInfoPage.clickInsuredPersonInfoButton();
 
-  //await page2.getByRole("button", { name: "Employer Information" }).click();
   const employerInfoPage = new EmployerInfoPage(page2);
   await employerInfoPage.clickEmployerInfoButton();
 
-  //await page2.getByRole("button", { name: "Certification by Employer" }).click();
   const certificationByEmployerPage = new CertificationByEmployerPage(page2);
   await certificationByEmployerPage.clickCertificationByEmployerButton();
 
-  //await page2.getByRole("button", { name: "Occupational Disease" }).click();
   const occupationalDiseasePage = new OccupationalDiseasePage(page2);
   await occupationalDiseasePage.clickOccupationalDiseaseButton();
+  occupationalDiseasePage.selectCausativeAgentOption();
+  // await page2.getByLabel("Causative Agten - Prevention*").selectOption("10401");
 
-  //await page2.getByRole("button", { name: "Preferred SOCSO Office" }).click();
   const preferredSOCSOOfficePage = new PreferredSOCSOOfficePage(page2);
   await preferredSOCSOOfficePage.clickPreferredSOCSOOfficeButton();
 
-  //await page2.getByRole("button", { name: "Confirmation of Insured" }).click();
   const confirmationOfInsuredPage = new ConfirmationOfInsuredPage(page2);
   await confirmationOfInsuredPage.clickConfirmationOfInsuredButton();
 
-  //await page2.getByRole("button", { name: "Inconsistent & Doubtful" }).click();
   const inconsistentDoubtfulPage = new InconsistentDoubtfulPage(page2);
   inconsistentDoubtfulPage.clickInconsistentDoubtfulButton();
 
-  //await page2.getByRole("button", { name: "Appointment" }).click();
   const appointmentPage = new AppointmentPage(page2);
   appointmentPage.clickAppointmentButton();
 
-  //await page2.getByRole("button", { name: "Medical/PPN/ARO Opinion" }).click();
   const medicalOpinionPagePage = new MedicalOpinionPage(page2);
   medicalOpinionPagePage.clickedicalOpinionButton();
 
-  //await page2.getByRole("button", { name: "Recommendation" }).click();
   const recommendationPage = new RecommendationPage(page2);
-  recommendationPage.clickRecommendationutton();
+  recommendationPage.clickRecommendationButton();
+  recommendationPage.selectActionOption();
 
-  //await page2.getByRole("button", { name: "HUS Information" }).click();
+  // await page2.locator("#ActionRecommend").selectOption("10207");
+
   const medicalCertificatePage = new MedicalCertificatePage(page2);
   await medicalCertificatePage.clickHusInfoButton();
 
-  //await page2.getByRole("button", { name: "Bank Information" }).click();
   const bankInformationPage = new BankInformationPage(page2);
   await bankInformationPage.clickBankInformationButton();
 
-  //await page2.getByRole("button", { name: "Supporting Document" }).click();
   const supportingDocumentPage = new SupportingDocumentPage(page2);
   await supportingDocumentPage.clickSupportingDocumentButton();
 
-  //await page2.getByRole("button", { name: "Preview & Submission" }).click();
   const previewSubmissionPage = new PreviewSubmissionPage(page2);
   await previewSubmissionPage.clickPreviewSubmissionButton();
   await previewSubmissionPage.clickShowPreviewButton();
