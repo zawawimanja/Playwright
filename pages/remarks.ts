@@ -1,16 +1,15 @@
-import { Page } from '@playwright/test';
+import { Page } from "@playwright/test";
 
 export class RemarksPage {
   private REMARKS_BUTTON_SELECTOR = '[role="button"][name="Remarks"]';
-  private SECTION_TABS_SELECTOR = '#sectionTabs';
+  private SECTION_TABS_SELECTOR = "#sectionTabs";
 
-private page: Page;
+  private page: Page;
 
-      constructor(page: Page) {
-        this.page = page;
-    }
+  constructor(page: Page) {
+    this.page = page;
+  }
 
- 
   get remarksButton() {
     return this.page.locator(this.REMARKS_BUTTON_SELECTOR);
   }
@@ -20,14 +19,18 @@ private page: Page;
   }
 
   get addRemarksButton() {
-    return this.page.getByRole('button', { name: 'Add Remarks' });
+    return this.page.getByRole("button", { name: "Add Remarks" });
   }
 
   get saveRemarksButton() {
-    return this.page.getByRole('button', { name: 'Save Remarks' });
+    return this.page.getByRole("button", { name: "Save Remarks" });
   }
 
   get textbox() {
-    return this.page.getByRole('textbox');
+    return this.page.getByRole("textbox");
+  }
+
+  get textboxIO() {
+    return this.page.locator("#AddRemarksDetailsR").getByRole("textbox");
   }
 }

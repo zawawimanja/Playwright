@@ -34,7 +34,11 @@ export class RecommendationPage {
     return this.page.getByRole("button", { name: "Recommendation" });
   }
 
-  async clickRecommendationutton() {
+  async clickRecommendationButton() {
     await this.recommendationButton.click();
+  }
+
+  async selectActionOption() {
+    await this.page.locator("#ActionRecommend").selectOption("10207");
   }
 }
