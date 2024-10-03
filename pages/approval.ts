@@ -1,6 +1,6 @@
 import { Page } from "@playwright/test";
 
-export class RecommendationPage {
+export class ApprovalPage {
   private REMARKS_BUTTON_SELECTOR = '[role="button"][name="Remarks"]';
   private SECTION_TABS_SELECTOR = "#sectionTabs";
 
@@ -34,23 +34,31 @@ export class RecommendationPage {
     return this.page.getByRole("button", { name: "Recommendation" });
   }
 
-  get SAOrecommendationButton() {
-    return this.page.getByRole("button", { name: "SAO Recommendation" });
+  get approvalButton() {
+    return this.page.getByRole("button", { name: "Approval" });
   }
 
   get actionRecommend() {
     return this.page.locator("#ActionRecommend");
   }
 
+  get actionApprove() {
+    return this.page.locator("#ActionApprove");
+  }
+
   async clickRecommendationButton() {
     await this.recommendationButton.click();
   }
 
-  async clickSAORecommendationButton() {
-    await this.SAOrecommendationButton.click();
+  async clickApprovalButton() {
+    await this.approvalButton.click();
   }
 
   async selectActionOption() {
     await this.actionRecommend.selectOption("10207");
+  }
+
+  async selectSAOActionOption() {
+    await this.actionApprove.selectOption("10207");
   }
 }

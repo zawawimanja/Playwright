@@ -23,12 +23,9 @@ import { AppointmentPage } from "../../../pages/appointment";
 import { InconsistentDoubtfulPage } from "../../../pages/inconsistentdoubtful";
 import { CalendarPage } from "../../../utils/calendar";
 
-//causeative agent
-//recommendation action
-
 test.beforeEach(async ({ page }) => {
-  await login(page, "uat_muthu", "u@T_muthu");
-  // await login(page, "uat_akaw", "u@T_akaw");
+  //await login(page, "uat_muthu", "u@T_muthu");
+  await login(page, "uat_akaw", "u@T_akaw");
 });
 
 test("Prereg IO OD", async ({ page }) => {
@@ -51,7 +48,7 @@ test("Prereg IO OD", async ({ page }) => {
   const frame = page.frameLocator("#baristaPageOut");
 
   // Find the row that contains the specific text
-  const row = await frame.locator(`tr:has-text("E11NTO20240010024")`).first();
+  const row = await frame.locator(`tr:has-text("E11NTO20240010033")`).first();
 
   // Click on the grid cell within that row
   await row.getByRole("gridcell", { name: "Occupational Disease Notice" }).click();
@@ -113,9 +110,8 @@ test("Prereg IO OD", async ({ page }) => {
 
   const recommendationPage = new RecommendationPage(page2);
   recommendationPage.clickRecommendationButton();
+  await recommendationPage.actionRecommend.waitFor();
   recommendationPage.selectActionOption();
-
-  // await page2.locator("#ActionRecommend").selectOption("10207");
 
   const medicalCertificatePage = new MedicalCertificatePage(page2);
   await medicalCertificatePage.clickHusInfoButton();
