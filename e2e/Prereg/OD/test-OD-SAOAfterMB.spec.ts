@@ -23,6 +23,7 @@ import { AppointmentPage } from "../../../pages/appointment";
 import { ApprovalPage } from "../../../pages/approval";
 import { InconsistentDoubtfulPage } from "../../../pages/inconsistentdoubtful";
 import { CalendarPage } from "../../../utils/calendar";
+import { SmbInformationPage } from "../../../pages/smb_info";
 
 test.beforeEach(async ({ page }) => {
   await login(page, "roliana.pks", "u@T_roliana");
@@ -47,7 +48,7 @@ test("Prereg SAO OD", async ({ page }) => {
   const frame = page.frameLocator("#baristaPageOut");
 
   // Find the row that contains the specific text
-  const row = await frame.locator(`tr:has-text("E11NTO20240010045")`).first();
+  const row = await frame.locator(`tr:has-text("E11NTO20240010046")`).first();
 
   // Click on the grid cell within that row
   await row.getByRole("gridcell", { name: "Occupation Disease Notice SAO" }).click();
@@ -101,6 +102,8 @@ test("Prereg SAO OD", async ({ page }) => {
   inconsistentDoubtfulPage.clickInconsistentDoubtfulButton();
 
   //smb info
+  const SMBInformationPage = new SmbInformationPage(page2);
+  SMBInformationPage.clickSMBInfoButton();
 
   const medicalOpinionPagePage = new MedicalOpinionPage(page2);
   medicalOpinionPagePage.clickedicalOpinionButton();
@@ -110,12 +113,19 @@ test("Prereg SAO OD", async ({ page }) => {
 
   const approvalPage = new ApprovalPage(page2);
   approvalPage.clickApprovalButton();
-  await approvalPage.actionApprove.waitFor();
-  approvalPage.selectActionOption();
+
+  await page2.getByRole("button", { name: "Approval" }).click();
+  await page2.locator("#ActionApprovalAfterMB").selectOption("10203");
+  // await approvalPage.actionApprove.waitFor();
+  // approvalPage.selectActionOption();
 
   //wages info
+  const wagesInfoPage = new WagesInfoPage(page2);
+  await wagesInfoPage.clickWagesInfoButton();
 
   //hus info
+  const medicalCertificatePage = new MedicalCertificatePage(page2);
+  await medicalCertificatePage.clickHusInfoButton();
 
   const supportingDocumentPage = new SupportingDocumentPage(page2);
   await supportingDocumentPage.clickSupportingDocumentButton();
