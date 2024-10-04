@@ -20,15 +20,14 @@ import { MedicalOpinionPage } from "../../../pages/medical_opinion";
 import { PreparerInformationPage } from "../../../pages/preparer_info";
 import { CaseInformationPage } from "../../../pages/case_info";
 import { AppointmentPage } from "../../../pages/appointment";
+import { ApprovalPage } from "../../../pages/approval";
 import { InconsistentDoubtfulPage } from "../../../pages/inconsistentdoubtful";
 import { CalendarPage } from "../../../utils/calendar";
 
 test.beforeEach(async ({ page }) => {
-  //await login(page, "uat_muthu", "u@T_muthu");
-  await login(page, "uat_akaw", "u@T_akaw");
+  await login(page, "roliana.pks", "u@T_roliana");
 });
-
-test("Prereg IO OD", async ({ page }) => {
+test("Prereg SAO OD", async ({ page }) => {
   const preregPage = new PreregistrationPage(page);
   const leftTabPage = new LeftTabPage(page);
 
@@ -48,11 +47,10 @@ test("Prereg IO OD", async ({ page }) => {
   const frame = page.frameLocator("#baristaPageOut");
 
   // Find the row that contains the specific text
-
   const row = await frame.locator(`tr:has-text("E11NTO20240010046")`).first();
-  //const row = await frame.locator(`tr:has-text("${schemeRefValue}")`).first();
+
   // Click on the grid cell within that row
-  await row.getByRole("gridcell", { name: "Occupational Disease Notice" }).click();
+  await row.getByRole("gridcell", { name: "Occupation Disease Notice SAO" }).click();
 
   const pagePromise = page.waitForEvent("popup");
   await page.frameLocator("#baristaPageOut").getByText("Open Task").click();
@@ -102,26 +100,26 @@ test("Prereg IO OD", async ({ page }) => {
   const inconsistentDoubtfulPage = new InconsistentDoubtfulPage(page2);
   inconsistentDoubtfulPage.clickInconsistentDoubtfulButton();
 
-  const appointmentPage = new AppointmentPage(page2);
-  appointmentPage.clickAppointmentButton();
-
   const medicalOpinionPagePage = new MedicalOpinionPage(page2);
   medicalOpinionPagePage.clickedicalOpinionButton();
 
   const recommendationPage = new RecommendationPage(page2);
-  recommendationPage.clickRecommendationButton();
-  await page2.locator("#ctrlField407").getByText("Action*").click();
-  await expect(page2.locator("#ctrlField407")).toContainText("Action*");
-  await expect(page2.locator("#ctrlField407").getByText("Action*")).toBeVisible();
-  await expect(recommendationPage.actionRecommend).toBeVisible();
-  await recommendationPage.actionRecommend.waitFor();
-  recommendationPage.selectActionOption();
+  recommendationPage.clickSAORecommendationButton();
 
-  const medicalCertificatePage = new MedicalCertificatePage(page2);
-  await medicalCertificatePage.clickHusInfoButton();
+  const approvalPage = new ApprovalPage(page2);
+  approvalPage.clickApprovalButton();
 
-  const bankInformationPage = new BankInformationPage(page2);
-  await bankInformationPage.clickBankInformationButton();
+  await expect(page2.getByRole("heading", { name: "RECOMMENDATION & APPROVAL" })).toBeVisible();
+  await expect(page2.locator("#Recommendation2")).toContainText("RECOMMENDATION & APPROVAL");
+  await expect(page2.getByRole("heading", { name: "Approval", exact: true })).toBeVisible();
+  await expect(page2.locator("#Approval")).toContainText("Approval");
+  await page2.locator("#ctrlField2089").getByText("Action*").click();
+  await expect(page2.locator("#ctrlField2089").getByText("Action*")).toBeVisible();
+  await expect(page2.locator("#ctrlField2089")).toContainText("Action*");
+  await expect(approvalPage.actionApprove).toBeVisible();
+  await approvalPage.actionApprove.waitFor();
+  await page2.locator("#ActionApprove").selectOption("10222");
+  //approvalPage.selectSAOActionOption();
 
   const supportingDocumentPage = new SupportingDocumentPage(page2);
   await supportingDocumentPage.clickSupportingDocumentButton();

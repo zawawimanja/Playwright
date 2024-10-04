@@ -100,16 +100,18 @@ test("Prereg SAO OD", async ({ page }) => {
   const inconsistentDoubtfulPage = new InconsistentDoubtfulPage(page2);
   inconsistentDoubtfulPage.clickInconsistentDoubtfulButton();
 
+  //appointment
+
+  //smb info
+
   const medicalOpinionPagePage = new MedicalOpinionPage(page2);
   medicalOpinionPagePage.clickedicalOpinionButton();
 
   const recommendationPage = new RecommendationPage(page2);
   recommendationPage.clickSAORecommendationButton();
 
-  const approvalPage = new ApprovalPage(page2);
-  approvalPage.clickApprovalButton();
-  await approvalPage.actionApprove.waitFor();
-  approvalPage.selectActionOption();
+  //hus info
+  //bank info
 
   const supportingDocumentPage = new SupportingDocumentPage(page2);
   await supportingDocumentPage.clickSupportingDocumentButton();

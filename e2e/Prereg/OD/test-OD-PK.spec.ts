@@ -16,10 +16,13 @@ import { BankInformationPage } from "../../../pages/bank_info";
 import { SupportingDocumentPage } from "../../../pages/support_doc";
 import { ConfirmationOfInsuredPage } from "../../../pages/confirm_person";
 import { CalendarPage } from "../../../utils/calendar";
+import { SubmitPage } from "../../../pages/submit";
 
 test.beforeEach(async ({ page }) => {
   await login(page, "afzan.pks", "u@T_afzan");
 });
+
+export let schemeRefValue: string;
 
 test("Prereg PK OD", async ({ page }) => {
   const preregPage = new PreregistrationPage(page);
@@ -36,9 +39,9 @@ test("Prereg PK OD", async ({ page }) => {
   await preregPage.selectNoticeTypePreRegOption("OD");
   await preregPage.selectInsuredPersonEmployment("Yes");
   await preregPage.selectIdentificationType("2");
-  await preregPage.fillIdentificationNo("010124010227");
+  await preregPage.fillIdentificationNo("900912105870");
   await preregPage.selectNoticeAndBenefitClaimFormOption("Insured Person");
-  await preregPage.fillEmployerCode("A3702024230P");
+  await preregPage.fillEmployerCode("B3401010420M");
   await preregPage.clickClaimFormSubmissionByListButton();
   await preregPage.clickSearchButton();
   const pagePromise = page.waitForEvent("popup");
@@ -154,9 +157,15 @@ test("Prereg PK OD", async ({ page }) => {
 
   const previewSubmissionPage = new PreviewSubmissionPage(page1);
   await previewSubmissionPage.clickPreviewSubmissionButton();
-  //   await previewSubmissionPage.clickShowPreviewButton();
+  await previewSubmissionPage.clickShowPreviewButton();
 
-  // await previewSubmissionPage.clickSubmitButton();
-  // await previewSubmissionPage.clickYesButton();
-  // await previewSubmissionPage.navigateToEFormRenderPage();
+  await previewSubmissionPage.clickSubmitButton();
+  await previewSubmissionPage.clickYesButton();
+
+  await previewSubmissionPage.navigateToEFormRenderPage();
+  const submitPage = new SubmitPage(page1);
+
+  schemeRefValue = await submitPage.schemeRefNo.inputValue();
+  //await expect(page1.getByLabel("Scheme Ref No.")).toHaveValue("E11NTO20240010044");
+  //await page1.getByRole("button", { name: "Submit" }).click();
 });
