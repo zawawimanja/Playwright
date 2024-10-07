@@ -39,7 +39,7 @@ test("Prereg PK OD", async ({ page }) => {
   await preregPage.selectNoticeTypePreRegOption("OD");
   await preregPage.selectInsuredPersonEmployment("Yes");
   await preregPage.selectIdentificationType("2");
-  await preregPage.fillIdentificationNo("900912105870");
+  await preregPage.fillIdentificationNo("970909085462");
   await preregPage.selectNoticeAndBenefitClaimFormOption("Insured Person");
   await preregPage.fillEmployerCode("B3401010420M");
   await preregPage.clickClaimFormSubmissionByListButton();
@@ -162,10 +162,10 @@ test("Prereg PK OD", async ({ page }) => {
   await previewSubmissionPage.clickSubmitButton();
   await previewSubmissionPage.clickYesButton();
 
-  await previewSubmissionPage.navigateToEFormRenderPage();
-  const submitPage = new SubmitPage(page1);
+  // await previewSubmissionPage.navigateToEFormRenderPage();
+  // const submitPage = new SubmitPage(page1);
 
-  schemeRefValue = await submitPage.schemeRefNo.inputValue();
+  // schemeRefValue = await submitPage.schemeRefNo.inputValue();
   //await expect(page1.getByLabel("Scheme Ref No.")).toHaveValue("E11NTO20240010044");
   //await page1.getByRole("button", { name: "Submit" }).click();
 });

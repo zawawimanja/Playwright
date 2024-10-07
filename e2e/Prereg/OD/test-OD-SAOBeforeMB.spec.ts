@@ -47,7 +47,7 @@ test("Prereg SAO OD", async ({ page }) => {
   const frame = page.frameLocator("#baristaPageOut");
 
   // Find the row that contains the specific text
-  const row = await frame.locator(`tr:has-text("E11NTO20240010046")`).first();
+  const row = await frame.locator(`tr:has-text("E11NTO20240010055")`).first();
 
   // Click on the grid cell within that row
   await row.getByRole("gridcell", { name: "Occupation Disease Notice SAO" }).click();
@@ -101,11 +101,12 @@ test("Prereg SAO OD", async ({ page }) => {
   inconsistentDoubtfulPage.clickInconsistentDoubtfulButton();
 
   const medicalOpinionPagePage = new MedicalOpinionPage(page2);
-  medicalOpinionPagePage.clickedicalOpinionButton();
+  medicalOpinionPagePage.clickMedicalOpinionButton();
 
   const recommendationPage = new RecommendationPage(page2);
   recommendationPage.clickSAORecommendationButton();
 
+  //not work
   const approvalPage = new ApprovalPage(page2);
   approvalPage.clickApprovalButton();
 
@@ -113,6 +114,7 @@ test("Prereg SAO OD", async ({ page }) => {
   await expect(page2.locator("#Recommendation2")).toContainText("RECOMMENDATION & APPROVAL");
   await expect(page2.getByRole("heading", { name: "Approval", exact: true })).toBeVisible();
   await expect(page2.locator("#Approval")).toContainText("Approval");
+
   await page2.locator("#ctrlField2089").getByText("Action*").click();
   await expect(page2.locator("#ctrlField2089").getByText("Action*")).toBeVisible();
   await expect(page2.locator("#ctrlField2089")).toContainText("Action*");

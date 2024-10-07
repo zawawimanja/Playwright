@@ -25,7 +25,8 @@ import { InconsistentDoubtfulPage } from "../../../pages/inconsistentdoubtful";
 import { CalendarPage } from "../../../utils/calendar";
 
 test.beforeEach(async ({ page }) => {
-  await login(page, "roliana.pks", "u@T_roliana");
+  //await login(page, "roliana.pks", "u@T_roliana");
+  await login(page, "atilia.pks", "u@T_atilia");
 });
 test("Prereg SAO OD", async ({ page }) => {
   const preregPage = new PreregistrationPage(page);
@@ -47,10 +48,12 @@ test("Prereg SAO OD", async ({ page }) => {
   const frame = page.frameLocator("#baristaPageOut");
 
   // Find the row that contains the specific text
-  const row = await frame.locator(`tr:has-text("E11NTO20240010033")`).first();
+  const row = await frame.locator(`tr:has-text("E11NTO20240010055")`).first();
+
+  //await page.frameLocator('#baristaPageOut').getByRole('gridcell', { name: 'Occupational Disease Notice' }).click();
 
   // Click on the grid cell within that row
-  await row.getByRole("gridcell", { name: "Occupation Disease Notice SAO" }).click();
+  await row.getByRole("gridcell", { name: "Occupational Disease Notice" }).click();
 
   const pagePromise = page.waitForEvent("popup");
   await page.frameLocator("#baristaPageOut").getByText("Open Task").click();
@@ -101,17 +104,24 @@ test("Prereg SAO OD", async ({ page }) => {
   inconsistentDoubtfulPage.clickInconsistentDoubtfulButton();
 
   //appointment
+  await page2.getByRole("button", { name: "Appointment" }).click();
 
   //smb info
+  await page2.getByRole("button", { name: "SMB Information" }).click();
 
   const medicalOpinionPagePage = new MedicalOpinionPage(page2);
-  medicalOpinionPagePage.clickedicalOpinionButton();
+  medicalOpinionPagePage.clickMedicalOpinionButton();
 
   const recommendationPage = new RecommendationPage(page2);
   recommendationPage.clickSAORecommendationButton();
+  await page2.locator("#ActionSCO").selectOption("10201");
 
   //hus info
+  const medicalCertificatePage = new MedicalCertificatePage(page2);
+  await medicalCertificatePage.clickHusInfoButton();
   //bank info
+  const bankInformationPage = new BankInformationPage(page2);
+  await bankInformationPage.clickBankInformationButton();
 
   const supportingDocumentPage = new SupportingDocumentPage(page2);
   await supportingDocumentPage.clickSupportingDocumentButton();

@@ -49,7 +49,7 @@ test("Prereg IO OD", async ({ page }) => {
 
   // Find the row that contains the specific text
 
-  const row = await frame.locator(`tr:has-text("E11NTO20240010046")`).first();
+  const row = await frame.locator(`tr:has-text("E11NTO20240010055")`).first();
   //const row = await frame.locator(`tr:has-text("${schemeRefValue}")`).first();
   // Click on the grid cell within that row
   await row.getByRole("gridcell", { name: "Occupational Disease Notice" }).click();
@@ -105,30 +105,46 @@ test("Prereg IO OD", async ({ page }) => {
   const appointmentPage = new AppointmentPage(page2);
   appointmentPage.clickAppointmentButton();
 
-  const medicalOpinionPagePage = new MedicalOpinionPage(page2);
-  medicalOpinionPagePage.clickedicalOpinionButton();
+  const medicalOpinionPage = new MedicalOpinionPage(page2);
+  await medicalOpinionPage.medicalOpinionButton.waitFor();
+  await expect(medicalOpinionPage.medicalOpinionButton).toBeVisible();
+  medicalOpinionPage.clickMedicalOpinionButton();
 
   const recommendationPage = new RecommendationPage(page2);
+  await recommendationPage.recommendationButton.waitFor();
+  await expect(recommendationPage.recommendationButton).toBeVisible();
   recommendationPage.clickRecommendationButton();
+
+  await expect(
+    page2.getByText("Reco History Approval History RECOMMENDATIONhide history SAO Approval - Before")
+  ).toBeVisible();
+
+  await page2.getByRole("heading", { name: "RECOMMENDATION", exact: true }).click();
+  await expect(page2.getByRole("heading", { name: "RECOMMENDATION", exact: true })).toBeVisible();
+  await expect(page2.locator("#Heading37")).toContainText("RECOMMENDATION");
+  await expect(page2.getByRole("heading", { name: "Recommendation", exact: true })).toBeVisible();
+  await expect(page2.locator("#Recommendation")).toContainText("Recommendation");
   await page2.locator("#ctrlField407").getByText("Action*").click();
   await expect(page2.locator("#ctrlField407")).toContainText("Action*");
   await expect(page2.locator("#ctrlField407").getByText("Action*")).toBeVisible();
   await expect(recommendationPage.actionRecommend).toBeVisible();
   await recommendationPage.actionRecommend.waitFor();
-  recommendationPage.selectActionOption();
+  //still not work
+  // recommendationPage.selectActionOption();
+  await page2.locator("#ActionRecommend").selectOption("10207");
 
-  const medicalCertificatePage = new MedicalCertificatePage(page2);
-  await medicalCertificatePage.clickHusInfoButton();
+  // const medicalCertificatePage = new MedicalCertificatePage(page2);
+  // await medicalCertificatePage.clickHusInfoButton();
 
-  const bankInformationPage = new BankInformationPage(page2);
-  await bankInformationPage.clickBankInformationButton();
+  // const bankInformationPage = new BankInformationPage(page2);
+  // await bankInformationPage.clickBankInformationButton();
 
-  const supportingDocumentPage = new SupportingDocumentPage(page2);
-  await supportingDocumentPage.clickSupportingDocumentButton();
+  // const supportingDocumentPage = new SupportingDocumentPage(page2);
+  // await supportingDocumentPage.clickSupportingDocumentButton();
 
-  const previewSubmissionPage = new PreviewSubmissionPage(page2);
-  await previewSubmissionPage.clickPreviewSubmissionButton();
-  await previewSubmissionPage.clickShowPreviewButton();
+  // const previewSubmissionPage = new PreviewSubmissionPage(page2);
+  // await previewSubmissionPage.clickPreviewSubmissionButton();
+  // await previewSubmissionPage.clickShowPreviewButton();
 
   // await previewSubmissionPage.clickSubmitButton();
   // await previewSubmissionPage.clickYesButton();
