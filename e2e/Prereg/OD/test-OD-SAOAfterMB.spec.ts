@@ -48,7 +48,7 @@ test("Prereg SAO OD", async ({ page }) => {
   const frame = page.frameLocator("#baristaPageOut");
 
   // Find the row that contains the specific text
-  const row = await frame.locator(`tr:has-text("E11NTO20240010055")`).first();
+  const row = await frame.locator(`tr:has-text("E11NTO20240010062")`).first();
 
   // Click on the grid cell within that row
   await row.getByRole("gridcell", { name: "Occupation Disease Notice SAO" }).click();
@@ -113,9 +113,8 @@ test("Prereg SAO OD", async ({ page }) => {
 
   const approvalPage = new ApprovalPage(page2);
   approvalPage.clickApprovalButton();
+  approvalPage.selectSAOActionOptionAfterMB();
 
-  await page2.getByRole("button", { name: "Approval" }).click();
-  await page2.locator("#ActionApprovalAfterMB").selectOption("10203");
   // await approvalPage.actionApprove.waitFor();
   // approvalPage.selectActionOption();
 

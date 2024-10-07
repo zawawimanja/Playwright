@@ -46,6 +46,14 @@ export class ApprovalPage {
     return this.page.locator("#ActionApprove");
   }
 
+  get actionApproveAfterMB() {
+    return this.page.locator("#ActionApprovalAfterMB");
+  }
+
+  async selectSAOActionOptionAfterMB() {
+    await this.actionApprove.selectOption("10203");
+  }
+
   async clickRecommendationButton() {
     await this.recommendationButton.click();
   }

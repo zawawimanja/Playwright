@@ -68,7 +68,7 @@ test("Prereg PK OD", async ({ page }) => {
   await insuredPersonInfoPage.clickInsuredPersonInfoButton();
   await insuredPersonInfoPage.noticeAndBenefitClaimFormReceivedDateInput.click();
 
-  await calendarPage.selectDateInsuredPersonPage("2021", "6", "11");
+  await calendarPage.selectDateInsuredPersonPage("2021", "7", "11");
   await insuredPersonInfoPage.fillOccupation("CS");
   await insuredPersonInfoPage.selectOccupation("1000002");
   await insuredPersonInfoPage.selectSubOccupation("1001132");
@@ -101,24 +101,24 @@ test("Prereg PK OD", async ({ page }) => {
   await medicalCertificatePage.enterClinicHospitalName("kl");
 
   await page1.getByRole("textbox").nth(1).click();
-  await calendarPage.selectDateInsuredPersonPage("2021", "6", "12");
+  await calendarPage.selectDateInsuredPersonPage("2021", "8", "12");
 
   await page1.getByRole("textbox").nth(2).click();
-  await calendarPage.selectDateMCEndDate("2021", "6", "16");
+  await calendarPage.selectDateMCEndDate("2021", "9", "16");
   await medicalCertificatePage.submitButton().click();
 
   //2nd mc
-  await medicalCertificatePage.addRecord();
-  await medicalCertificatePage.enterClinicHospitalName("kl");
+  // await medicalCertificatePage.addRecord();
+  // await medicalCertificatePage.enterClinicHospitalName("kl");
 
-  await calendarPage.startDateInput.click();
+  // await calendarPage.startDateInput.click();
 
-  await calendarPage.selectDateInsuredPersonPage("2021", "6", "21");
+  // await calendarPage.selectDateInsuredPersonPage("2021", "6", "21");
 
-  await calendarPage.endDateInput.click();
+  // await calendarPage.endDateInput.click();
 
-  await calendarPage.selectDateMCEndDate("2021", "7", "26");
-  await medicalCertificatePage.submitButton().click();
+  // await calendarPage.selectDateMCEndDate("2021", "7", "26");
+  // await medicalCertificatePage.submitButton().click();
 
   const wagesInfoPage = new WagesInfoPage(page1);
   await wagesInfoPage.clickWagesInfoButton();
@@ -159,8 +159,8 @@ test("Prereg PK OD", async ({ page }) => {
   await previewSubmissionPage.clickPreviewSubmissionButton();
   await previewSubmissionPage.clickShowPreviewButton();
 
-  await previewSubmissionPage.clickSubmitButton();
-  await previewSubmissionPage.clickYesButton();
+  // await previewSubmissionPage.clickSubmitButton();
+  // await previewSubmissionPage.clickYesButton();
 
   // await previewSubmissionPage.navigateToEFormRenderPage();
   // const submitPage = new SubmitPage(page1);

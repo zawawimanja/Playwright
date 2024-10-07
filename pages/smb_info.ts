@@ -35,7 +35,8 @@ export class SmbInformationPage {
   }
 
   get SMBInfo() {
-    return this.page.getByLabel("SMB Information");
+    //return this.page.getByLabel("SMB Information");
+    return this.page.getByRole("button", { name: "SMB Information" });
   }
 
   /**

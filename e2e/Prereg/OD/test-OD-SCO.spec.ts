@@ -23,6 +23,7 @@ import { AppointmentPage } from "../../../pages/appointment";
 import { ApprovalPage } from "../../../pages/approval";
 import { InconsistentDoubtfulPage } from "../../../pages/inconsistentdoubtful";
 import { CalendarPage } from "../../../utils/calendar";
+import { SmbInformationPage } from "../../../pages/smb_info";
 
 test.beforeEach(async ({ page }) => {
   //await login(page, "roliana.pks", "u@T_roliana");
@@ -48,7 +49,7 @@ test("Prereg SAO OD", async ({ page }) => {
   const frame = page.frameLocator("#baristaPageOut");
 
   // Find the row that contains the specific text
-  const row = await frame.locator(`tr:has-text("E11NTO20240010055")`).first();
+  const row = await frame.locator(`tr:has-text("E11NTO20240010062")`).first();
 
   //await page.frameLocator('#baristaPageOut').getByRole('gridcell', { name: 'Occupational Disease Notice' }).click();
 
@@ -104,17 +105,19 @@ test("Prereg SAO OD", async ({ page }) => {
   inconsistentDoubtfulPage.clickInconsistentDoubtfulButton();
 
   //appointment
-  await page2.getByRole("button", { name: "Appointment" }).click();
+  const appointmentPage = new AppointmentPage(page2);
+  appointmentPage.clickAppointmentButton();
 
   //smb info
-  await page2.getByRole("button", { name: "SMB Information" }).click();
+  const SmbInformationPagePage = new SmbInformationPage(page2);
+  SmbInformationPagePage.clickSMBInfoButton();
 
   const medicalOpinionPagePage = new MedicalOpinionPage(page2);
   medicalOpinionPagePage.clickMedicalOpinionButton();
 
   const recommendationPage = new RecommendationPage(page2);
   recommendationPage.clickSAORecommendationButton();
-  await page2.locator("#ActionSCO").selectOption("10201");
+  recommendationPage.selectActionOptionSCO();
 
   //hus info
   const medicalCertificatePage = new MedicalCertificatePage(page2);

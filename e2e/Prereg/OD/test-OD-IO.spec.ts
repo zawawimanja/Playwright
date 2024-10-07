@@ -24,8 +24,8 @@ import { InconsistentDoubtfulPage } from "../../../pages/inconsistentdoubtful";
 import { CalendarPage } from "../../../utils/calendar";
 
 test.beforeEach(async ({ page }) => {
-  //await login(page, "uat_muthu", "u@T_muthu");
-  await login(page, "uat_akaw", "u@T_akaw");
+  await login(page, "uat_muthu", "u@T_muthu");
+  //await login(page, "uat_akaw", "u@T_akaw");
 });
 
 test("Prereg IO OD", async ({ page }) => {
@@ -49,7 +49,7 @@ test("Prereg IO OD", async ({ page }) => {
 
   // Find the row that contains the specific text
 
-  const row = await frame.locator(`tr:has-text("E11NTO20240010055")`).first();
+  const row = await frame.locator(`tr:has-text("E11NTO20240010062")`).first();
   //const row = await frame.locator(`tr:has-text("${schemeRefValue}")`).first();
   // Click on the grid cell within that row
   await row.getByRole("gridcell", { name: "Occupational Disease Notice" }).click();
