@@ -42,6 +42,10 @@ export class RecommendationPage {
     return this.page.locator("#ActionRecommend");
   }
 
+  get actionRecommendSCO() {
+    return this.page.locator("#ActionSCO");
+  }
+
   async clickRecommendationButton() {
     await this.recommendationButton.click();
   }
@@ -52,5 +56,9 @@ export class RecommendationPage {
 
   async selectActionOption() {
     await this.actionRecommend.selectOption("10207");
+  }
+
+  async selectActionOptionSCO() {
+    await this.actionRecommendSCO.selectOption("10201");
   }
 }

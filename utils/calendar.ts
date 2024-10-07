@@ -15,14 +15,6 @@ export class CalendarPage {
     return this.page.locator("#ui-datepicker-div");
   }
 
-  async selectDatePrereg(year: string, month: string, day: string) {
-    await this.baristaPageOut.getByRole("combobox").nth(1).selectOption(year);
-    //+1
-    await this.baristaPageOut.getByRole("combobox").first().selectOption(month);
-
-    await this.page.getByRole("link", { name: day, exact: true }).click();
-  }
-
   private mcDate() {
     return this.page.getByRole("textbox");
   }
@@ -31,9 +23,32 @@ export class CalendarPage {
   }
 
   async selectDateInsuredPersonPage(year: string, month: string, day: string) {
+    let monthNumber = parseInt(month, 10) - 1;
+    const formattedMonth = monthNumber.toString();
     await this.uidatepicker.getByRole("combobox").nth(1).selectOption(year);
     //+1
-    await this.uidatepicker.getByRole("combobox").first().selectOption(month);
+    await this.uidatepicker.getByRole("combobox").first().selectOption(formattedMonth);
+
+    await this.page.getByRole("link", { name: day, exact: true }).click();
+  }
+
+  async selectDatePrereg(year: string, month: string, day: string) {
+    let monthNumber = parseInt(month, 10) - 1;
+    const formattedMonth = monthNumber.toString();
+
+    await this.baristaPageOut.getByRole("combobox").nth(1).selectOption(year);
+    //+1
+    await this.baristaPageOut.getByRole("combobox").first().selectOption(formattedMonth);
+
+    await this.page.getByRole("link", { name: day, exact: true }).click();
+  }
+
+  async selectDateMCEndDate(year: string, month: string, day: string) {
+    let monthNumber = parseInt(month, 10) - 1;
+    const formattedMonth = monthNumber.toString();
+    await this.uidatepicker.getByRole("combobox").nth(1).selectOption(year);
+    //+1
+    await this.uidatepicker.getByRole("combobox").first().selectOption(formattedMonth);
 
     await this.page.getByRole("link", { name: day, exact: true }).click();
   }
@@ -48,14 +63,6 @@ export class CalendarPage {
     return this.page.locator(
       'div.subCtrlPreviewCtrlHolder[controlholdername="EndDateMC"] >> nth=1 >> input.datepicker'
     );
-  }
-
-  async selectDateMCEndDate(year: string, month: string, day: string) {
-    await this.uidatepicker.getByRole("combobox").nth(1).selectOption(year);
-    //+1
-    await this.uidatepicker.getByRole("combobox").first().selectOption(month);
-
-    await this.page.getByRole("link", { name: day, exact: true }).click();
   }
 
   async navigateCalendar(direction: "prev" | "next") {
