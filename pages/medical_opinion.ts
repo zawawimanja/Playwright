@@ -33,7 +33,7 @@ export class MedicalOpinionPage {
     return this.page.getByRole("button", { name: "Medical/PPN/ARO Opinion" });
   }
 
-  async clickedicalOpinionButton() {
+  async clickMedicalOpinionButton() {
     await this.medicalOpinionButton.click();
   }
 }
