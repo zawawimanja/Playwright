@@ -23,6 +23,7 @@ import { AppointmentPage } from "../../../pages/appointment";
 import { ApprovalPage } from "../../../pages/approval";
 import { InconsistentDoubtfulPage } from "../../../pages/inconsistentdoubtful";
 import { CalendarPage } from "../../../utils/calendar";
+import { CasesPage } from "../../../pages/cases";
 
 test.beforeEach(async ({ page }) => {
   await login(page, "hilmi.pks", "u@T_hilmi");
@@ -31,6 +32,7 @@ test.beforeEach(async ({ page }) => {
 test("Prereg MB OD", async ({ page }) => {
   const preregPage = new PreregistrationPage(page);
   const leftTabPage = new LeftTabPage(page);
+  const casesPage = new CasesPage(page);
 
   await leftTabPage.leftBar.waitFor();
   await expect(leftTabPage.leftBar).toBeVisible();
@@ -48,7 +50,7 @@ test("Prereg MB OD", async ({ page }) => {
   const frame = page.frameLocator("#baristaPageOut");
 
   // Find the row that contains the specific text
-  const row = await frame.locator(`tr:has-text("E11NTO20240010059")`).first();
+  const row = await frame.locator(`tr:has-text("${casesPage.casesCreated}")`).first(); //const row = await frame.locator(`tr:has-text("${schemeRefValue}")`).first();
 
   // Click on the grid cell within that row
 
@@ -70,17 +72,24 @@ test("Prereg MB OD", async ({ page }) => {
   await page2.getByRole("button", { name: "New" }).click();
   const page3 = await page3Promise;
   await page3.getByRole("button", { name: "Add" }).click();
-
+  const calendarPage = new CalendarPage(page3);
   //session venue
-  await page2.locator("#ctrlField1021").getByRole("textbox").click();
+  await page3.locator("#ctrlField1020").getByRole("combobox").selectOption("708056");
   //session date
-  // await page2.getByRole("link", { name: "3", exact: true }).click();
+  await page3.locator("#ctrlField1021").getByRole("textbox").click();
+  await page3.locator("#ui-datepicker-div").getByRole("combobox").nth(1).selectOption("2021");
+  await page3.locator("#ui-datepicker-div").getByRole("combobox").first().selectOption("5");
+  await page3.getByRole("link", { name: "9", exact: true }).click();
+  // await calendarPage.selectDateInsuredPersonPage("2021", "7", "11");
+  //disease 5
+  await page3.locator("#ctrlField1022").getByRole("combobox").selectOption("Yes");
   //disease work
-  await page2.locator("#ctrlField1022").getByRole("combobox").selectOption("Yes");
+  await page3.locator("#ctrlField1023").getByRole("combobox").selectOption("Yes");
+
   //mmi
-  await page2.locator("#ctrlField1023").getByRole("combobox").selectOption("Yes");
+  //await page3.locator("#ODSF1MMIAchieved-0fec-42dbe-af4b-1459").selectOption("No");
   //desc
-  await page2.locator("#ODSF1DescriptionOfDisease-91cc-49827-9bc4-25a3").fill("test");
+  // await page2.locator("#ODSF1DescriptionOfDisease-91cc-49827-9bc4-25a3").fill("test");
   //ass type
   await page2.locator("#ctrlField1026").getByRole("combobox").selectOption("Final");
   //session ass
@@ -94,8 +103,6 @@ test("Prereg MB OD", async ({ page }) => {
   //remarks
   await page2.locator("#ctrlField1049").getByRole("textbox").fill("test");
   await page2.getByRole("button", { name: "OK" }).click();
-
-  const calendarPage = new CalendarPage(page2);
 
   const remarksPage = new RemarksPage(page2);
   await remarksPage.remarksButton.waitFor();
@@ -134,10 +141,7 @@ test("Prereg MB OD", async ({ page }) => {
   inconsistentDoubtfulPage.clickInconsistentDoubtfulButton();
 
   const recommendationPage = new RecommendationPage(page2);
-  recommendationPage.clickSAORecommendationButton();
-
-  const medicalOpinionPagePage = new MedicalOpinionPage(page2);
-  medicalOpinionPagePage.clickMedicalOpinionButton();
+  recommendationPage.clickRecommendationButton();
 
   const supportingDocumentPage = new SupportingDocumentPage(page2);
   await supportingDocumentPage.clickSupportingDocumentButton();

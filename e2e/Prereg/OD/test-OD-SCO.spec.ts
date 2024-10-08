@@ -24,14 +24,16 @@ import { ApprovalPage } from "../../../pages/approval";
 import { InconsistentDoubtfulPage } from "../../../pages/inconsistentdoubtful";
 import { CalendarPage } from "../../../utils/calendar";
 import { SmbInformationPage } from "../../../pages/smb_info";
+import { CasesPage } from "../../../pages/cases";
 
 test.beforeEach(async ({ page }) => {
   //await login(page, "roliana.pks", "u@T_roliana");
   await login(page, "atilia.pks", "u@T_atilia");
 });
-test("Prereg SAO OD", async ({ page }) => {
+test("Prereg SCO OD", async ({ page }) => {
   const preregPage = new PreregistrationPage(page);
   const leftTabPage = new LeftTabPage(page);
+  const casesPage = new CasesPage(page);
 
   await leftTabPage.leftBar.waitFor();
   await expect(leftTabPage.leftBar).toBeVisible();
@@ -49,7 +51,7 @@ test("Prereg SAO OD", async ({ page }) => {
   const frame = page.frameLocator("#baristaPageOut");
 
   // Find the row that contains the specific text
-  const row = await frame.locator(`tr:has-text("E11NTO20240010062")`).first();
+  const row = await frame.locator(`tr:has-text("${casesPage.casesCreated}")`).first(); //const row = await frame.locator(`tr:has-text("${schemeRefValue}")`).first();
 
   //await page.frameLocator('#baristaPageOut').getByRole('gridcell', { name: 'Occupational Disease Notice' }).click();
 
@@ -112,11 +114,17 @@ test("Prereg SAO OD", async ({ page }) => {
   const SmbInformationPagePage = new SmbInformationPage(page2);
   SmbInformationPagePage.clickSMBInfoButton();
 
-  const medicalOpinionPagePage = new MedicalOpinionPage(page2);
-  medicalOpinionPagePage.clickMedicalOpinionButton();
+  const medicalOpinionPage = new MedicalOpinionPage(page2);
+  await medicalOpinionPage.medicalOpinionButton.waitFor();
+  await expect(medicalOpinionPage.medicalOpinionButton).toBeVisible();
+  medicalOpinionPage.clickMedicalOpinionButton();
 
+  //not work
   const recommendationPage = new RecommendationPage(page2);
   recommendationPage.clickSAORecommendationButton();
+
+  await page2.locator("#ActionSCO").selectOption("10206");
+  await page2.locator("#ActionSCO").selectOption("10202");
   recommendationPage.selectActionOptionSCO();
 
   //hus info

@@ -22,6 +22,7 @@ import { CaseInformationPage } from "../../../pages/case_info";
 import { AppointmentPage } from "../../../pages/appointment";
 import { InconsistentDoubtfulPage } from "../../../pages/inconsistentdoubtful";
 import { CalendarPage } from "../../../utils/calendar";
+import { CasesPage } from "../../../pages/cases";
 
 test.beforeEach(async ({ page }) => {
   await login(page, "uat_muthu", "u@T_muthu");
@@ -31,6 +32,7 @@ test.beforeEach(async ({ page }) => {
 test("Prereg IO OD", async ({ page }) => {
   const preregPage = new PreregistrationPage(page);
   const leftTabPage = new LeftTabPage(page);
+  const casesPage = new CasesPage(page);
 
   await leftTabPage.leftBar.waitFor();
   await expect(leftTabPage.leftBar).toBeVisible();
@@ -49,8 +51,7 @@ test("Prereg IO OD", async ({ page }) => {
 
   // Find the row that contains the specific text
 
-  const row = await frame.locator(`tr:has-text("E11NTO20240010062")`).first();
-  //const row = await frame.locator(`tr:has-text("${schemeRefValue}")`).first();
+  const row = await frame.locator(`tr:has-text("${casesPage.casesCreated}")`).first(); //const row = await frame.locator(`tr:has-text("${schemeRefValue}")`).first();
   // Click on the grid cell within that row
   await row.getByRole("gridcell", { name: "Occupational Disease Notice" }).click();
 
@@ -129,15 +130,16 @@ test("Prereg IO OD", async ({ page }) => {
   await expect(page2.locator("#ctrlField407").getByText("Action*")).toBeVisible();
   await expect(recommendationPage.actionRecommend).toBeVisible();
   await recommendationPage.actionRecommend.waitFor();
-  //still not work
-  // recommendationPage.selectActionOption();
-  await page2.locator("#ActionRecommend").selectOption("10207");
 
-  // const medicalCertificatePage = new MedicalCertificatePage(page2);
-  // await medicalCertificatePage.clickHusInfoButton();
+  //temporary solution
+  await page2.locator("#ActionRecommend").selectOption("10206");
+  recommendationPage.selectActionOption();
 
-  // const bankInformationPage = new BankInformationPage(page2);
-  // await bankInformationPage.clickBankInformationButton();
+  const medicalCertificatePage = new MedicalCertificatePage(page2);
+  await medicalCertificatePage.clickHusInfoButton();
+
+  const bankInformationPage = new BankInformationPage(page2);
+  await bankInformationPage.clickBankInformationButton();
 
   // const supportingDocumentPage = new SupportingDocumentPage(page2);
   // await supportingDocumentPage.clickSupportingDocumentButton();

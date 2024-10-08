@@ -23,6 +23,7 @@ import { AppointmentPage } from "../../../pages/appointment";
 import { ApprovalPage } from "../../../pages/approval";
 import { InconsistentDoubtfulPage } from "../../../pages/inconsistentdoubtful";
 import { CalendarPage } from "../../../utils/calendar";
+import { CasesPage } from "../../../pages/cases";
 
 test.beforeEach(async ({ page }) => {
   await login(page, "roliana.pks", "u@T_roliana");
@@ -30,7 +31,7 @@ test.beforeEach(async ({ page }) => {
 test("Prereg SAO OD", async ({ page }) => {
   const preregPage = new PreregistrationPage(page);
   const leftTabPage = new LeftTabPage(page);
-
+  const casesPage = new CasesPage(page);
   await leftTabPage.leftBar.waitFor();
   await expect(leftTabPage.leftBar).toBeVisible();
   expect(leftTabPage.pageBuilderRoot).toContainText(
@@ -47,7 +48,7 @@ test("Prereg SAO OD", async ({ page }) => {
   const frame = page.frameLocator("#baristaPageOut");
 
   // Find the row that contains the specific text
-  const row = await frame.locator(`tr:has-text("E11NTO20240010062")`).first();
+  const row = await frame.locator(`tr:has-text("${casesPage.casesCreated}")`).first(); //const row = await frame.locator(`tr:has-text("${schemeRefValue}")`).first();
 
   // Click on the grid cell within that row
   await row.getByRole("gridcell", { name: "Occupation Disease Notice SAO" }).click();
@@ -121,7 +122,7 @@ test("Prereg SAO OD", async ({ page }) => {
   await expect(approvalPage.actionApprove).toBeVisible();
   await approvalPage.actionApprove.waitFor();
   await page2.locator("#ActionApprove").selectOption("10222");
-  //approvalPage.selectSAOActionOption();
+  approvalPage.selectSAOActionOption();
 
   const supportingDocumentPage = new SupportingDocumentPage(page2);
   await supportingDocumentPage.clickSupportingDocumentButton();
