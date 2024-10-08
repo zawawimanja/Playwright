@@ -17,6 +17,7 @@ import { SupportingDocumentPage } from "../../../pages/support_doc";
 import { ConfirmationOfInsuredPage } from "../../../pages/confirm_person";
 import { CalendarPage } from "../../../utils/calendar";
 import { SubmitPage } from "../../../pages/submit";
+import { CasesPage } from "../../../pages/cases";
 
 test.beforeEach(async ({ page }) => {
   await login(page, "afzan.pks", "u@T_afzan");
@@ -39,7 +40,7 @@ test("Prereg PK OD", async ({ page }) => {
   await preregPage.selectNoticeTypePreRegOption("OD");
   await preregPage.selectInsuredPersonEmployment("Yes");
   await preregPage.selectIdentificationType("2");
-  await preregPage.fillIdentificationNo("970909085462");
+  await preregPage.fillIdentificationNo("911201145386");
   await preregPage.selectNoticeAndBenefitClaimFormOption("Insured Person");
   await preregPage.fillEmployerCode("B3401010420M");
   await preregPage.clickClaimFormSubmissionByListButton();
@@ -68,7 +69,7 @@ test("Prereg PK OD", async ({ page }) => {
   await insuredPersonInfoPage.clickInsuredPersonInfoButton();
   await insuredPersonInfoPage.noticeAndBenefitClaimFormReceivedDateInput.click();
 
-  await calendarPage.selectDateInsuredPersonPage("2021", "7", "11");
+  await calendarPage.selectDateInsuredPersonPage("2021", "1", "11");
   await insuredPersonInfoPage.fillOccupation("CS");
   await insuredPersonInfoPage.selectOccupation("1000002");
   await insuredPersonInfoPage.selectSubOccupation("1001132");
@@ -101,10 +102,10 @@ test("Prereg PK OD", async ({ page }) => {
   await medicalCertificatePage.enterClinicHospitalName("kl");
 
   await page1.getByRole("textbox").nth(1).click();
-  await calendarPage.selectDateInsuredPersonPage("2021", "8", "12");
+  await calendarPage.selectDateInsuredPersonPage("2021", "1", "12");
 
   await page1.getByRole("textbox").nth(2).click();
-  await calendarPage.selectDateMCEndDate("2021", "9", "16");
+  await calendarPage.selectDateMCEndDate("2021", "1", "20");
   await medicalCertificatePage.submitButton().click();
 
   //2nd mc

@@ -51,7 +51,7 @@ export class ApprovalPage {
   }
 
   async selectSAOActionOptionAfterMB() {
-    await this.actionApprove.selectOption("10203");
+    await this.actionApproveAfterMB.selectOption("10203");
   }
 
   async clickRecommendationButton() {
