@@ -26,7 +26,8 @@ import { CalendarPage } from "../../../utils/calendar";
 import { CasesPage } from "../../../pages/cases";
 
 test.beforeEach(async ({ page }) => {
-  await login(page, "roliana.pks", "u@T_roliana");
+  //await login(page, "roliana.pks", "u@T_roliana");
+  await login(page, "uat_ali", "u@T_ali");
 });
 test("Prereg SAO OD", async ({ page }) => {
   const preregPage = new PreregistrationPage(page);
@@ -48,7 +49,7 @@ test("Prereg SAO OD", async ({ page }) => {
   const frame = page.frameLocator("#baristaPageOut");
 
   // Find the row that contains the specific text
-  const row = await frame.locator(`tr:has-text("${casesPage.casesCreated}")`).first(); //const row = await frame.locator(`tr:has-text("${schemeRefValue}")`).first();
+  const row = await frame.locator(`tr:has-text("${casesPage.casesCreated}")`);
 
   // Click on the grid cell within that row
   await row.getByRole("gridcell", { name: "Occupation Disease Notice SAO" }).click();

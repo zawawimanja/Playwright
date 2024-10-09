@@ -26,8 +26,8 @@ import { CalendarPage } from "../../../utils/calendar";
 import { CasesPage } from "../../../pages/cases";
 
 test.beforeEach(async ({ page }) => {
-  await login(page, "hilmi.pks", "u@T_hilmi");
-  //await login(page, "aslam.pks", "u@T_aslam");
+  //await login(page, "hilmi.pks", "u@T_hilmi");
+  await login(page, "aslam.pks", "u@T_aslam");
 });
 test("Prereg MB OD", async ({ page }) => {
   const preregPage = new PreregistrationPage(page);
@@ -50,7 +50,7 @@ test("Prereg MB OD", async ({ page }) => {
   const frame = page.frameLocator("#baristaPageOut");
 
   // Find the row that contains the specific text
-  const row = await frame.locator(`tr:has-text("${casesPage.casesCreated}")`).first(); //const row = await frame.locator(`tr:has-text("${schemeRefValue}")`).first();
+  const row = await frame.locator(`tr:has-text("${casesPage.casesCreated}")`);
 
   // Click on the grid cell within that row
 
@@ -74,33 +74,65 @@ test("Prereg MB OD", async ({ page }) => {
   await page3.getByRole("button", { name: "Add" }).click();
   const calendarPage = new CalendarPage(page3);
   //session venue
+  await expect(
+    page3.locator("div:nth-child(3) > .ap-fb-subCtrlPreviewCell > #ctrlField1020 > .control > label > span")
+  ).toBeVisible();
+  await expect(page3.locator("#previewPanel")).toContainText("Session Venue");
   await page3.locator("#ctrlField1020").getByRole("combobox").selectOption("708056");
   //session date
+
+  await expect(page3.locator("#ctrlField1021").getByText("Session Date")).toBeVisible();
+  await expect(page3.locator("#previewPanel")).toContainText("Session Date*");
   await page3.locator("#ctrlField1021").getByRole("textbox").click();
-  await page3.locator("#ui-datepicker-div").getByRole("combobox").nth(1).selectOption("2021");
-  await page3.locator("#ui-datepicker-div").getByRole("combobox").first().selectOption("5");
-  await page3.getByRole("link", { name: "9", exact: true }).click();
-  // await calendarPage.selectDateInsuredPersonPage("2021", "7", "11");
-  //disease 5
+  // await page3.locator("#ui-datepicker-div").getByRole("combobox").nth(1).selectOption("2021");
+  // await page3.locator("#ui-datepicker-div").getByRole("combobox").first().selectOption("5");
+  // await page3.getByRole("link", { name: "9", exact: true }).click();
+  await calendarPage.selectDateInsuredPersonPage("2021", "7", "11");
+
+  //disease 5 blank default
+  await expect(page3.getByText("Disease is in Schedule")).toBeVisible();
+  await expect(page3.locator("#ctrlField1022")).toContainText("Disease is in Schedule 5");
   await page3.locator("#ctrlField1022").getByRole("combobox").selectOption("Yes");
-  //disease work
+
+  //disease work no default
   await page3.locator("#ctrlField1023").getByRole("combobox").selectOption("Yes");
 
-  //mmi
+  //mmi yes default
+  await expect(page3.getByText("MMI Achieved")).toBeVisible();
+  await expect(page3.locator("#ctrlField1024")).toContainText("MMI Achieved");
   //await page3.locator("#ODSF1MMIAchieved-0fec-42dbe-af4b-1459").selectOption("No");
   //desc
+
+  await expect(page3.getByText("Description of Disease")).toBeVisible();
+  await expect(page3.locator("#ctrlField1025")).toContainText("Description of Disease");
   // await page2.locator("#ODSF1DescriptionOfDisease-91cc-49827-9bc4-25a3").fill("test");
+
   //ass type
-  await page2.locator("#ctrlField1026").getByRole("combobox").selectOption("Final");
+  //await page3.locator("#ODSF1AssessmentType-bf2c-4def2-8907-ac1a").selectOption("Final");
+
   //session ass
-  await page2.locator("#ODSF1SessionAssessment-477a-404ca-acdc-dfc5").fill("20");
-  //jd result
+  //  await page2.locator("#ODSF1SessionAssessment-477a-404ca-acdc-dfc5").fill("20");
+
+  //jd result no default
+  // await page2.getByText("JD Result*").waitFor();
+  // await expect(page2.getByText("JD Result*")).toBeVisible();
+  // await expect(page2.locator("#ctrlField1031")).toContainText("JD Result*");
   await page2.locator("#ctrlField1033").getByRole("combobox").selectOption("Yes");
-  //recommendation
-  await page2.locator("#ctrlField1034").getByRole("textbox").fill("test");
+
+  //recommendation rehab no default
+  // await page2.locator("#ODSF1RecommendationForRehab-8089-421e4-826e-c81f").selectOption("Yes");
+
   //remark recommendation
-  await page2.locator("#ctrlField1049").getByRole("textbox").fill("t");
+  // await expect(page3.getByText("Remarks for Recommendation")).toBeVisible();
+  // await expect(page3.locator("#ctrlField1034")).toContainText("Remarks for Recommendation for Rehab");
+  // await page2.locator("#ctrlField1049").getByRole("textbox").fill("t");
+
   //remarks
+
+  await expect(
+    page3.locator("div:nth-child(18) > .ap-fb-subCtrlPreviewCell > #ctrlField1049 > .control > label > span")
+  ).toBeVisible();
+  await expect(page3.locator("#previewPanel")).toContainText("Remarks");
   await page2.locator("#ctrlField1049").getByRole("textbox").fill("test");
   await page2.getByRole("button", { name: "OK" }).click();
 
