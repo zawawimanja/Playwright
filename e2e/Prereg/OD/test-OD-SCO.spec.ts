@@ -42,19 +42,18 @@ test("Prereg SCO OD", async ({ page }) => {
   );
   await expect(leftTabPage.myCasesLink).toBeVisible();
   await leftTabPage.myCasesLink.waitFor();
-  //leftTabPage.clickMyCases;
 
   await page.getByRole("link", { name: "My Cases" }).click();
 
   await page.frameLocator("#baristaPageOut").getByText("My Cases").click();
-  // Locate the frame first
-  const frame = page.frameLocator("#baristaPageOut");
 
-  // Find the row that contains the specific text
-  const row = await frame.locator(`tr:has-text("${casesPage.casesCreated}")`).first();
+  await expect(page.frameLocator("#baristaPageOut").getByText(`${casesPage.casesCreated}`)).toBeVisible();
 
-  // Click on the grid cell within that row
-  await row.getByRole("gridcell", { name: "Occupational Disease Notice" }).click();
+  await page
+    .frameLocator("#baristaPageOut")
+    .getByRole("gridcell", { name: "Occupational Disease Notice" })
+    .first()
+    .click();
 
   const pagePromise = page.waitForEvent("popup");
   await page.frameLocator("#baristaPageOut").getByText("Open Task").click();
@@ -120,13 +119,13 @@ test("Prereg SCO OD", async ({ page }) => {
   //temporary solution not select
   const recommendationPage = new RecommendationPage(page2);
   recommendationPage.clickRecommendationButton();
-
+  await page.waitForTimeout(5000);
   await expect(
     page2.getByText("Reco History Approval History RECOMMENDATIONhide history SAO Approval - Before")
   ).toBeVisible();
   await expect(page2.locator("#ctrlField3158").getByText("Action*")).toBeVisible();
   await expect(page2.locator("#ctrlField3158")).toContainText("Action*");
-  await page2.locator("#ActionSCO").selectOption("10206");
+  await recommendationPage.actionRecommendSCO.waitFor();
   recommendationPage.selectActionOptionSCO();
 
   //hus info
