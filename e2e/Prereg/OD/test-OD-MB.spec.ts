@@ -26,8 +26,8 @@ import { CalendarPage } from "../../../utils/calendar";
 import { CasesPage } from "../../../pages/cases";
 
 test.beforeEach(async ({ page }) => {
-  //await login(page, "hilmi.pks", "u@T_hilmi");
-  await login(page, "aslam.pks", "u@T_aslam");
+  await login(page, "hilmi.pks", "u@T_hilmi");
+  //await login(page, "aslam.pks", "u@T_aslam");
 });
 test("Prereg MB OD", async ({ page }) => {
   const preregPage = new PreregistrationPage(page);
@@ -46,13 +46,8 @@ test("Prereg MB OD", async ({ page }) => {
   await page.getByRole("link", { name: "My Cases" }).click();
 
   await page.frameLocator("#baristaPageOut").getByText("My Cases").click();
-  // Locate the frame first
-  const frame = page.frameLocator("#baristaPageOut");
 
-  // Find the row that contains the specific text
-  const row = await frame.locator(`tr:has-text("${casesPage.casesCreated}")`);
-
-  // Click on the grid cell within that row
+  await expect(page.frameLocator("#baristaPageOut").getByText(`${casesPage.casesCreated}`)).toBeVisible();
 
   await page.frameLocator("#baristaPageOut").getByRole("gridcell", { name: "Medical Board Info" }).first().click();
 

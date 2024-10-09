@@ -42,19 +42,18 @@ test("Prereg SAO OD", async ({ page }) => {
   );
   await expect(leftTabPage.myCasesLink).toBeVisible();
   await leftTabPage.myCasesLink.waitFor();
-  //leftTabPage.clickMyCases;
 
   await page.getByRole("link", { name: "My Cases" }).click();
 
   await page.frameLocator("#baristaPageOut").getByText("My Cases").click();
-  // Locate the frame first
-  const frame = page.frameLocator("#baristaPageOut");
 
-  // Find the row that contains the specific text
-  const row = await frame.locator(`tr:has-text("${casesPage.casesCreated}")`).first();
+  await expect(page.frameLocator("#baristaPageOut").getByText(`${casesPage.casesCreated}`)).toBeVisible();
 
-  // Click on the grid cell within that row
-  await row.getByRole("gridcell", { name: "Occupation Disease Notice SAO" }).click();
+  await page
+    .frameLocator("#baristaPageOut")
+    .getByRole("gridcell", { name: "Occupation Disease Notice SAO" })
+    .first()
+    .click();
 
   const pagePromise = page.waitForEvent("popup");
   await page.frameLocator("#baristaPageOut").getByText("Open Task").click();
