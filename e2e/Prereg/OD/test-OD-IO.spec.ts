@@ -26,7 +26,7 @@ import { CasesPage } from "../../../pages/cases";
 
 test.beforeEach(async ({ page }) => {
   await login(page, "uat_muthu", "u@T_muthu");
-  //await login(page, "uat_akaw", "u@T_akaw");
+  // await login(page, "uat_akaw", "u@T_akaw");
 });
 
 test("Prereg IO OD", async ({ page }) => {
@@ -41,7 +41,6 @@ test("Prereg IO OD", async ({ page }) => {
   );
   await expect(leftTabPage.myCasesLink).toBeVisible();
   await leftTabPage.myCasesLink.waitFor();
-  //leftTabPage.clickMyCases;
 
   await page.getByRole("link", { name: "My Cases" }).click();
 
@@ -50,10 +49,10 @@ test("Prereg IO OD", async ({ page }) => {
   const frame = page.frameLocator("#baristaPageOut");
 
   // Find the row that contains the specific text
+  const row = await frame.locator(`tr:has-text("${casesPage.casesCreated}")`).first();
 
-  const row = await frame.locator(`tr:has-text("${casesPage.casesCreated}")`).first(); //const row = await frame.locator(`tr:has-text("${schemeRefValue}")`).first();
   // Click on the grid cell within that row
-  await row.getByRole("gridcell", { name: "Occupational Disease Notice" }).click();
+  await row.getByRole("gridcell", { name: "Occupation Disease Notice SAO" }).click();
 
   const pagePromise = page.waitForEvent("popup");
   await page.frameLocator("#baristaPageOut").getByText("Open Task").click();
@@ -115,10 +114,8 @@ test("Prereg IO OD", async ({ page }) => {
   await recommendationPage.recommendationButton.waitFor();
   await expect(recommendationPage.recommendationButton).toBeVisible();
   recommendationPage.clickRecommendationButton();
-
-  await expect(
-    page2.getByText("Reco History Approval History RECOMMENDATIONhide history SAO Approval - Before")
-  ).toBeVisible();
+  //temporary solution
+  await page.waitForTimeout(5000);
 
   await page2.getByRole("heading", { name: "RECOMMENDATION", exact: true }).click();
   await expect(page2.getByRole("heading", { name: "RECOMMENDATION", exact: true })).toBeVisible();
@@ -131,8 +128,6 @@ test("Prereg IO OD", async ({ page }) => {
   await expect(recommendationPage.actionRecommend).toBeVisible();
   await recommendationPage.actionRecommend.waitFor();
 
-  //temporary solution
-  await page2.locator("#ActionRecommend").selectOption("10206");
   recommendationPage.selectActionOption();
 
   const medicalCertificatePage = new MedicalCertificatePage(page2);

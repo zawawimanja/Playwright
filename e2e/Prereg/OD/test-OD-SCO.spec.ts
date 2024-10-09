@@ -27,8 +27,8 @@ import { SmbInformationPage } from "../../../pages/smb_info";
 import { CasesPage } from "../../../pages/cases";
 
 test.beforeEach(async ({ page }) => {
-  //await login(page, "roliana.pks", "u@T_roliana");
-  await login(page, "atilia.pks", "u@T_atilia");
+  await login(page, "nazira.pks", "u@T_nazira");
+  //await login(page, "atilia.pks", "u@T_atilia");
 });
 test("Prereg SCO OD", async ({ page }) => {
   const preregPage = new PreregistrationPage(page);
@@ -51,9 +51,7 @@ test("Prereg SCO OD", async ({ page }) => {
   const frame = page.frameLocator("#baristaPageOut");
 
   // Find the row that contains the specific text
-  const row = await frame.locator(`tr:has-text("${casesPage.casesCreated}")`).first(); //const row = await frame.locator(`tr:has-text("${schemeRefValue}")`).first();
-
-  //await page.frameLocator('#baristaPageOut').getByRole('gridcell', { name: 'Occupational Disease Notice' }).click();
+  const row = await frame.locator(`tr:has-text("${casesPage.casesCreated}")`).first();
 
   // Click on the grid cell within that row
   await row.getByRole("gridcell", { name: "Occupational Disease Notice" }).click();
@@ -119,12 +117,16 @@ test("Prereg SCO OD", async ({ page }) => {
   await expect(medicalOpinionPage.medicalOpinionButton).toBeVisible();
   medicalOpinionPage.clickMedicalOpinionButton();
 
-  //not work
+  //temporary solution not select
   const recommendationPage = new RecommendationPage(page2);
-  recommendationPage.clickSAORecommendationButton();
+  recommendationPage.clickRecommendationButton();
 
+  await expect(
+    page2.getByText("Reco History Approval History RECOMMENDATIONhide history SAO Approval - Before")
+  ).toBeVisible();
+  await expect(page2.locator("#ctrlField3158").getByText("Action*")).toBeVisible();
+  await expect(page2.locator("#ctrlField3158")).toContainText("Action*");
   await page2.locator("#ActionSCO").selectOption("10206");
-  await page2.locator("#ActionSCO").selectOption("10202");
   recommendationPage.selectActionOptionSCO();
 
   //hus info
