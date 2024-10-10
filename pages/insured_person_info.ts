@@ -41,7 +41,6 @@ export class InsuredPersonInfoPage {
   getStateSelect() {
     return this.page.getByLabel("State*");
   }
-
   getCitySelect() {
     return this.page.getByLabel("City*");
   }

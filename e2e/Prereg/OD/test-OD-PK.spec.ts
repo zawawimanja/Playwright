@@ -69,7 +69,7 @@ test("Prereg PK OD", async ({ page }) => {
   await insuredPersonInfoPage.clickInsuredPersonInfoButton();
   await insuredPersonInfoPage.noticeAndBenefitClaimFormReceivedDateInput.click();
 
-  await calendarPage.selectDateInsuredPersonPage("2021", "1", "11");
+  await calendarPage.selectDateInsuredPersonPage("2024", "10", "10");
   await insuredPersonInfoPage.fillOccupation("CS");
   await insuredPersonInfoPage.selectOccupation("1000002");
   await insuredPersonInfoPage.selectSubOccupation("1001132");
@@ -98,15 +98,15 @@ test("Prereg PK OD", async ({ page }) => {
   await medicalCertificatePage.clickMedicalCertificateButton();
 
   //1st mc
-  await medicalCertificatePage.addRecord();
-  await medicalCertificatePage.enterClinicHospitalName("kl");
+  // await medicalCertificatePage.addRecord();
+  // await medicalCertificatePage.enterClinicHospitalName("kl");
 
-  await page1.getByRole("textbox").nth(1).click();
-  await calendarPage.selectDateInsuredPersonPage("2021", "1", "12");
+  // await page1.getByRole("textbox").nth(1).click();
+  // await calendarPage.selectDateInsuredPersonPage("2021", "1", "12");
 
-  await page1.getByRole("textbox").nth(2).click();
-  await calendarPage.selectDateMCEndDate("2021", "1", "20");
-  await medicalCertificatePage.submitButton().click();
+  // await page1.getByRole("textbox").nth(2).click();
+  // await calendarPage.selectDateMCEndDate("2021", "1", "20");
+  // await medicalCertificatePage.submitButton().click();
 
   //2nd mc
   // await medicalCertificatePage.addRecord();
@@ -160,13 +160,14 @@ test("Prereg PK OD", async ({ page }) => {
   await previewSubmissionPage.clickPreviewSubmissionButton();
   await previewSubmissionPage.clickShowPreviewButton();
 
-  // await previewSubmissionPage.clickSubmitButton();
-  // await previewSubmissionPage.clickYesButton();
+  await previewSubmissionPage.clickSubmitButton();
+  await previewSubmissionPage.clickYesButton();
 
-  // await previewSubmissionPage.navigateToEFormRenderPage();
-  // const submitPage = new SubmitPage(page1);
+  const submitPage = new SubmitPage(page1);
 
-  // schemeRefValue = await submitPage.schemeRefNo.inputValue();
-  //await expect(page1.getByLabel("Scheme Ref No.")).toHaveValue("E11NTO20240010044");
+  schemeRefValue = await submitPage.schemeRefNo.inputValue();
+  console.log(" SRN " + schemeRefValue);
+
   //await page1.getByRole("button", { name: "Submit" }).click();
+  await submitPage.submitButton.click();
 });

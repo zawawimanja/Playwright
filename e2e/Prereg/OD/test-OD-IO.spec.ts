@@ -23,16 +23,22 @@ import { AppointmentPage } from "../../../pages/appointment";
 import { InconsistentDoubtfulPage } from "../../../pages/inconsistentdoubtful";
 import { CalendarPage } from "../../../utils/calendar";
 import { CasesPage } from "../../../pages/cases";
+import { SubmitPage } from "../../../pages/submit";
 
 test.beforeEach(async ({ page }) => {
-  await login(page, "uat_muthu", "u@T_muthu");
-  // await login(page, "uat_akaw", "u@T_akaw");
+  //  await login(page, "uat_muthu", "u@T_muthu");
+  await login(page, "uat_akaw", "u@T_akaw");
 });
+
+export let schemeRefValue: string;
 
 test("Prereg IO OD", async ({ page }) => {
   const preregPage = new PreregistrationPage(page);
   const leftTabPage = new LeftTabPage(page);
-  const casesPage = new CasesPage(page);
+
+  const submitPage = new SubmitPage(page);
+  const casesPage = new CasesPage(page, submitPage);
+  await casesPage.init();
 
   await leftTabPage.leftBar.waitFor();
   await expect(leftTabPage.leftBar).toBeVisible();
@@ -45,8 +51,6 @@ test("Prereg IO OD", async ({ page }) => {
   await page.getByRole("link", { name: "My Cases" }).click();
 
   await page.frameLocator("#baristaPageOut").getByText("My Cases").click();
-
-  const frame = page.frameLocator("#baristaPageOut");
 
   await page.waitForTimeout(5000);
   await expect(page.frameLocator("#baristaPageOut").getByText(`${casesPage.casesCreated}`)).toBeVisible();
@@ -139,14 +143,20 @@ test("Prereg IO OD", async ({ page }) => {
   const bankInformationPage = new BankInformationPage(page2);
   await bankInformationPage.clickBankInformationButton();
 
-  // const supportingDocumentPage = new SupportingDocumentPage(page2);
-  // await supportingDocumentPage.clickSupportingDocumentButton();
+  const supportingDocumentPage = new SupportingDocumentPage(page2);
+  await supportingDocumentPage.clickSupportingDocumentButton();
 
-  // const previewSubmissionPage = new PreviewSubmissionPage(page2);
-  // await previewSubmissionPage.clickPreviewSubmissionButton();
-  // await previewSubmissionPage.clickShowPreviewButton();
+  const previewSubmissionPage = new PreviewSubmissionPage(page2);
+  await previewSubmissionPage.clickPreviewSubmissionButton();
+  await previewSubmissionPage.clickShowPreviewButton();
 
-  // await previewSubmissionPage.clickSubmitButton();
-  // await previewSubmissionPage.clickYesButton();
-  // await previewSubmissionPage.navigateToEFormRenderPage();
+  await previewSubmissionPage.clickSubmitButton();
+  await previewSubmissionPage.clickYesButton();
+
+  schemeRefValue = await submitPage.schemeRefNo.inputValue();
+  console.log(" SRN " + schemeRefValue);
+
+  await expect(submitPage.caseStatusPendingApproval).toBeVisible();
+
+  await submitPage.submitButton.click();
 });
