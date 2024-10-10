@@ -33,4 +33,16 @@ export class SubmitPage {
   get textboxIO() {
     return this.page.locator("#AddRemarksDetailsR").getByRole("textbox");
   }
+
+  get caseStatusPendingApproval_IO() {
+    return this.page.getByRole("heading", { name: "Case Status: Pending Approval" });
+  }
+
+  get caseStatusPendingInvestigation_SAO() {
+    return this.page.getByRole("heading", { name: "Case Status: Pending Investigation" });
+  }
+
+  get submitButton() {
+    return this.page.getByRole("button", { name: "Submit" });
+  }
 }

@@ -24,15 +24,20 @@ import { ApprovalPage } from "../../../pages/approval";
 import { InconsistentDoubtfulPage } from "../../../pages/inconsistentdoubtful";
 import { CalendarPage } from "../../../utils/calendar";
 import { CasesPage } from "../../../pages/cases";
-
+import { SubmitPage } from "../../../pages/submit";
 test.beforeEach(async ({ page }) => {
   //await login(page, "roliana.pks", "u@T_roliana");
   await login(page, "uat_ali", "u@T_ali");
 });
+
+export let schemeRefValue: string;
 test("Prereg SAO OD", async ({ page }) => {
   const preregPage = new PreregistrationPage(page);
   const leftTabPage = new LeftTabPage(page);
-  const casesPage = new CasesPage(page);
+  const submitPage = new SubmitPage(page);
+  const casesPage = new CasesPage(page, submitPage);
+  await casesPage.init();
+
   await leftTabPage.leftBar.waitFor();
   await expect(leftTabPage.leftBar).toBeVisible();
   expect(leftTabPage.pageBuilderRoot).toContainText(
@@ -45,7 +50,8 @@ test("Prereg SAO OD", async ({ page }) => {
 
   await page.frameLocator("#baristaPageOut").getByText("My Cases").click();
 
-  await expect(page.frameLocator("#baristaPageOut").getByText(`${casesPage.casesCreated}`)).toBeVisible();
+  await page.waitForTimeout(5000);
+  await page.frameLocator("#baristaPageOut").getByText(`${casesPage.casesCreated}`).click();
 
   await page
     .frameLocator("#baristaPageOut")
@@ -69,7 +75,7 @@ test("Prereg SAO OD", async ({ page }) => {
   await expect(remarksPage.sectionTabs).toContainText("Remarks");
   await remarksPage.remarksButton.waitFor();
   await remarksPage.addRemarksButton.click();
-  await remarksPage.textboxIO.fill("test io");
+  await remarksPage.textboxIO.fill("test sao");
 
   await remarksPage.saveRemarksButton.click();
 
@@ -111,6 +117,8 @@ test("Prereg SAO OD", async ({ page }) => {
   const approvalPage = new ApprovalPage(page2);
   approvalPage.clickApprovalButton();
 
+  await page.waitForTimeout(5000);
+
   await expect(page2.getByRole("heading", { name: "RECOMMENDATION & APPROVAL" })).toBeVisible();
   await expect(page2.locator("#Recommendation2")).toContainText("RECOMMENDATION & APPROVAL");
   await expect(page2.getByRole("heading", { name: "Approval", exact: true })).toBeVisible();
@@ -121,6 +129,8 @@ test("Prereg SAO OD", async ({ page }) => {
   await expect(page2.locator("#ctrlField2089")).toContainText("Action*");
   await expect(approvalPage.actionApprove).toBeVisible();
   await approvalPage.actionApprove.waitFor();
+
+  await page2.locator("#ActionApprove").selectOption("10205");
   approvalPage.selectSAOActionOption();
 
   const supportingDocumentPage = new SupportingDocumentPage(page2);
@@ -130,7 +140,13 @@ test("Prereg SAO OD", async ({ page }) => {
   await previewSubmissionPage.clickPreviewSubmissionButton();
   await previewSubmissionPage.clickShowPreviewButton();
 
-  // await previewSubmissionPage.clickSubmitButton();
-  // await previewSubmissionPage.clickYesButton();
-  // await previewSubmissionPage.navigateToEFormRenderPage();
+  await previewSubmissionPage.clickSubmitButton();
+  await previewSubmissionPage.clickYesButton();
+
+  schemeRefValue = await submitPage.schemeRefNo.inputValue();
+  console.log(" SRN " + schemeRefValue);
+
+  await expect(submitPage.caseStatusPendingInvestigation_SAO).toBeVisible();
+
+  await submitPage.submitButton.click();
 });
