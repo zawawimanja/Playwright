@@ -28,6 +28,9 @@ export let schemeRefValue: string;
 test("Prereg PK OD", async ({ page }) => {
   const preregPage = new PreregistrationPage(page);
   const leftTabPage = new LeftTabPage(page);
+  const submitPage = new SubmitPage(page);
+  const casesPage = new CasesPage(page, submitPage);
+  await casesPage.init();
 
   await leftTabPage.leftBar.waitFor();
   await expect(leftTabPage.leftBar).toBeVisible();
@@ -163,11 +166,11 @@ test("Prereg PK OD", async ({ page }) => {
   await previewSubmissionPage.clickSubmitButton();
   await previewSubmissionPage.clickYesButton();
 
-  const submitPage = new SubmitPage(page1);
-
+  await expect(submitPage.schemeRefNo).toBeVisible();
   schemeRefValue = await submitPage.schemeRefNo.inputValue();
   console.log(" SRN " + schemeRefValue);
 
-  //await page1.getByRole("button", { name: "Submit" }).click();
+  await expect(submitPage.caseStatusPendingInvestigation_PK_SAO).toBeVisible();
+
   await submitPage.submitButton.click();
 });

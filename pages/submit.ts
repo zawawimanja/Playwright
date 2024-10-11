@@ -34,7 +34,7 @@ export class SubmitPage {
     return this.page.locator("#AddRemarksDetailsR").getByRole("textbox");
   }
 
-  get caseStatusPendingApproval_IO() {
+  get caseStatusPendingApproval_IO_SCO() {
     return this.page.getByRole("heading", { name: "Case Status: Pending Approval" });
   }
 
@@ -42,7 +42,7 @@ export class SubmitPage {
     return this.page.getByRole("heading", { name: "Case Status: Pending Recommendation" });
   }
 
-  get caseStatusPendingInvestigation_SAO() {
+  get caseStatusPendingInvestigation_PK_SAO() {
     return this.page.getByRole("heading", { name: "Case Status: Pending Investigation" });
   }
 

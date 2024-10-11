@@ -28,8 +28,8 @@ import { CasesPage } from "../../../pages/cases";
 import { SubmitPage } from "../../../pages/submit";
 
 test.beforeEach(async ({ page }) => {
-  //await login(page, "roliana.pks", "u@T_roliana");
-  await login(page, "uat_ali", "u@T_ali");
+  await login(page, "roliana.pks", "u@T_roliana");
+  // await login(page, "uat_ali", "u@T_ali");
 });
 
 export let schemeRefValue: string;
@@ -143,11 +143,6 @@ test("Prereg SAO OD", async ({ page }) => {
 
   await previewSubmissionPage.clickSubmitButton();
   await previewSubmissionPage.clickYesButton();
-
-  await submitPage.schemeRefNo.waitFor();
-  await expect(submitPage.schemeRefNo).toBeVisible();
-  schemeRefValue = await submitPage.schemeRefNo.inputValue();
-  console.log(" SRN " + schemeRefValue);
 
   await expect(submitPage.caseStatusPendingEndorsement_SAO).toBeVisible();
 

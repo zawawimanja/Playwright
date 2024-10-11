@@ -3,7 +3,7 @@ import { SubmitPage } from "../pages/submit";
 
 export class CasesPage {
   private page: Page;
-  private submitPage: SubmitPage; // SubmitPage instance
+  private submitPage: SubmitPage;
   private schemeRefValue: string;
 
   constructor(page: Page, submitPage: SubmitPage) {
@@ -17,7 +17,7 @@ export class CasesPage {
   // }
 
   async init() {
-    this.schemeRefValue = "E11NTO20240000065";
+    this.schemeRefValue = "E11NTO20240000075";
 
     console.log(" SRN " + this.schemeRefValue);
   }
