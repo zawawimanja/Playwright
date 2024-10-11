@@ -85,15 +85,6 @@ export class PreviewSubmissionPage {
   }
 
   /**
-   * Navigate to the eFormRender page
-   */
-  async navigateToEFormRenderPage() {
-    await this.page.goto(
-      "http://barista-sandbox.perkeso.gov.my:13491/ApplicationBuilder/eFormRender.html?WID=8F6200505680B7F611FF81FA610B2BC0"
-    );
-  }
-
-  /**
    * Check if the Scheme Ref No. label is visible
    */
 }

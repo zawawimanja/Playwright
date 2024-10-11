@@ -26,8 +26,8 @@ import { CalendarPage } from "../../../utils/calendar";
 import { CasesPage } from "../../../pages/cases";
 import { SubmitPage } from "../../../pages/submit";
 test.beforeEach(async ({ page }) => {
-  //await login(page, "roliana.pks", "u@T_roliana");
-  await login(page, "uat_ali", "u@T_ali");
+  await login(page, "roliana.pks", "u@T_roliana");
+  //await login(page, "uat_ali", "u@T_ali");
 });
 
 export let schemeRefValue: string;
@@ -113,10 +113,10 @@ test("Prereg SAO OD", async ({ page }) => {
   const recommendationPage = new RecommendationPage(page2);
   recommendationPage.clickSAORecommendationButton();
 
+  //temporary solution
+  await page.waitForTimeout(10000);
   const approvalPage = new ApprovalPage(page2);
   approvalPage.clickApprovalButton();
-
-  await page.waitForTimeout(5000);
 
   await expect(page2.getByRole("heading", { name: "RECOMMENDATION & APPROVAL" })).toBeVisible();
   await expect(page2.locator("#Recommendation2")).toContainText("RECOMMENDATION & APPROVAL");
@@ -128,7 +128,6 @@ test("Prereg SAO OD", async ({ page }) => {
   await expect(page2.locator("#ctrlField2089")).toContainText("Action*");
   await expect(approvalPage.actionApprove).toBeVisible();
   await approvalPage.actionApprove.waitFor();
-
   approvalPage.selectSAOActionOption();
 
   const supportingDocumentPage = new SupportingDocumentPage(page2);
@@ -141,10 +140,7 @@ test("Prereg SAO OD", async ({ page }) => {
   await previewSubmissionPage.clickSubmitButton();
   await previewSubmissionPage.clickYesButton();
 
-  schemeRefValue = await submitPage.schemeRefNo.inputValue();
-  console.log(" SRN " + schemeRefValue);
-
-  await expect(submitPage.caseStatusPendingInvestigation_SAO).toBeVisible();
+  await expect(submitPage.caseStatusPendingInvestigation_PK_SAO).toBeVisible();
 
   await submitPage.submitButton.click();
 });

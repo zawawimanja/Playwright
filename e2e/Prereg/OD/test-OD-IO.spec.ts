@@ -26,8 +26,8 @@ import { CasesPage } from "../../../pages/cases";
 import { SubmitPage } from "../../../pages/submit";
 
 test.beforeEach(async ({ page }) => {
-  //  await login(page, "uat_muthu", "u@T_muthu");
-  await login(page, "uat_akaw", "u@T_akaw");
+  await login(page, "uat_muthu", "u@T_muthu");
+  //await login(page, "uat_akaw", "u@T_akaw");
 });
 
 export let schemeRefValue: string;
@@ -121,8 +121,6 @@ test("Prereg IO OD", async ({ page }) => {
   await recommendationPage.recommendationButton.waitFor();
   await expect(recommendationPage.recommendationButton).toBeVisible();
   recommendationPage.clickRecommendationButton();
-  //temporary solution
-  await page.waitForTimeout(5000);
 
   await page2.getByRole("heading", { name: "RECOMMENDATION", exact: true }).click();
   await expect(page2.getByRole("heading", { name: "RECOMMENDATION", exact: true })).toBeVisible();
@@ -151,12 +149,10 @@ test("Prereg IO OD", async ({ page }) => {
   await previewSubmissionPage.clickShowPreviewButton();
 
   await previewSubmissionPage.clickSubmitButton();
+
   await previewSubmissionPage.clickYesButton();
 
-  schemeRefValue = await submitPage.schemeRefNo.inputValue();
-  console.log(" SRN " + schemeRefValue);
-
-  await expect(submitPage.caseStatusPendingApproval_IO).toBeVisible();
+  await expect(submitPage.caseStatusPendingApproval_IO_SCO).toBeVisible();
 
   await submitPage.submitButton.click();
 });

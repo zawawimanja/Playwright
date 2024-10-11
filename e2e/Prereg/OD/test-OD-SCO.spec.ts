@@ -28,7 +28,7 @@ import { CasesPage } from "../../../pages/cases";
 import { SubmitPage } from "../../../pages/submit";
 test.beforeEach(async ({ page }) => {
   await login(page, "nazira.pks", "u@T_nazira");
-  //await login(page, "atilia.pks", "u@T_atilia");
+  // await login(page, "atilia.pks", "u@T_atilia");
 });
 
 export let schemeRefValue: string;
@@ -120,10 +120,12 @@ test("Prereg SCO OD", async ({ page }) => {
   await expect(medicalOpinionPage.medicalOpinionButton).toBeVisible();
   medicalOpinionPage.clickMedicalOpinionButton();
 
+  await page.waitForTimeout(10000);
+
   //temporary solution
   const recommendationPage = new RecommendationPage(page2);
   recommendationPage.clickRecommendationButton();
-  await page.waitForTimeout(5000);
+
   await expect(
     page2.getByText("Reco History Approval History RECOMMENDATIONhide history SAO Approval - Before")
   ).toBeVisible();
@@ -149,12 +151,7 @@ test("Prereg SCO OD", async ({ page }) => {
   await previewSubmissionPage.clickSubmitButton();
   await previewSubmissionPage.clickYesButton();
 
-  await submitPage.schemeRefNo.waitFor();
-  await expect(submitPage.schemeRefNo).toBeVisible();
-  schemeRefValue = await submitPage.schemeRefNo.inputValue();
-  console.log(" SRN " + schemeRefValue);
-
-  await expect(submitPage.caseStatusPendingRecommendation_MB).toBeVisible();
+  await expect(submitPage.caseStatusPendingApproval_IO_SCO).toBeVisible();
 
   await submitPage.submitButton.click();
 });

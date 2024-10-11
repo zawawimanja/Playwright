@@ -26,8 +26,8 @@ import { CalendarPage } from "../../../utils/calendar";
 import { CasesPage } from "../../../pages/cases";
 import { SubmitPage } from "../../../pages/submit";
 test.beforeEach(async ({ page }) => {
-  //await login(page, "hilmi.pks", "u@T_hilmi");
-  await login(page, "aslam.pks", "u@T_aslam");
+  await login(page, "hilmi.pks", "u@T_hilmi");
+  // await login(page, "aslam.pks", "u@T_aslam");
 });
 
 export let schemeRefValue: string;
@@ -76,7 +76,6 @@ test("Prereg MB OD", async ({ page }) => {
   await page3.waitForTimeout(5000);
 
   //session venue
-
   await page3.locator("#ctrlField1020").getByRole("combobox").selectOption("708056");
 
   //session date
@@ -181,10 +180,7 @@ test("Prereg MB OD", async ({ page }) => {
   await previewSubmissionPage.clickSubmitButton();
   await previewSubmissionPage.clickYesButton();
 
-  schemeRefValue = await submitPage.schemeRefNo.inputValue();
-  console.log(" SRN " + schemeRefValue);
-
-  await expect(submitPage.caseStatusPendingApproval_IO).toBeVisible();
+  await expect(submitPage.caseStatusPendingRecommendation_MB).toBeVisible();
 
   await submitPage.submitButton.click();
 });

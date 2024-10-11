@@ -67,6 +67,6 @@ export class ApprovalPage {
   }
 
   async selectSAOActionOption() {
-    await this.actionApprove.selectOption("10207");
+    await this.actionApprove.selectOption("10222");
   }
 }
