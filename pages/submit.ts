@@ -46,6 +46,10 @@ export class SubmitPage {
     return this.page.getByRole("heading", { name: "Case Status: Pending Investigation" });
   }
 
+  get caseStatusPendingEndorsement_SAO() {
+    return this.page.getByRole("heading", { name: "Case Status: Pending Endorsement" });
+  }
+
   get submitButton() {
     return this.page.getByRole("button", { name: "Submit" });
   }

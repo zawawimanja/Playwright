@@ -25,15 +25,19 @@ import { InconsistentDoubtfulPage } from "../../../pages/inconsistentdoubtful";
 import { CalendarPage } from "../../../utils/calendar";
 import { SmbInformationPage } from "../../../pages/smb_info";
 import { CasesPage } from "../../../pages/cases";
-
+import { SubmitPage } from "../../../pages/submit";
 test.beforeEach(async ({ page }) => {
   await login(page, "nazira.pks", "u@T_nazira");
   //await login(page, "atilia.pks", "u@T_atilia");
 });
+
+export let schemeRefValue: string;
 test("Prereg SCO OD", async ({ page }) => {
   const preregPage = new PreregistrationPage(page);
   const leftTabPage = new LeftTabPage(page);
-  const casesPage = new CasesPage(page);
+  const submitPage = new SubmitPage(page);
+  const casesPage = new CasesPage(page, submitPage);
+  await casesPage.init();
 
   await leftTabPage.leftBar.waitFor();
   await expect(leftTabPage.leftBar).toBeVisible();
@@ -116,7 +120,7 @@ test("Prereg SCO OD", async ({ page }) => {
   await expect(medicalOpinionPage.medicalOpinionButton).toBeVisible();
   medicalOpinionPage.clickMedicalOpinionButton();
 
-  //temporary solution not select
+  //temporary solution
   const recommendationPage = new RecommendationPage(page2);
   recommendationPage.clickRecommendationButton();
   await page.waitForTimeout(5000);
@@ -142,7 +146,15 @@ test("Prereg SCO OD", async ({ page }) => {
   await previewSubmissionPage.clickPreviewSubmissionButton();
   await previewSubmissionPage.clickShowPreviewButton();
 
-  // await previewSubmissionPage.clickSubmitButton();
-  // await previewSubmissionPage.clickYesButton();
-  // await previewSubmissionPage.navigateToEFormRenderPage();
+  await previewSubmissionPage.clickSubmitButton();
+  await previewSubmissionPage.clickYesButton();
+
+  await submitPage.schemeRefNo.waitFor();
+  await expect(submitPage.schemeRefNo).toBeVisible();
+  schemeRefValue = await submitPage.schemeRefNo.inputValue();
+  console.log(" SRN " + schemeRefValue);
+
+  await expect(submitPage.caseStatusPendingRecommendation_MB).toBeVisible();
+
+  await submitPage.submitButton.click();
 });
