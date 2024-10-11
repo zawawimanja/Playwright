@@ -156,7 +156,7 @@ test("Prereg IO OD", async ({ page }) => {
   schemeRefValue = await submitPage.schemeRefNo.inputValue();
   console.log(" SRN " + schemeRefValue);
 
-  await expect(submitPage.caseStatusPendingApproval).toBeVisible();
+  await expect(submitPage.caseStatusPendingApproval_IO).toBeVisible();
 
   await submitPage.submitButton.click();
 });

@@ -33,4 +33,11 @@ export class RemarksPage {
   get textboxIO() {
     return this.page.locator("#AddRemarksDetailsR").getByRole("textbox");
   }
+
+  get caseInformationButton() {
+    return this.page.getByRole("button", { name: "Remarks" });
+  }
+  async clickRemarksButton() {
+    await this.remarksButton.click();
+  }
 }

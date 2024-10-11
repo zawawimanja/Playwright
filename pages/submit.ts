@@ -38,6 +38,10 @@ export class SubmitPage {
     return this.page.getByRole("heading", { name: "Case Status: Pending Approval" });
   }
 
+  get caseStatusPendingRecommendation_MB() {
+    return this.page.getByRole("heading", { name: "Case Status: Pending Recommendation" });
+  }
+
   get caseStatusPendingInvestigation_SAO() {
     return this.page.getByRole("heading", { name: "Case Status: Pending Investigation" });
   }
