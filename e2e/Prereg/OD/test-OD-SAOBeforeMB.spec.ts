@@ -113,7 +113,6 @@ test("Prereg SAO OD", async ({ page }) => {
   const recommendationPage = new RecommendationPage(page2);
   recommendationPage.clickSAORecommendationButton();
 
-  //not work
   const approvalPage = new ApprovalPage(page2);
   approvalPage.clickApprovalButton();
 
@@ -130,7 +129,6 @@ test("Prereg SAO OD", async ({ page }) => {
   await expect(approvalPage.actionApprove).toBeVisible();
   await approvalPage.actionApprove.waitFor();
 
-  await page2.locator("#ActionApprove").selectOption("10205");
   approvalPage.selectSAOActionOption();
 
   const supportingDocumentPage = new SupportingDocumentPage(page2);

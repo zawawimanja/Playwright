@@ -25,15 +25,20 @@ import { InconsistentDoubtfulPage } from "../../../pages/inconsistentdoubtful";
 import { CalendarPage } from "../../../utils/calendar";
 import { SmbInformationPage } from "../../../pages/smb_info";
 import { CasesPage } from "../../../pages/cases";
+import { SubmitPage } from "../../../pages/submit";
 
 test.beforeEach(async ({ page }) => {
   //await login(page, "roliana.pks", "u@T_roliana");
   await login(page, "uat_ali", "u@T_ali");
 });
+
+export let schemeRefValue: string;
 test("Prereg SAO OD", async ({ page }) => {
   const preregPage = new PreregistrationPage(page);
   const leftTabPage = new LeftTabPage(page);
-  const casesPage = new CasesPage(page);
+  const submitPage = new SubmitPage(page);
+  const casesPage = new CasesPage(page, submitPage);
+  await casesPage.init();
 
   await leftTabPage.leftBar.waitFor();
   await expect(leftTabPage.leftBar).toBeVisible();
@@ -115,13 +120,11 @@ test("Prereg SAO OD", async ({ page }) => {
 
   const approvalPage = new ApprovalPage(page2);
   approvalPage.clickApprovalButton();
+
   await expect(approvalPage.actionApproveAfterMB).toBeVisible();
   await approvalPage.actionApproveAfterMB.waitFor();
-  await page2.locator("#ActionApprovalAfterMB").selectOption("10203");
-  approvalPage.selectSAOActionOptionAfterMB();
 
-  // await approvalPage.actionApprove.waitFor();
-  // approvalPage.selectActionOption();
+  approvalPage.selectSAOActionOptionAfterMB();
 
   //wages info
   const wagesInfoPage = new WagesInfoPage(page2);
@@ -138,7 +141,15 @@ test("Prereg SAO OD", async ({ page }) => {
   await previewSubmissionPage.clickPreviewSubmissionButton();
   await previewSubmissionPage.clickShowPreviewButton();
 
-  // await previewSubmissionPage.clickSubmitButton();
-  // await previewSubmissionPage.clickYesButton();
-  // await previewSubmissionPage.navigateToEFormRenderPage();
+  await previewSubmissionPage.clickSubmitButton();
+  await previewSubmissionPage.clickYesButton();
+
+  await submitPage.schemeRefNo.waitFor();
+  await expect(submitPage.schemeRefNo).toBeVisible();
+  schemeRefValue = await submitPage.schemeRefNo.inputValue();
+  console.log(" SRN " + schemeRefValue);
+
+  await expect(submitPage.caseStatusPendingEndorsement_SAO).toBeVisible();
+
+  await submitPage.submitButton.click();
 });
