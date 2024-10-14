@@ -50,6 +50,10 @@ export class SubmitPage {
     return this.page.getByRole("heading", { name: "Case Status: Pending Endorsement" });
   }
 
+  get caseStatusPendingAssesment_SAO_BeforeMB() {
+    return this.page.getByRole("heading", { name: "Case Status: Pending Assessment" });
+  }
+
   get submitButton() {
     return this.page.getByRole("button", { name: "Submit" });
   }

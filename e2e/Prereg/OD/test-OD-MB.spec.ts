@@ -28,7 +28,7 @@ import { SubmitPage } from "../../../pages/submit";
 import { MyCasesPage } from "../../../pages/mycases";
 
 test.beforeEach(async ({ page }) => {
-  // await login(page, "hilmi.pks", "u@T_hilmi");
+  //await login(page, "hilmi.pks", "u@T_hilmi");
   await login(page, "aslam.pks", "u@T_aslam");
 });
 
@@ -36,7 +36,7 @@ export let schemeRefValue: string;
 test("Prereg MB OD", async ({ page }) => {
   const preregPage = new PreregistrationPage(page);
   const leftTabPage = new LeftTabPage(page);
-  const submitPage = new SubmitPage(page);
+  let submitPage = new SubmitPage(page);
   const casesPage = new CasesPage(page, submitPage);
   const myCasesPage = new MyCasesPage(page, casesPage);
   await casesPage.init();
@@ -184,7 +184,9 @@ test("Prereg MB OD", async ({ page }) => {
   await previewSubmissionPage.clickSubmitButton();
   await previewSubmissionPage.clickYesButton();
 
-  await page.waitForTimeout(15000);
+  await page2.waitForTimeout(15000);
+
+  submitPage = new SubmitPage(page2);
 
   await expect(submitPage.caseStatusPendingRecommendation_MB).toBeVisible();
 
