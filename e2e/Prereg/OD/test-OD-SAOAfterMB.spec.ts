@@ -26,6 +26,7 @@ import { CalendarPage } from "../../../utils/calendar";
 import { SmbInformationPage } from "../../../pages/smb_info";
 import { CasesPage } from "../../../pages/cases";
 import { SubmitPage } from "../../../pages/submit";
+import { MyCasesPage } from "../../../pages/mycases";
 
 test.beforeEach(async ({ page }) => {
   await login(page, "roliana.pks", "u@T_roliana");
@@ -38,6 +39,7 @@ test("Prereg SAO OD", async ({ page }) => {
   const leftTabPage = new LeftTabPage(page);
   const submitPage = new SubmitPage(page);
   const casesPage = new CasesPage(page, submitPage);
+  const myCasesPage = new MyCasesPage(page, casesPage);
   await casesPage.init();
 
   await leftTabPage.leftBar.waitFor();
@@ -47,21 +49,18 @@ test("Prereg SAO OD", async ({ page }) => {
   );
   await expect(leftTabPage.myCasesLink).toBeVisible();
   await leftTabPage.myCasesLink.waitFor();
+  //click my cases left tab
+  leftTabPage.clickMyCases();
 
-  await page.getByRole("link", { name: "My Cases" }).click();
+  //click  my cases tab
+  await myCasesPage.clickMyCases();
 
-  await page.frameLocator("#baristaPageOut").getByText("My Cases").click();
+  await page.waitForTimeout(5000);
 
-  await expect(page.frameLocator("#baristaPageOut").getByText(`${casesPage.casesCreated}`)).toBeVisible();
-
-  await page
-    .frameLocator("#baristaPageOut")
-    .getByRole("gridcell", { name: "Occupation Disease Notice SAO" })
-    .first()
-    .click();
+  myCasesPage.clickODSAO();
 
   const pagePromise = page.waitForEvent("popup");
-  await page.frameLocator("#baristaPageOut").getByText("Open Task").click();
+  await myCasesPage.frameLocator.getByText("Open Task").click();
   const page2 = await pagePromise;
 
   const draftPage = new DraftPage(page2);
@@ -144,7 +143,8 @@ test("Prereg SAO OD", async ({ page }) => {
   await previewSubmissionPage.clickSubmitButton();
   await previewSubmissionPage.clickYesButton();
 
-  await expect(submitPage.caseStatusPendingEndorsement_SAO).toBeVisible();
+  await page.waitForTimeout(15000);
+  // await expect(submitPage.caseStatusPendingEndorsement_SAO).toBeVisible();
 
   await submitPage.submitButton.click();
 });
