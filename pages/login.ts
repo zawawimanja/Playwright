@@ -11,9 +11,9 @@ export class LoginPage {
 
   async navigateToLogin() {
     //sit
-    //await this.page.goto("http://barista-sandbox.perkeso.gov.my:13491/");
+    await this.page.goto("http://barista-sandbox.perkeso.gov.my:13491/");
     //uat
-    await this.page.goto("http://barista-uat.perkeso.gov.my:13491/");
+    //await this.page.goto("http://barista-uat.perkeso.gov.my:13491/");
   }
 
   async setUsername(username: string) {
