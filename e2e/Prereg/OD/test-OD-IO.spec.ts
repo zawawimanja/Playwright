@@ -27,8 +27,8 @@ import { SubmitPage } from "../../../pages/submit";
 import { MyCasesPage } from "../../../pages/mycases";
 
 test.beforeEach(async ({ page }) => {
-  //await login(page, "uat_muthu", "u@T_muthu");
-  await login(page, "uat_akaw", "u@T_akaw");
+  await login(page, "uat_muthu", "u@T_muthu");
+  //await login(page, "uat_akaw", "u@T_akaw");
 });
 
 export let schemeRefValue: string;
@@ -36,8 +36,7 @@ export let schemeRefValue: string;
 test("Prereg IO OD", async ({ page }) => {
   const preregPage = new PreregistrationPage(page);
   const leftTabPage = new LeftTabPage(page);
-
-  const submitPage = new SubmitPage(page);
+  let submitPage = new SubmitPage(page);
   const casesPage = new CasesPage(page, submitPage);
   const myCasesPage = new MyCasesPage(page, casesPage);
   await casesPage.init();
@@ -151,7 +150,11 @@ test("Prereg IO OD", async ({ page }) => {
 
   await previewSubmissionPage.clickYesButton();
 
-  await page.waitForTimeout(15000);
+  await page2.waitForTimeout(15000);
+
+  submitPage = new SubmitPage(page2);
+
+  await expect(submitPage.schemeRefNo).toBeVisible();
 
   await expect(submitPage.caseStatusPendingApproval_IO_SCO).toBeVisible();
 

@@ -28,7 +28,7 @@ export let schemeRefValue: string;
 test("Prereg PK OD", async ({ page }) => {
   const preregPage = new PreregistrationPage(page);
   const leftTabPage = new LeftTabPage(page);
-  const submitPage = new SubmitPage(page);
+  let submitPage = new SubmitPage(page);
   const casesPage = new CasesPage(page, submitPage);
   await casesPage.init();
 
@@ -43,7 +43,7 @@ test("Prereg PK OD", async ({ page }) => {
   await preregPage.selectNoticeTypePreRegOption("OD");
   await preregPage.selectInsuredPersonEmployment("Yes");
   await preregPage.selectIdentificationType("2");
-  await preregPage.fillIdentificationNo("890206036154");
+  await preregPage.fillIdentificationNo("880825235145");
   await preregPage.selectNoticeAndBenefitClaimFormOption("Insured Person");
   await preregPage.fillEmployerCode("B3201014851P");
   await preregPage.clickClaimFormSubmissionByListButton();
@@ -72,7 +72,7 @@ test("Prereg PK OD", async ({ page }) => {
   await insuredPersonInfoPage.clickInsuredPersonInfoButton();
   await insuredPersonInfoPage.noticeAndBenefitClaimFormReceivedDateInput.click();
 
-  await calendarPage.selectDateInsuredPersonPage("2024", "10", "10");
+  await calendarPage.selectDateInsuredPersonPage("2023", "10", "10");
   await insuredPersonInfoPage.fillOccupation("CS");
   await insuredPersonInfoPage.selectOccupation("1000002");
   await insuredPersonInfoPage.selectSubOccupation("1001132");
@@ -166,12 +166,15 @@ test("Prereg PK OD", async ({ page }) => {
   await previewSubmissionPage.clickSubmitButton();
   await previewSubmissionPage.clickYesButton();
 
+  await page1.waitForTimeout(15000);
+
+  submitPage = new SubmitPage(page1);
+
   await expect(submitPage.schemeRefNo).toBeVisible();
   schemeRefValue = await submitPage.schemeRefNo.inputValue();
   console.log(" SRN " + schemeRefValue);
 
-  await page.waitForTimeout(15000);
-  // await expect(submitPage.caseStatusPendingInvestigation_PK_SAO).toBeVisible();
+  await expect(submitPage.caseStatusPendingInvestigation_PK_SAO).toBeVisible();
 
   await submitPage.submitButton.click();
 });
