@@ -30,7 +30,6 @@ test("Prereg PK OD", async ({ page }) => {
   const leftTabPage = new LeftTabPage(page);
   let submitPage = new SubmitPage(page);
   const casesPage = new CasesPage(page, submitPage);
-  await casesPage.init();
 
   await leftTabPage.leftBar.waitFor();
   await expect(leftTabPage.leftBar).toBeVisible();
@@ -171,6 +170,7 @@ test("Prereg PK OD", async ({ page }) => {
   submitPage = new SubmitPage(page1);
 
   await expect(submitPage.schemeRefNo).toBeVisible();
+
   schemeRefValue = await submitPage.schemeRefNo.inputValue();
   console.log(" SRN " + schemeRefValue);
 

@@ -38,6 +38,10 @@ export class SubmitPage {
     return this.page.getByRole("heading", { name: "Case Status: Pending Approval" });
   }
 
+  async getSchemeRefValue() {
+    return await this.schemeRefNo.inputValue();
+  }
+
   get caseStatusPendingRecommendation_MB() {
     return this.page.getByRole("heading", { name: "Case Status: Pending Recommendation" });
   }

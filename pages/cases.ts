@@ -11,16 +11,16 @@ export class CasesPage {
     this.submitPage = submitPage;
   }
 
-  // async init() {
-  //   this.schemeRefValue = await this.submitPage.schemeRefNo.inputValue();
-  //   console.log(" SRN " + this.schemeRefValue);
-  // }
-
   async init() {
-    this.schemeRefValue = "E11NTO20240000079";
-
+    this.schemeRefValue = await this.submitPage.getSchemeRefValue();
     console.log(" SRN " + this.schemeRefValue);
   }
+
+  // async init() {
+  //   this.schemeRefValue = "E11NTO20240000082";
+
+  //   console.log(" SRN " + this.schemeRefValue);
+  // }
 
   get casesCreated() {
     return this.schemeRefValue;
