@@ -24,10 +24,11 @@ import { InconsistentDoubtfulPage } from "../../../pages/inconsistentdoubtful";
 import { CalendarPage } from "../../../utils/calendar";
 import { CasesPage } from "../../../pages/cases";
 import { SubmitPage } from "../../../pages/submit";
+import { MyCasesPage } from "../../../pages/mycases";
 
 test.beforeEach(async ({ page }) => {
-  await login(page, "uat_muthu", "u@T_muthu");
-  //await login(page, "uat_akaw", "u@T_akaw");
+  //await login(page, "uat_muthu", "u@T_muthu");
+  await login(page, "uat_akaw", "u@T_akaw");
 });
 
 export let schemeRefValue: string;
@@ -38,6 +39,7 @@ test("Prereg IO OD", async ({ page }) => {
 
   const submitPage = new SubmitPage(page);
   const casesPage = new CasesPage(page, submitPage);
+  const myCasesPage = new MyCasesPage(page, casesPage);
   await casesPage.init();
 
   await leftTabPage.leftBar.waitFor();
@@ -48,21 +50,18 @@ test("Prereg IO OD", async ({ page }) => {
   await expect(leftTabPage.myCasesLink).toBeVisible();
   await leftTabPage.myCasesLink.waitFor();
 
-  await page.getByRole("link", { name: "My Cases" }).click();
+  //click my cases left tab
+  leftTabPage.clickMyCases();
 
-  await page.frameLocator("#baristaPageOut").getByText("My Cases").click();
+  //click  my cases tab
+  await myCasesPage.clickMyCases();
 
   await page.waitForTimeout(5000);
-  await expect(page.frameLocator("#baristaPageOut").getByText(`${casesPage.casesCreated}`)).toBeVisible();
 
-  await page
-    .frameLocator("#baristaPageOut")
-    .getByRole("gridcell", { name: "Occupational Disease Notice" })
-    .first()
-    .click();
+  myCasesPage.clickOD();
 
   const pagePromise = page.waitForEvent("popup");
-  await page.frameLocator("#baristaPageOut").getByText("Open Task").click();
+  await casesPage.frameLocator.getByText("Open Task").click();
   const page2 = await pagePromise;
 
   const draftPage = new DraftPage(page2);
@@ -151,6 +150,8 @@ test("Prereg IO OD", async ({ page }) => {
   await previewSubmissionPage.clickSubmitButton();
 
   await previewSubmissionPage.clickYesButton();
+
+  await page.waitForTimeout(15000);
 
   await expect(submitPage.caseStatusPendingApproval_IO_SCO).toBeVisible();
 

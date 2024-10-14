@@ -17,12 +17,16 @@ export class CasesPage {
   // }
 
   async init() {
-    this.schemeRefValue = "E11NTO20240000075";
+    this.schemeRefValue = "E11NTO20240000076";
 
     console.log(" SRN " + this.schemeRefValue);
   }
 
   get casesCreated() {
     return this.schemeRefValue;
+  }
+
+  get frameLocator() {
+    return this.page.frameLocator("#baristaPageOut");
   }
 }
