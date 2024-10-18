@@ -27,8 +27,8 @@ import { SubmitPage } from "../../../pages/submit";
 import { MyCasesPage } from "../../../pages/mycases";
 
 test.beforeEach(async ({ page }) => {
-  //await login(page, "uat_muthu", "u@T_muthu");
-  await login(page, "uat_akaw", "u@T_akaw");
+  await login(page, "uat_muthu", "u@T_muthu");
+  // await login(page, "uat_akaw", "u@T_akaw");
 });
 
 export let schemeRefValue: string;
@@ -115,6 +115,7 @@ test("Prereg IO OD", async ({ page }) => {
   await expect(medicalOpinionPage.medicalOpinionButton).toBeVisible();
   medicalOpinionPage.clickMedicalOpinionButton();
 
+  await page.waitForTimeout(10000);
   const recommendationPage = new RecommendationPage(page2);
   await recommendationPage.recommendationButton.waitFor();
   await expect(recommendationPage.recommendationButton).toBeVisible();

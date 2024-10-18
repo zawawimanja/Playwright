@@ -117,6 +117,7 @@ test("Prereg SAO OD", async ({ page }) => {
   const recommendationPage = new RecommendationPage(page2);
   recommendationPage.clickSAORecommendationButton();
 
+  await page.waitForTimeout(10000);
   const approvalPage = new ApprovalPage(page2);
   approvalPage.clickApprovalButton();
 

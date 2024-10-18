@@ -28,8 +28,8 @@ import { SubmitPage } from "../../../pages/submit";
 import { MyCasesPage } from "../../../pages/mycases";
 
 test.beforeEach(async ({ page }) => {
-  //await login(page, "hilmi.pks", "u@T_hilmi");
-  await login(page, "aslam.pks", "u@T_aslam");
+  await login(page, "hilmi.pks", "u@T_hilmi");
+  // await login(page, "aslam.pks", "u@T_aslam");
 });
 
 export let schemeRefValue: string;
