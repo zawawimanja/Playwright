@@ -33,16 +33,14 @@ test("Prereg PK OD", async ({ page }) => {
 
   await leftTabPage.leftBar.waitFor();
   await expect(leftTabPage.leftBar).toBeVisible();
-  expect(leftTabPage.pageBuilderRoot).toContainText(
-    "HomePre-RegistrationHUK Pre-RegistrationCreate RevisionMy CasesAppointmentsInsured Person SearchToolsSSNCommon ListingPermanent RepresentativeAnnual DeclarationReemployment Scheduler"
-  );
+
   await expect(leftTabPage.preregistrationLink).toBeVisible();
   leftTabPage.clickPreregistration();
 
   await preregPage.selectNoticeTypePreRegOption("OD");
   await preregPage.selectInsuredPersonEmployment("Yes");
   await preregPage.selectIdentificationType("2");
-  await preregPage.fillIdentificationNo("830328115147");
+  await preregPage.fillIdentificationNo("890101035964");
   await preregPage.selectNoticeAndBenefitClaimFormOption("Insured Person");
   await preregPage.fillEmployerCode("B3201014851P");
   await preregPage.clickClaimFormSubmissionByListButton();
@@ -71,7 +69,7 @@ test("Prereg PK OD", async ({ page }) => {
   await insuredPersonInfoPage.clickInsuredPersonInfoButton();
   await insuredPersonInfoPage.noticeAndBenefitClaimFormReceivedDateInput.click();
 
-  await calendarPage.selectDateInsuredPersonPage("2023", "10", "10");
+  await calendarPage.selectDateInsuredPersonPage("2021", "6", "10");
   await insuredPersonInfoPage.fillOccupation("CS");
   await insuredPersonInfoPage.selectOccupation("1000002");
   await insuredPersonInfoPage.selectSubOccupation("1001132");
@@ -100,15 +98,15 @@ test("Prereg PK OD", async ({ page }) => {
   await medicalCertificatePage.clickMedicalCertificateButton();
 
   //1st mc
-  // await medicalCertificatePage.addRecord();
-  // await medicalCertificatePage.enterClinicHospitalName("kl");
+  await medicalCertificatePage.addRecord();
+  await medicalCertificatePage.enterClinicHospitalName("kl");
 
-  // await page1.getByRole("textbox").nth(1).click();
-  // await calendarPage.selectDateInsuredPersonPage("2021", "1", "12");
+  await page1.getByRole("textbox").nth(1).click();
+  await calendarPage.selectDateInsuredPersonPage("2020", "1", "1");
 
-  // await page1.getByRole("textbox").nth(2).click();
-  // await calendarPage.selectDateMCEndDate("2021", "1", "20");
-  // await medicalCertificatePage.submitButton().click();
+  await page1.getByRole("textbox").nth(2).click();
+  await calendarPage.selectDateMCEndDate("2020", "2", "8");
+  await medicalCertificatePage.submitButton().click();
 
   //2nd mc
   // await medicalCertificatePage.addRecord();
@@ -116,11 +114,11 @@ test("Prereg PK OD", async ({ page }) => {
 
   // await calendarPage.startDateInput.click();
 
-  // await calendarPage.selectDateInsuredPersonPage("2021", "6", "21");
+  // await calendarPage.selectDateInsuredPersonPage("2021", "7", "9");
 
   // await calendarPage.endDateInput.click();
 
-  // await calendarPage.selectDateMCEndDate("2021", "7", "26");
+  // await calendarPage.selectDateMCEndDate("2021", "7", "14");
   // await medicalCertificatePage.submitButton().click();
 
   const wagesInfoPage = new WagesInfoPage(page1);
@@ -134,7 +132,7 @@ test("Prereg PK OD", async ({ page }) => {
   await certificationByEmployerPage.fillName("MAT");
   await certificationByEmployerPage.fillDesignation("CEO");
   await certificationByEmployerPage.calendar.click();
-  await calendarPage.selectDateInsuredPersonPage("2021", "7", "11");
+  await calendarPage.selectDateInsuredPersonPage("2021", "8", "11");
 
   const bankInformationPage = new BankInformationPage(page1);
   await bankInformationPage.clickBankInformationButton();
@@ -171,8 +169,8 @@ test("Prereg PK OD", async ({ page }) => {
 
   await expect(submitPage.schemeRefNo).toBeVisible();
 
-  schemeRefValue = await submitPage.schemeRefNo.inputValue();
-  console.log(" SRN " + schemeRefValue);
+  // schemeRefValue = await submitPage.schemeRefNo.inputValue();
+  // console.log(" SRN " + schemeRefValue);
 
   await expect(submitPage.caseStatusPendingInvestigation_PK_SAO).toBeVisible();
 

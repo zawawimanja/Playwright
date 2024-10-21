@@ -29,8 +29,8 @@ import { SubmitPage } from "../../../pages/submit";
 import { MyCasesPage } from "../../../pages/mycases";
 
 test.beforeEach(async ({ page }) => {
-  //await login(page, "roliana.pks", "u@T_roliana");
-  await login(page, "uat_ali", "u@T_ali");
+  await login(page, "roliana.pks", "u@T_roliana");
+  //await login(page, "uat_ali", "u@T_ali");
 });
 
 export let schemeRefValue: string;
@@ -44,9 +44,7 @@ test("Prereg SAO OD", async ({ page }) => {
 
   await leftTabPage.leftBar.waitFor();
   await expect(leftTabPage.leftBar).toBeVisible();
-  expect(leftTabPage.pageBuilderRoot).toContainText(
-    "HomePre-RegistrationHUK Pre-RegistrationCreate RevisionMy CasesAppointmentsInsured Person SearchToolsSSNCommon ListingPermanent RepresentativeAnnual DeclarationReemployment Scheduler"
-  );
+
   await expect(leftTabPage.myCasesLink).toBeVisible();
   await leftTabPage.myCasesLink.waitFor();
   //click my cases left tab

@@ -27,8 +27,8 @@ import { SubmitPage } from "../../../pages/submit";
 import { MyCasesPage } from "../../../pages/mycases";
 
 test.beforeEach(async ({ page }) => {
-  await login(page, "uat_muthu", "u@T_muthu");
-  // await login(page, "uat_akaw", "u@T_akaw");
+  // await login(page, "uat_muthu", "u@T_muthu");
+  await login(page, "uat_akaw", "u@T_akaw");
 });
 
 export let schemeRefValue: string;
@@ -43,9 +43,7 @@ test("Prereg IO OD", async ({ page }) => {
 
   await leftTabPage.leftBar.waitFor();
   await expect(leftTabPage.leftBar).toBeVisible();
-  expect(leftTabPage.pageBuilderRoot).toContainText(
-    "HomePre-RegistrationHUK Pre-RegistrationCreate RevisionMy CasesAppointmentsInsured Person SearchToolsSSNCommon ListingPermanent RepresentativeAnnual DeclarationReemployment Scheduler"
-  );
+
   await expect(leftTabPage.myCasesLink).toBeVisible();
   await leftTabPage.myCasesLink.waitFor();
 

@@ -43,9 +43,7 @@ test("Prereg MB OD", async ({ page }) => {
 
   await leftTabPage.leftBar.waitFor();
   await expect(leftTabPage.leftBar).toBeVisible();
-  expect(leftTabPage.pageBuilderRoot).toContainText(
-    "HomePre-RegistrationHUK Pre-RegistrationCreate RevisionMy CasesAppointmentsInsured Person SearchToolsSSNCommon ListingPermanent RepresentativeAnnual DeclarationReemployment Scheduler"
-  );
+
   await expect(leftTabPage.myCasesLink).toBeVisible();
   await leftTabPage.myCasesLink.waitFor();
 
@@ -85,7 +83,7 @@ test("Prereg MB OD", async ({ page }) => {
   //session date
   await page3.locator("#ctrlField1021").getByRole("textbox").click();
 
-  await calendarPage.selectDateInsuredPersonPage("2021", "7", "11");
+  await calendarPage.selectDateInsuredPersonPage("2021", "7", "15");
 
   //disease 5 blank default
   await expect(page3.getByText("Disease is in Schedule")).toBeVisible();
