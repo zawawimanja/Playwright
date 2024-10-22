@@ -48,14 +48,14 @@ test("Prereg IO OD", async ({ page }) => {
   await leftTabPage.myCasesLink.waitFor();
 
   //click my cases left tab
-  leftTabPage.clickMyCases();
+  await leftTabPage.clickMyCases();
 
   //click  my cases tab
   await myCasesPage.clickMyCases();
 
   await page.waitForTimeout(5000);
 
-  myCasesPage.clickOD();
+  await myCasesPage.clickOD();
 
   const pagePromise = page.waitForEvent("popup");
   await casesPage.frameLocator.getByText("Open Task").click();
@@ -81,7 +81,7 @@ test("Prereg IO OD", async ({ page }) => {
   await preparerInformationPage.clickpreparerInformationButton();
 
   const caseInformationPage = new CaseInformationPage(page2);
-  caseInformationPage.clickCaseInformationButton();
+  await caseInformationPage.clickCaseInformationButton();
 
   const insuredPersonInfoPage = new InsuredPersonInfoPage(page2);
   await insuredPersonInfoPage.clickInsuredPersonInfoButton();
@@ -103,10 +103,10 @@ test("Prereg IO OD", async ({ page }) => {
   await confirmationOfInsuredPage.clickConfirmationOfInsuredButton();
 
   const inconsistentDoubtfulPage = new InconsistentDoubtfulPage(page2);
-  inconsistentDoubtfulPage.clickInconsistentDoubtfulButton();
+  await inconsistentDoubtfulPage.clickInconsistentDoubtfulButton();
 
   const appointmentPage = new AppointmentPage(page2);
-  appointmentPage.clickAppointmentButton();
+  await appointmentPage.clickAppointmentButton();
 
   const medicalOpinionPage = new MedicalOpinionPage(page2);
   await medicalOpinionPage.medicalOpinionButton.waitFor();

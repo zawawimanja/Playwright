@@ -48,14 +48,14 @@ test("Prereg MB OD", async ({ page }) => {
   await leftTabPage.myCasesLink.waitFor();
 
   //click my cases left tab
-  leftTabPage.clickMyCases();
+  await leftTabPage.clickMyCases();
 
   //click  my cases tab
   await myCasesPage.clickMyCases();
 
   await page.waitForTimeout(5000);
 
-  myCasesPage.clickODMB();
+  await myCasesPage.clickODMB();
 
   const pagePromise = page.waitForEvent("popup");
   await myCasesPage.frameLocator.getByText("Open Task").click();
@@ -166,16 +166,15 @@ test("Prereg MB OD", async ({ page }) => {
   await confirmationOfInsuredPage.clickConfirmationOfInsuredButton();
 
   const inconsistentDoubtfulPage = new InconsistentDoubtfulPage(page2);
-  inconsistentDoubtfulPage.clickInconsistentDoubtfulButton();
+  await inconsistentDoubtfulPage.clickInconsistentDoubtfulButton();
 
   const recommendationPage = new RecommendationPage(page2);
-  recommendationPage.clickRecommendationButton();
+  await recommendationPage.clickRecommendationButton();
 
   const supportingDocumentPage = new SupportingDocumentPage(page2);
   await supportingDocumentPage.clickSupportingDocumentButton();
 
   await page2.reload();
-  await page2.waitForTimeout(10000);
 
   const previewSubmissionPage = new PreviewSubmissionPage(page2);
   await previewSubmissionPage.clickPreviewSubmissionButton();

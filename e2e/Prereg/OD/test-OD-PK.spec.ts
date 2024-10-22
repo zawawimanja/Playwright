@@ -40,7 +40,7 @@ test("Prereg PK OD", async ({ page }) => {
   await preregPage.selectNoticeTypePreRegOption("OD");
   await preregPage.selectInsuredPersonEmployment("Yes");
   await preregPage.selectIdentificationType("2");
-  await preregPage.fillIdentificationNo("890101035964");
+  await preregPage.fillIdentificationNo("921116036264");
   await preregPage.selectNoticeAndBenefitClaimFormOption("Insured Person");
   await preregPage.fillEmployerCode("B3201014851P");
   await preregPage.clickClaimFormSubmissionByListButton();

@@ -29,8 +29,8 @@ import { SubmitPage } from "../../../pages/submit";
 import { MyCasesPage } from "../../../pages/mycases";
 
 test.beforeEach(async ({ page }) => {
-  await login(page, "roliana.pks", "u@T_roliana");
-  //await login(page, "uat_ali", "u@T_ali");
+  // await login(page, "roliana.pks", "u@T_roliana");
+  await login(page, "uat_ali", "u@T_ali");
 });
 
 export let schemeRefValue: string;
@@ -48,14 +48,14 @@ test("Prereg SAO OD", async ({ page }) => {
   await expect(leftTabPage.myCasesLink).toBeVisible();
   await leftTabPage.myCasesLink.waitFor();
   //click my cases left tab
-  leftTabPage.clickMyCases();
+  await leftTabPage.clickMyCases();
 
   //click  my cases tab
   await myCasesPage.clickMyCases();
 
   await page.waitForTimeout(5000);
 
-  myCasesPage.clickODSAO();
+  await myCasesPage.clickODSAO();
 
   const pagePromise = page.waitForEvent("popup");
   await myCasesPage.frameLocator.getByText("Open Task").click();
@@ -81,7 +81,7 @@ test("Prereg SAO OD", async ({ page }) => {
   await preparerInformationPage.clickpreparerInformationButton();
 
   const caseInformationPage = new CaseInformationPage(page2);
-  caseInformationPage.clickCaseInformationButton();
+  await caseInformationPage.clickCaseInformationButton();
 
   const insuredPersonInfoPage = new InsuredPersonInfoPage(page2);
   await insuredPersonInfoPage.clickInsuredPersonInfoButton();
@@ -103,26 +103,26 @@ test("Prereg SAO OD", async ({ page }) => {
   await confirmationOfInsuredPage.clickConfirmationOfInsuredButton();
 
   const inconsistentDoubtfulPage = new InconsistentDoubtfulPage(page2);
-  inconsistentDoubtfulPage.clickInconsistentDoubtfulButton();
+  await inconsistentDoubtfulPage.clickInconsistentDoubtfulButton();
 
   //smb info
   const SMBInformationPage = new SmbInformationPage(page2);
-  SMBInformationPage.clickSMBInfoButton();
+  await SMBInformationPage.clickSMBInfoButton();
 
   const medicalOpinionPagePage = new MedicalOpinionPage(page2);
-  medicalOpinionPagePage.clickMedicalOpinionButton();
+  await medicalOpinionPagePage.clickMedicalOpinionButton();
 
   const recommendationPage = new RecommendationPage(page2);
-  recommendationPage.clickSAORecommendationButton();
+  await recommendationPage.clickSAORecommendationButton();
 
   await page.waitForTimeout(10000);
   const approvalPage = new ApprovalPage(page2);
-  approvalPage.clickApprovalButton();
+  await approvalPage.clickApprovalButton();
 
   await expect(approvalPage.actionApproveAfterMB).toBeVisible();
   await approvalPage.actionApproveAfterMB.waitFor();
 
-  approvalPage.selectSAOActionOptionAfterMB();
+  await approvalPage.selectSAOActionOptionAfterMB();
 
   //wages info
   const wagesInfoPage = new WagesInfoPage(page2);
