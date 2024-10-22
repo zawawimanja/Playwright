@@ -28,8 +28,8 @@ import { SubmitPage } from "../../../pages/submit";
 import { MyCasesPage } from "../../../pages/mycases";
 
 test.beforeEach(async ({ page }) => {
-  await login(page, "hilmi.pks", "u@T_hilmi");
-  // await login(page, "aslam.pks", "u@T_aslam");
+  //await login(page, "hilmi.pks", "u@T_hilmi");
+  await login(page, "aslam.pks", "u@T_aslam");
 });
 
 export let schemeRefValue: string;
@@ -107,7 +107,7 @@ test("Prereg MB OD", async ({ page }) => {
   await page3.locator("#ctrlField1026").getByRole("combobox").selectOption("Final");
 
   // //session ass
-  await page3.locator("#ctrlField1027").getByRole("textbox").fill("20");
+  await page3.locator("#ctrlField1027").getByRole("textbox").fill("100");
 
   // //jd result no default
   await page3.locator("#ctrlField1031").getByRole("combobox").selectOption("Yes");
@@ -133,13 +133,12 @@ test("Prereg MB OD", async ({ page }) => {
 
   await expect(remarksPage.sectionTabs).toContainText("Remarks");
   //temporary solution
-  await page.waitForTimeout(10000);
+  await page2.waitForTimeout(10000);
   await remarksPage.clickRemarksButton();
 
   await remarksPage.addRemarksButton.waitFor();
   await remarksPage.addRemarksButton.click();
   await remarksPage.textboxIO.fill("test mb");
-
   await remarksPage.saveRemarksButton.click();
 
   const preparerInformationPage = new PreparerInformationPage(page2);
@@ -174,6 +173,9 @@ test("Prereg MB OD", async ({ page }) => {
 
   const supportingDocumentPage = new SupportingDocumentPage(page2);
   await supportingDocumentPage.clickSupportingDocumentButton();
+
+  await page2.reload();
+  await page2.waitForTimeout(10000);
 
   const previewSubmissionPage = new PreviewSubmissionPage(page2);
   await previewSubmissionPage.clickPreviewSubmissionButton();
