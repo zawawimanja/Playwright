@@ -20,6 +20,10 @@ export class MedicalCertificatePage {
     return this.page.locator("#ctrlField976").getByRole("button", { name: "Add Record" });
   }
 
+  get husApprovalStatus() {
+    return this.page.getByRole("combobox").nth(2);
+  }
+
   get clinicHospitalInput() {
     return this.page.locator(
       'input[type="text"][class*="textInput"][style*="width: 90.49%;"][style*="float: left;"]:not([disabled])'
@@ -55,5 +59,16 @@ export class MedicalCertificatePage {
 
   submitButton() {
     return this.page.getByRole("button", { name: "OK" });
+  }
+
+  get editButton() {
+    return this.page.locator('input.ButtonOriginal[value="Edit"]').nth(0);
+  }
+  clickEditButton() {
+    return this.editButton.click();
+  }
+
+  async selectHusApprovalStatus() {
+    await this.husApprovalStatus.selectOption("Approved");
   }
 }

@@ -28,8 +28,8 @@ import { SubmitPage } from "../../../pages/submit";
 import { MyCasesPage } from "../../../pages/mycases";
 
 test.beforeEach(async ({ page }) => {
-  await login(page, "roliana.pks", "u@T_roliana");
-  //await login(page, "uat_ali", "u@T_ali");
+  //await login(page, "roliana.pks", "u@T_roliana");
+  await login(page, "uat_ali", "u@T_ali");
 });
 
 export let schemeRefValue: string;
@@ -55,7 +55,7 @@ test("Prereg SAO OD", async ({ page }) => {
 
   await page.waitForTimeout(5000);
 
-  myCasesPage.clickODSAO();
+  await myCasesPage.clickODSAO();
 
   const pagePromise = page.waitForEvent("popup");
   await myCasesPage.frameLocator.getByText("Open Task").click();
@@ -99,25 +99,20 @@ test("Prereg SAO OD", async ({ page }) => {
   const preferredSOCSOOfficePage = new PreferredSOCSOOfficePage(page2);
   await preferredSOCSOOfficePage.clickPreferredSOCSOOfficeButton();
 
-  const confirmationOfInsuredPage = new ConfirmationOfInsuredPage(page2);
-  await confirmationOfInsuredPage.clickConfirmationOfInsuredButton();
-
   const inconsistentDoubtfulPage = new InconsistentDoubtfulPage(page2);
-  inconsistentDoubtfulPage.clickInconsistentDoubtfulButton();
+  await inconsistentDoubtfulPage.clickInconsistentDoubtfulButton();
 
   const medicalOpinionPagePage = new MedicalOpinionPage(page2);
-  medicalOpinionPagePage.clickMedicalOpinionButton();
+  await medicalOpinionPagePage.clickMedicalOpinionButton();
 
   const recommendationPage = new RecommendationPage(page2);
-  recommendationPage.clickSAORecommendationButton();
+  await recommendationPage.clickSAORecommendationButton();
 
   //temporary solution
   await page.waitForTimeout(10000);
   const approvalPage = new ApprovalPage(page2);
-  approvalPage.clickApprovalButton();
+  await approvalPage.clickApprovalButton();
 
-  await expect(page2.getByRole("heading", { name: "RECOMMENDATION & APPROVAL" })).toBeVisible();
-  await expect(page2.locator("#Recommendation2")).toContainText("RECOMMENDATION & APPROVAL");
   await expect(page2.getByRole("heading", { name: "Approval", exact: true })).toBeVisible();
   await expect(page2.locator("#Approval")).toContainText("Approval");
 
@@ -126,7 +121,16 @@ test("Prereg SAO OD", async ({ page }) => {
   await expect(page2.locator("#ctrlField2089")).toContainText("Action*");
   await expect(approvalPage.actionApprove).toBeVisible();
   await approvalPage.actionApprove.waitFor();
-  approvalPage.selectSAOActionOption();
+  await approvalPage.selectSAOActionOption();
+
+  const medicalCertificatePage = new MedicalCertificatePage(page2);
+  await medicalCertificatePage.clickHusInfoButton();
+  await medicalCertificatePage.clickEditButton();
+  await medicalCertificatePage.selectHusApprovalStatus();
+  await medicalCertificatePage.submitButton().click();
+
+  const confirmationOfInsuredPage = new ConfirmationOfInsuredPage(page2);
+  await confirmationOfInsuredPage.clickConfirmationOfInsuredButton();
 
   const supportingDocumentPage = new SupportingDocumentPage(page2);
   await supportingDocumentPage.clickSupportingDocumentButton();

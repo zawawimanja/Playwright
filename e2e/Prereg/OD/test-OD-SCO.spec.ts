@@ -29,8 +29,8 @@ import { SubmitPage } from "../../../pages/submit";
 import { MyCasesPage } from "../../../pages/mycases";
 
 test.beforeEach(async ({ page }) => {
-  await login(page, "nazira.pks", "u@T_nazira");
-  //await login(page, "atilia.pks", "u@T_atilia");
+  //await login(page, "nazira.pks", "u@T_nazira");
+  await login(page, "atilia.pks", "u@T_atilia");
 });
 
 export let schemeRefValue: string;
@@ -49,13 +49,13 @@ test("Prereg SCO OD", async ({ page }) => {
   await leftTabPage.myCasesLink.waitFor();
 
   //click my cases left tab
-  leftTabPage.clickMyCases();
+  await leftTabPage.clickMyCases();
 
   //click  my cases tab
   await myCasesPage.clickMyCases();
 
   await page.waitForTimeout(5000);
-  myCasesPage.clickOD();
+  await myCasesPage.clickOD();
 
   const pagePromise = page.waitForEvent("popup");
   await myCasesPage.frameLocator.getByText("Open Task").click();
@@ -103,26 +103,26 @@ test("Prereg SCO OD", async ({ page }) => {
   await confirmationOfInsuredPage.clickConfirmationOfInsuredButton();
 
   const inconsistentDoubtfulPage = new InconsistentDoubtfulPage(page2);
-  inconsistentDoubtfulPage.clickInconsistentDoubtfulButton();
+  await inconsistentDoubtfulPage.clickInconsistentDoubtfulButton();
 
   //appointment
   const appointmentPage = new AppointmentPage(page2);
-  appointmentPage.clickAppointmentButton();
+  await appointmentPage.clickAppointmentButton();
 
   //smb info
   const SmbInformationPagePage = new SmbInformationPage(page2);
-  SmbInformationPagePage.clickSMBInfoButton();
+  await SmbInformationPagePage.clickSMBInfoButton();
 
   const medicalOpinionPage = new MedicalOpinionPage(page2);
   await medicalOpinionPage.medicalOpinionButton.waitFor();
   await expect(medicalOpinionPage.medicalOpinionButton).toBeVisible();
-  medicalOpinionPage.clickMedicalOpinionButton();
+  await medicalOpinionPage.clickMedicalOpinionButton();
 
   await page.waitForTimeout(10000);
 
   //temporary solution
   const recommendationPage = new RecommendationPage(page2);
-  recommendationPage.clickRecommendationButton();
+  await recommendationPage.clickRecommendationButton();
 
   await expect(
     page2.getByText("Reco History Approval History RECOMMENDATIONhide history SAO Approval - Before")
@@ -130,7 +130,7 @@ test("Prereg SCO OD", async ({ page }) => {
   await expect(page2.locator("#ctrlField3158").getByText("Action*")).toBeVisible();
   await expect(page2.locator("#ctrlField3158")).toContainText("Action*");
   await recommendationPage.actionRecommendSCO.waitFor();
-  recommendationPage.selectActionOptionSCO();
+  await recommendationPage.selectActionOptionSCO();
 
   //hus info
   const medicalCertificatePage = new MedicalCertificatePage(page2);
