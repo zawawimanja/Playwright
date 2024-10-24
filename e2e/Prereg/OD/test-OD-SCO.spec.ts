@@ -29,8 +29,8 @@ import { SubmitPage } from "../../../pages/submit";
 import { MyCasesPage } from "../../../pages/mycases";
 
 test.beforeEach(async ({ page }) => {
-  //await login(page, "nazira.pks", "u@T_nazira");
-  await login(page, "atilia.pks", "u@T_atilia");
+  await login(page, "nazira.pks", "u@T_nazira");
+  //await login(page, "atilia.pks", "u@T_atilia");
 });
 
 export let schemeRefValue: string;
@@ -149,7 +149,7 @@ test("Prereg SCO OD", async ({ page }) => {
   await previewSubmissionPage.clickSubmitButton();
   await previewSubmissionPage.clickYesButton();
 
-  await page2.waitForTimeout(15000);
+  await page2.waitForTimeout(30000);
 
   submitPage = new SubmitPage(page2);
   await expect(submitPage.schemeRefNo).toBeVisible();
