@@ -28,8 +28,8 @@ import { SubmitPage } from "../../../pages/submit";
 import { MyCasesPage } from "../../../pages/mycases";
 
 test.beforeEach(async ({ page }) => {
-  //await login(page, "hilmi.pks", "u@T_hilmi");
-  await login(page, "aslam.pks", "u@T_aslam");
+  await login(page, "hilmi.pks", "u@T_hilmi");
+  //await login(page, "aslam.pks", "u@T_aslam");
 });
 
 export let schemeRefValue: string;
@@ -83,7 +83,7 @@ test("Prereg MB OD", async ({ page }) => {
   //session date
   await page3.locator("#ctrlField1021").getByRole("textbox").click();
 
-  await calendarPage.selectDateInsuredPersonPage("2021", "7", "15");
+  await calendarPage.selectDateInsuredPersonPage("2021", "8", "15");
 
   //disease 5 blank default
   await expect(page3.getByText("Disease is in Schedule")).toBeVisible();
@@ -106,11 +106,22 @@ test("Prereg MB OD", async ({ page }) => {
   //ass type
   await page3.locator("#ctrlField1026").getByRole("combobox").selectOption("Final");
 
-  // //session ass
-  await page3.locator("#ctrlField1027").getByRole("textbox").fill("100");
+  // Fill the textbox with "100"  session ass
+  await page3.locator("#ctrlField1027").getByRole("textbox").fill("30");
 
   // //jd result no default
   await page3.locator("#ctrlField1031").getByRole("combobox").selectOption("Yes");
+
+  // Check if the value is "100"
+  const value = await page3.locator("#ctrlField1027").getByRole("textbox").inputValue();
+
+  //els
+  if (value === "100") {
+    // Perform actions if the value is "100"
+    await page3.locator("#ctrlField1032").getByRole("combobox").selectOption("Yes");
+  } else {
+    // Perform actions if the value is not "100"
+  }
 
   // //recommendation rehab no default
   await page3.locator("#ctrlField1033").getByRole("combobox").selectOption("Yes");
@@ -176,7 +187,11 @@ test("Prereg MB OD", async ({ page }) => {
 
   await page2.reload();
 
+  await page2.waitForTimeout(30000);
+
   const previewSubmissionPage = new PreviewSubmissionPage(page2);
+  await previewSubmissionPage.previewSubmissionButton.waitFor();
+  await expect(previewSubmissionPage.previewSubmissionButton).toBeVisible();
   await previewSubmissionPage.clickPreviewSubmissionButton();
   await previewSubmissionPage.clickShowPreviewButton();
 

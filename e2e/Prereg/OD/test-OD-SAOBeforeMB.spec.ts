@@ -28,7 +28,7 @@ import { SubmitPage } from "../../../pages/submit";
 import { MyCasesPage } from "../../../pages/mycases";
 
 test.beforeEach(async ({ page }) => {
-  //await login(page, "roliana.pks", "u@T_roliana");
+  // await login(page, "roliana.pks", "u@T_roliana");
   await login(page, "uat_ali", "u@T_ali");
 });
 
@@ -142,7 +142,7 @@ test("Prereg SAO OD", async ({ page }) => {
   await previewSubmissionPage.clickSubmitButton();
   await previewSubmissionPage.clickYesButton();
 
-  await page2.waitForTimeout(15000);
+  await page2.waitForTimeout(30000);
 
   submitPage = new SubmitPage(page2);
   await expect(submitPage.schemeRefNo).toBeVisible();

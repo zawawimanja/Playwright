@@ -27,8 +27,8 @@ import { SubmitPage } from "../../../pages/submit";
 import { MyCasesPage } from "../../../pages/mycases";
 
 test.beforeEach(async ({ page }) => {
-  // await login(page, "uat_muthu", "u@T_muthu");
-  await login(page, "uat_akaw", "u@T_akaw");
+  await login(page, "uat_muthu", "u@T_muthu");
+  //await login(page, "uat_akaw", "u@T_akaw");
 });
 
 export let schemeRefValue: string;
@@ -149,7 +149,7 @@ test("Prereg IO OD", async ({ page }) => {
 
   await previewSubmissionPage.clickYesButton();
 
-  await page2.waitForTimeout(15000);
+  await page2.waitForTimeout(30000);
 
   submitPage = new SubmitPage(page2);
 
