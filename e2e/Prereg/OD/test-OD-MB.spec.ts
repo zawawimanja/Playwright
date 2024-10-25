@@ -29,7 +29,7 @@ import { MyCasesPage } from "../../../pages/mycases";
 
 test.beforeEach(async ({ page }) => {
   await login(page, "hilmi.pks", "u@T_hilmi");
-  //await login(page, "aslam.pks", "u@T_aslam");
+  // await login(page, "aslam.pks", "u@T_aslam");
 });
 
 export let schemeRefValue: string;
@@ -104,10 +104,27 @@ test("Prereg MB OD", async ({ page }) => {
   page3.locator("#ctrlField1025").getByRole("textbox").fill("test");
 
   //ass type
-  await page3.locator("#ctrlField1026").getByRole("combobox").selectOption("Final");
+  await page3.locator("#ctrlField1026").getByRole("combobox").selectOption("Provisional");
+
+  // Get the selected value to verify by evaluating the text content of the selected option
+  const selectedValue = await page3.locator("#ctrlField1026 option:checked").textContent();
+
+  console.log(selectedValue + " type");
+
+  // Conditional logic based on the selected value
+  if (selectedValue === "Provisional") {
+    // Perform actions if the selected value is "Provisional"
+    await page3.locator("#ctrlField1030").getByRole("textbox").click();
+
+    await calendarPage.selectDateInsuredPersonPage("2022", "8", "15");
+  } else {
+    // Perform actions if the selected value is not "Provisional"
+  }
 
   // Fill the textbox with "100"  session ass
-  await page3.locator("#ctrlField1027").getByRole("textbox").fill("30");
+  await page3.locator("#ctrlField1027").getByRole("textbox").fill("10");
+
+  //if choose provisional have assessment date
 
   // //jd result no default
   await page3.locator("#ctrlField1031").getByRole("combobox").selectOption("Yes");
