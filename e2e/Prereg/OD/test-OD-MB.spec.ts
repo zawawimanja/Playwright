@@ -29,7 +29,7 @@ import { MyCasesPage } from "../../../pages/mycases";
 
 test.beforeEach(async ({ page }) => {
   await login(page, "hilmi.pks", "u@T_hilmi");
-  //await login(page, "aslam.pks", "u@T_aslam");
+  // await login(page, "aslam.pks", "u@T_aslam");
 });
 
 export let schemeRefValue: string;
@@ -106,8 +106,20 @@ test("Prereg MB OD", async ({ page }) => {
   //ass type
   await page3.locator("#ctrlField1026").getByRole("combobox").selectOption("Final");
 
+  // Get the selected value to verify
+  const selectedValue = await page3.locator("#ctrlField1026").getByRole("combobox").getAttribute("value");
+
+  // Conditional logic based on the selected value
+  if (selectedValue === "Provisional") {
+    // Perform actions if the selected value is "Provisional"
+  } else {
+    // Perform actions if the selected value is not "Provisional"
+  }
+
   // Fill the textbox with "100"  session ass
-  await page3.locator("#ctrlField1027").getByRole("textbox").fill("30");
+  await page3.locator("#ctrlField1027").getByRole("textbox").fill("10");
+
+  //if choose provisional have assessment date
 
   // //jd result no default
   await page3.locator("#ctrlField1031").getByRole("combobox").selectOption("Yes");
