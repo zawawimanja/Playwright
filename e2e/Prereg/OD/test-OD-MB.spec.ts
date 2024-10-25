@@ -104,14 +104,19 @@ test("Prereg MB OD", async ({ page }) => {
   page3.locator("#ctrlField1025").getByRole("textbox").fill("test");
 
   //ass type
-  await page3.locator("#ctrlField1026").getByRole("combobox").selectOption("Final");
+  await page3.locator("#ctrlField1026").getByRole("combobox").selectOption("Provisional");
 
-  // Get the selected value to verify
-  const selectedValue = await page3.locator("#ctrlField1026").getByRole("combobox").getAttribute("value");
+  // Get the selected value to verify by evaluating the text content of the selected option
+  const selectedValue = await page3.locator("#ctrlField1026 option:checked").textContent();
+
+  console.log(selectedValue + " type");
 
   // Conditional logic based on the selected value
   if (selectedValue === "Provisional") {
     // Perform actions if the selected value is "Provisional"
+    await page3.locator("#ctrlField1030").getByRole("textbox").click();
+
+    await calendarPage.selectDateInsuredPersonPage("2022", "8", "15");
   } else {
     // Perform actions if the selected value is not "Provisional"
   }
