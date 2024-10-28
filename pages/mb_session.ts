@@ -46,6 +46,14 @@ export class MBSessionPage {
     await this.diseaseSchedule5.getByRole("combobox").selectOption("Yes");
   }
 
+  get ELS() {
+    return this.page.locator("#ctrlField1032");
+  }
+
+  async selectELS() {
+    await this.ELS.getByRole("combobox").selectOption("Yes");
+  }
+
   get diseaseWork() {
     return this.page.locator("#ctrlField1023");
   }

@@ -27,6 +27,7 @@ import { CasesPage } from "../../../pages/cases";
 import { SubmitPage } from "../../../pages/submit";
 import { MyCasesPage } from "../../../pages/mycases";
 import { MBSessionPage } from "../../../pages/mb_session";
+import { ButtonPage } from "../../../utils/button";
 
 test.beforeEach(async ({ page }) => {
   await login(page, "hilmi.pks", "u@T_hilmi");
@@ -71,54 +72,53 @@ test("Prereg MB OD", async ({ page }) => {
   await page2.getByRole("button", { name: "SMB Information" }).click();
 
   const page3Promise = page2.waitForEvent("popup");
-  await page2.getByRole("button", { name: "New" }).click();
+  const buttonPage = new ButtonPage(page2);
+  await buttonPage.clickNew();
+  //await page2.getByRole("button", { name: "New" }).click();
   const page3 = await page3Promise;
-  await page3.getByRole("button", { name: "Add" }).click();
+  const buttonPage3 = new ButtonPage(page3);
+  await buttonPage3.clickAdd();
+  // await page3.getByRole("button", { name: "Add" }).click();
   const calendarPage = new CalendarPage(page3);
 
   await page3.waitForTimeout(5000);
 
   const mbSessionPage = new MBSessionPage(page3);
 
-  //session venue
-  // await page3.locator("#ctrlField1020").getByRole("combobox").selectOption("708056");
-  mbSessionPage.selectSessionVenue();
+  //session venue hkl
+  await mbSessionPage.selectSessionVenue();
 
   //session date
-  await page3.locator("#ctrlField1021").getByRole("textbox").click();
+  //await page3.locator("#ctrlField1021").getByRole("textbox").click();
+  calendarPage.clickDate("Session Date");
   await calendarPage.selectDateInsuredPersonPage("2021", "8", "15");
 
   //disease 5 blank default
   await expect(page3.getByText("Disease is in Schedule")).toBeVisible();
-  await expect(page3.locator("#ctrlField1022")).toContainText("Disease is in Schedule 5");
-  //await page3.locator("#ctrlField1022").getByRole("combobox").selectOption("Yes");
-  mbSessionPage.selectDiseaseSchedule5();
+  await expect(mbSessionPage.diseaseSchedule5).toContainText("Disease is in Schedule 5");
+  await mbSessionPage.selectDiseaseSchedule5();
 
   //disease work no default
-  //await page3.locator("#ctrlField1023").getByRole("combobox").selectOption("Yes");
-  mbSessionPage.selectDiseaseWork();
+  await mbSessionPage.selectDiseaseWork();
 
   //mmi yes default
   await expect(page3.getByText("MMI Achieved")).toBeVisible();
-  await expect(page3.locator("#ctrlField1024")).toContainText("MMI Achieved");
-  //await page3.locator("#ctrlField1024").getByRole("combobox").selectOption("Yes");
-  mbSessionPage.selectmmiAchieved();
+  await expect(mbSessionPage.mmiAchieved).toContainText("MMI Achieved");
+  await mbSessionPage.selectmmiAchieved();
 
   //desc
   await expect(page3.getByText("Description of Disease")).toBeVisible();
-  await expect(page3.locator("#ctrlField1025")).toContainText("Description of Disease");
-  // page3.locator("#ctrlField1025").getByRole("textbox").fill("test");
-  mbSessionPage.setdescDis();
+  await expect(mbSessionPage.descDisease).toContainText("Description of Disease");
+  await mbSessionPage.setdescDis();
 
   //ass type
-  // await page3.locator("#ctrlField1026").getByRole("combobox").selectOption("Provisional");
-  mbSessionPage.selectAssessmentType("Provisional");
+  await mbSessionPage.selectAssessmentType("Provisional");
 
   // Fill the textbox with "100"  session ass
-  // await page3.locator("#ctrlField1027").getByRole("textbox").fill("10");
-  mbSessionPage.setsessionAssesment();
+  // await page3.locator("#ctrlField1034").getByRole("textbox").fill("10");
+  await mbSessionPage.setsessionAssesment();
 
-  // Get the selected value to verify by evaluating the text content of the selected option
+  //Get the selected value to verify by evaluating the text content of the selected option
   const selectedValue = await page3.locator("#ctrlField1026 option:checked").textContent();
 
   console.log(selectedValue + " type");
@@ -127,42 +127,44 @@ test("Prereg MB OD", async ({ page }) => {
   // Conditional logic based on the selected value
   if (selectedValue === "Provisional") {
     // Perform actions if the selected value is "Provisional"
-    await page3.locator("#ctrlField1030").getByRole("textbox").click();
+    // await page3.locator("#ctrlField1030").getByRole("textbox").click();
+    calendarPage.clickDate("Provisional Date");
 
     await calendarPage.selectDateInsuredPersonPage("2022", "8", "15");
   }
 
   // //jd result no default
-  // await page3.locator("#ctrlField1031").getByRole("combobox").selectOption("Yes");
   mbSessionPage.selectJDResult();
 
   // Check if the value is "100"
-  const value = await page3.locator("#ctrlField1027").getByRole("textbox").inputValue();
+  const value = await mbSessionPage.sessionAssesment.getByRole("textbox").inputValue();
 
   //els
   if (value === "100") {
     // Perform actions if the value is "100"
-    await page3.locator("#ctrlField1032").getByRole("combobox").selectOption("Yes");
+    await mbSessionPage.selectELS;
   } else {
     // Perform actions if the value is not "100"
   }
 
   // //recommendation rehab no default
-  // await page3.locator("#ctrlField1033").getByRole("combobox").selectOption("Yes");
   mbSessionPage.selectrecommendationRehab();
 
   // //remark recommendation
-  await expect(page3.locator("#ctrlField1034")).toContainText("Remarks for Recommendation for Rehab");
-  // await page3.locator("#ctrlField1034").getByRole("textbox").fill("test");
+  await expect(mbSessionPage.remarkRecommendation).toContainText("Remarks for Recommendation for Rehab");
   mbSessionPage.setremarkRecommendation();
 
   // //remarks textbox
   await expect(page3.locator("#previewPanel")).toContainText("Remarks");
   await page3.locator("#ctrlField1049").getByRole("textbox").fill("test");
 
-  await page3.getByRole("button", { name: "OK" }).click();
-  await page3.getByRole("button", { name: "Submit" }).click();
-  await page3.getByRole("button", { name: "Yes" }).click();
+  buttonPage3.clickOK();
+  buttonPage3.clickSubmit();
+  buttonPage3.clickYes();
+
+  // await page3.getByRole("button", { name: "OK" }).click();
+  // await page3.getByRole("button", { name: "Submit" }).click();
+  // await page3.getByRole("button", { name: "Yes" }).click();
 
   const remarksPage = new RemarksPage(page2);
   await remarksPage.remarksButton.waitFor();
