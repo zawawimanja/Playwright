@@ -36,6 +36,7 @@ test.beforeEach(async ({ page }) => {
 
 export let schemeRefValue: string;
 test("Prereg MB OD", async ({ page }) => {
+  let value = "";
   const preregPage = new PreregistrationPage(page);
   const leftTabPage = new LeftTabPage(page);
   let submitPage = new SubmitPage(page);
@@ -74,22 +75,19 @@ test("Prereg MB OD", async ({ page }) => {
   const page3Promise = page2.waitForEvent("popup");
   const buttonPage = new ButtonPage(page2);
   await buttonPage.clickNew();
-  //await page2.getByRole("button", { name: "New" }).click();
+
   const page3 = await page3Promise;
   const buttonPage3 = new ButtonPage(page3);
   await buttonPage3.clickAdd();
-  // await page3.getByRole("button", { name: "Add" }).click();
+
   const calendarPage = new CalendarPage(page3);
-
   await page3.waitForTimeout(5000);
-
   const mbSessionPage = new MBSessionPage(page3);
 
   //session venue hkl
   await mbSessionPage.selectSessionVenue();
 
   //session date
-  //await page3.locator("#ctrlField1021").getByRole("textbox").click();
   calendarPage.clickDate("Session Date");
   await calendarPage.selectDateInsuredPersonPage("2021", "8", "15");
 
@@ -114,30 +112,33 @@ test("Prereg MB OD", async ({ page }) => {
   //ass type
   await mbSessionPage.selectAssessmentType("Provisional");
 
-  // Fill the textbox with "100"  session ass
-  // await page3.locator("#ctrlField1034").getByRole("textbox").fill("10");
-  await mbSessionPage.setsessionAssesment();
+  //check additional assesment for session assesment
+  if (await mbSessionPage.additionalAssesment.isVisible()) {
+    await mbSessionPage.setsessionAssesmentAdditionalAssessment();
+  } else {
+    await mbSessionPage.setsessionAssesment();
+  }
 
-  //Get the selected value to verify by evaluating the text content of the selected option
+  //Get  assessment type value
   const selectedValue = await page3.locator("#ctrlField1026 option:checked").textContent();
+  //const selectedValue = await mbSessionPage.assessmentType.textContent();
 
   console.log(selectedValue + " type");
 
   //if choose provisional have assessment date
-  // Conditional logic based on the selected value
   if (selectedValue === "Provisional") {
-    // Perform actions if the selected value is "Provisional"
-    // await page3.locator("#ctrlField1030").getByRole("textbox").click();
     calendarPage.clickDate("Provisional Date");
-
     await calendarPage.selectDateInsuredPersonPage("2022", "8", "15");
   }
 
   // //jd result no default
   mbSessionPage.selectJDResult();
 
-  // Check if the value is "100"
-  const value = await mbSessionPage.sessionAssesment.getByRole("textbox").inputValue();
+  if (await mbSessionPage.additionalAssesment.isVisible()) {
+    value = await mbSessionPage.sessionAssesmentAdditionalAssessment.getByRole("textbox").inputValue();
+  } else {
+    value = await mbSessionPage.sessionAssesment.getByRole("textbox").inputValue();
+  }
 
   //els
   if (value === "100") {
@@ -156,15 +157,11 @@ test("Prereg MB OD", async ({ page }) => {
 
   // //remarks textbox
   await expect(page3.locator("#previewPanel")).toContainText("Remarks");
-  await page3.locator("#ctrlField1049").getByRole("textbox").fill("test");
+  await mbSessionPage.setremark();
 
   buttonPage3.clickOK();
   buttonPage3.clickSubmit();
   buttonPage3.clickYes();
-
-  // await page3.getByRole("button", { name: "OK" }).click();
-  // await page3.getByRole("button", { name: "Submit" }).click();
-  // await page3.getByRole("button", { name: "Yes" }).click();
 
   const remarksPage = new RemarksPage(page2);
   await remarksPage.remarksButton.waitFor();
