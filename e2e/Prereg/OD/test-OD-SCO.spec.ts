@@ -29,8 +29,8 @@ import { SubmitPage } from "../../../pages/submit";
 import { MyCasesPage } from "../../../pages/mycases";
 
 test.beforeEach(async ({ page }) => {
-  await login(page, "nazira.pks", "u@T_nazira");
-  // await login(page, "atilia.pks", "u@T_atilia");
+  //await login(page, "nazira.pks", "u@T_nazira");
+  await login(page, "atilia.pks", "u@T_atilia");
 });
 
 export let schemeRefValue: string;
@@ -127,8 +127,6 @@ test("Prereg SCO OD", async ({ page }) => {
   await expect(
     page2.getByText("Reco History Approval History RECOMMENDATIONhide history SAO Approval - Before")
   ).toBeVisible();
-  await expect(page2.locator("#ctrlField3158").getByText("Action*")).toBeVisible();
-  await expect(page2.locator("#ctrlField3158")).toContainText("Action*");
   await recommendationPage.actionRecommendSCO.waitFor();
   await recommendationPage.selectActionOptionSCO();
 

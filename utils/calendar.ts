@@ -22,6 +22,14 @@ export class CalendarPage {
     return this.page.getByRole("combobox");
   }
 
+  async clickDate(type) {
+    if (type === "Session Date") {
+      await this.page.locator("#ctrlField1021").getByRole("textbox").click();
+    } else if (type === "Provisional Date") {
+      await this.page.locator("#ctrlField1030").getByRole("textbox").click();
+    }
+  }
+
   async selectDateInsuredPersonPage(year: string, month: string, day: string) {
     let monthNumber = parseInt(month, 10) - 1;
     const formattedMonth = monthNumber.toString();

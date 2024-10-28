@@ -46,6 +46,14 @@ export class MBSessionPage {
     await this.diseaseSchedule5.getByRole("combobox").selectOption("Yes");
   }
 
+  get ELS() {
+    return this.page.locator("#ctrlField1032");
+  }
+
+  async selectELS() {
+    await this.ELS.getByRole("combobox").selectOption("Yes");
+  }
+
   get diseaseWork() {
     return this.page.locator("#ctrlField1023");
   }
@@ -78,6 +86,14 @@ export class MBSessionPage {
     await this.remarkRecommendation.getByRole("textbox").fill("test");
   }
 
+  get remark() {
+    return this.page.locator("#ctrlField1049");
+  }
+
+  async setremark() {
+    await this.remark.getByRole("textbox").fill("test");
+  }
+
   get recommendationRehab() {
     return this.page.locator("#ctrlField1033");
   }
@@ -102,8 +118,20 @@ export class MBSessionPage {
     return this.page.locator("#ctrlField1034");
   }
 
+  get sessionAssesmentAdditionalAssessment() {
+    return this.page.locator("#ctrlField1027");
+  }
+
   async setsessionAssesment() {
     await this.sessionAssesment.getByRole("textbox").fill("10");
+  }
+
+  async setsessionAssesmentAdditionalAssessment() {
+    await this.sessionAssesmentAdditionalAssessment.getByRole("textbox").fill("10");
+  }
+
+  get additionalAssesment() {
+    return this.page.locator("#ctrlField1028");
   }
 
   get jdResult() {
