@@ -29,6 +29,10 @@ export class LeftTabPage {
     return this.page.getByRole("link", { name: "Pre-Registration", exact: true });
   }
 
+  get createRevisionLink() {
+    return this.page.getByRole("link", { name: "Create Revision", exact: true });
+  }
+
   get myCasesLink() {
     return this.page.getByRole("link", { name: "My Cases" });
   }
