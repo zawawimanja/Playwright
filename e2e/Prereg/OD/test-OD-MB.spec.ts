@@ -26,6 +26,7 @@ import { CalendarPage } from "../../../utils/calendar";
 import { CasesPage } from "../../../pages/cases";
 import { SubmitPage } from "../../../pages/submit";
 import { MyCasesPage } from "../../../pages/mycases";
+import { MBSessionPage } from "../../../pages/mb_session";
 
 test.beforeEach(async ({ page }) => {
   await login(page, "hilmi.pks", "u@T_hilmi");
@@ -77,57 +78,63 @@ test("Prereg MB OD", async ({ page }) => {
 
   await page3.waitForTimeout(5000);
 
+  const mbSessionPage = new MBSessionPage(page3);
+
   //session venue
-  await page3.locator("#ctrlField1020").getByRole("combobox").selectOption("708056");
+  // await page3.locator("#ctrlField1020").getByRole("combobox").selectOption("708056");
+  mbSessionPage.selectSessionVenue();
 
   //session date
   await page3.locator("#ctrlField1021").getByRole("textbox").click();
-
   await calendarPage.selectDateInsuredPersonPage("2021", "8", "15");
 
   //disease 5 blank default
   await expect(page3.getByText("Disease is in Schedule")).toBeVisible();
   await expect(page3.locator("#ctrlField1022")).toContainText("Disease is in Schedule 5");
-  await page3.locator("#ctrlField1022").getByRole("combobox").selectOption("Yes");
+  //await page3.locator("#ctrlField1022").getByRole("combobox").selectOption("Yes");
+  mbSessionPage.selectDiseaseSchedule5();
 
   //disease work no default
-  await page3.locator("#ctrlField1023").getByRole("combobox").selectOption("Yes");
+  //await page3.locator("#ctrlField1023").getByRole("combobox").selectOption("Yes");
+  mbSessionPage.selectDiseaseWork();
 
   //mmi yes default
   await expect(page3.getByText("MMI Achieved")).toBeVisible();
   await expect(page3.locator("#ctrlField1024")).toContainText("MMI Achieved");
-  await page3.locator("#ctrlField1024").getByRole("combobox").selectOption("Yes");
+  //await page3.locator("#ctrlField1024").getByRole("combobox").selectOption("Yes");
+  mbSessionPage.selectmmiAchieved();
 
   //desc
   await expect(page3.getByText("Description of Disease")).toBeVisible();
   await expect(page3.locator("#ctrlField1025")).toContainText("Description of Disease");
-  page3.locator("#ctrlField1025").getByRole("textbox").fill("test");
+  // page3.locator("#ctrlField1025").getByRole("textbox").fill("test");
+  mbSessionPage.setdescDis();
 
   //ass type
-  await page3.locator("#ctrlField1026").getByRole("combobox").selectOption("Provisional");
+  // await page3.locator("#ctrlField1026").getByRole("combobox").selectOption("Provisional");
+  mbSessionPage.selectAssessmentType("Provisional");
+
+  // Fill the textbox with "100"  session ass
+  // await page3.locator("#ctrlField1027").getByRole("textbox").fill("10");
+  mbSessionPage.setsessionAssesment();
 
   // Get the selected value to verify by evaluating the text content of the selected option
   const selectedValue = await page3.locator("#ctrlField1026 option:checked").textContent();
 
   console.log(selectedValue + " type");
 
+  //if choose provisional have assessment date
   // Conditional logic based on the selected value
   if (selectedValue === "Provisional") {
     // Perform actions if the selected value is "Provisional"
     await page3.locator("#ctrlField1030").getByRole("textbox").click();
 
     await calendarPage.selectDateInsuredPersonPage("2022", "8", "15");
-  } else {
-    // Perform actions if the selected value is not "Provisional"
   }
 
-  // Fill the textbox with "100"  session ass
-  await page3.locator("#ctrlField1027").getByRole("textbox").fill("10");
-
-  //if choose provisional have assessment date
-
   // //jd result no default
-  await page3.locator("#ctrlField1031").getByRole("combobox").selectOption("Yes");
+  // await page3.locator("#ctrlField1031").getByRole("combobox").selectOption("Yes");
+  mbSessionPage.selectJDResult();
 
   // Check if the value is "100"
   const value = await page3.locator("#ctrlField1027").getByRole("textbox").inputValue();
@@ -141,11 +148,13 @@ test("Prereg MB OD", async ({ page }) => {
   }
 
   // //recommendation rehab no default
-  await page3.locator("#ctrlField1033").getByRole("combobox").selectOption("Yes");
+  // await page3.locator("#ctrlField1033").getByRole("combobox").selectOption("Yes");
+  mbSessionPage.selectrecommendationRehab();
 
   // //remark recommendation
   await expect(page3.locator("#ctrlField1034")).toContainText("Remarks for Recommendation for Rehab");
-  await page3.locator("#ctrlField1034").getByRole("textbox").fill("test");
+  // await page3.locator("#ctrlField1034").getByRole("textbox").fill("test");
+  mbSessionPage.setremarkRecommendation();
 
   // //remarks textbox
   await expect(page3.locator("#previewPanel")).toContainText("Remarks");
