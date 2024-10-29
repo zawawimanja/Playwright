@@ -26,10 +26,10 @@ import { CalendarPage } from "../../../utils/calendar";
 import { CasesPage } from "../../../pages/cases";
 import { SubmitPage } from "../../../pages/submit";
 import { MyCasesPage } from "../../../pages/mycases";
+import { HeaderPage } from "../../../pages/header";
 
 test.beforeEach(async ({ page }) => {
   await login(page, "roliana.pks", "u@T_roliana");
-  // await login(page, "uat_ali", "u@T_ali");
 });
 
 export let schemeRefValue: string;
@@ -41,21 +41,38 @@ test("Prereg SAO OD", async ({ page }) => {
   const myCasesPage = new MyCasesPage(page, casesPage);
   await casesPage.init();
 
-  await leftTabPage.leftBar.waitFor();
-  await expect(leftTabPage.leftBar).toBeVisible();
+  let loginUser = "roliana.pks";
+  let caseFound = false;
 
-  await expect(leftTabPage.myCasesLink).toBeVisible();
-  await leftTabPage.myCasesLink.waitFor();
+  while (!caseFound) {
+    await leftTabPage.leftBar.waitFor();
+    await expect(leftTabPage.leftBar).toBeVisible();
 
-  //click my cases left tab
-  leftTabPage.clickMyCases();
+    await expect(leftTabPage.myCasesLink).toBeVisible();
+    await leftTabPage.myCasesLink.waitFor();
 
-  //click  my cases tab
-  await myCasesPage.clickMyCases();
+    // Click my cases left tab
+    await leftTabPage.clickMyCases();
 
-  await page.waitForTimeout(5000);
+    // Click my cases tab
+    await myCasesPage.clickMyCases();
 
-  await myCasesPage.clickODSAO();
+    // Check if the case exists for the current login user
+    if (await myCasesPage.clickOD("SAO")) {
+      caseFound = true;
+      console.log(`Case found for user ${loginUser}`);
+      break;
+    } else {
+      // Re-login with the new user
+      await page.reload(); // Reload the page to start fresh
+
+      const headerPage = new HeaderPage(page);
+
+      headerPage.clickUserProfile();
+      headerPage.clickSignOut();
+      await login(page, "uat_ali", "u@T_ali");
+    }
+  }
 
   const pagePromise = page.waitForEvent("popup");
   await myCasesPage.frameLocator.getByText("Open Task").click();

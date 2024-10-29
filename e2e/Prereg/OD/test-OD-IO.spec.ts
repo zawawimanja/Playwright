@@ -25,10 +25,10 @@ import { CalendarPage } from "../../../utils/calendar";
 import { CasesPage } from "../../../pages/cases";
 import { SubmitPage } from "../../../pages/submit";
 import { MyCasesPage } from "../../../pages/mycases";
+import { HeaderPage } from "../../../pages/header";
 
 test.beforeEach(async ({ page }) => {
-  // await login(page, "uat_muthu", "u@T_muthu");
-  await login(page, "uat_akaw", "u@T_akaw");
+  await login(page, "uat_muthu", "u@T_muthu");
 });
 
 export let schemeRefValue: string;
@@ -41,21 +41,40 @@ test("Prereg IO OD", async ({ page }) => {
   const myCasesPage = new MyCasesPage(page, casesPage);
   await casesPage.init();
 
-  await leftTabPage.leftBar.waitFor();
-  await expect(leftTabPage.leftBar).toBeVisible();
+  let loginUser = "uat_muthu";
+  let caseFound = false;
 
-  await expect(leftTabPage.myCasesLink).toBeVisible();
-  await leftTabPage.myCasesLink.waitFor();
+  while (!caseFound) {
+    await leftTabPage.leftBar.waitFor();
+    await expect(leftTabPage.leftBar).toBeVisible();
 
-  //click my cases left tab
-  await leftTabPage.clickMyCases();
+    await expect(leftTabPage.myCasesLink).toBeVisible();
+    await leftTabPage.myCasesLink.waitFor();
 
-  //click  my cases tab
-  await myCasesPage.clickMyCases();
+    // Click my cases left tab
+    await leftTabPage.clickMyCases();
 
-  await page.waitForTimeout(5000);
+    // Click my cases tab
+    await myCasesPage.clickMyCases();
 
-  await myCasesPage.clickOD();
+    // Check if the case exists for the current login user
+    if (await myCasesPage.clickOD("OD")) {
+      caseFound = true;
+      console.log(`Case found for user ${loginUser}`);
+      break;
+    } else {
+      // Re-login with the new user
+      await page.reload(); // Reload the page to start fresh
+
+      const headerPage = new HeaderPage(page);
+
+      headerPage.clickUserProfile();
+      headerPage.clickSignOut();
+      await login(page, "uat_akaw", "u@T_akaw");
+    }
+  }
+
+  // Proceed with the rest of the test if the case is found
 
   const pagePromise = page.waitForEvent("popup");
   await casesPage.frameLocator.getByText("Open Task").click();

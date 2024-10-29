@@ -28,10 +28,9 @@ import { SubmitPage } from "../../../pages/submit";
 import { MyCasesPage } from "../../../pages/mycases";
 import { MBSessionPage } from "../../../pages/mb_session";
 import { ButtonPage } from "../../../utils/button";
-
+import { HeaderPage } from "../../../pages/header";
 test.beforeEach(async ({ page }) => {
   await login(page, "hilmi.pks", "u@T_hilmi");
-  // await login(page, "aslam.pks", "u@T_aslam");
 });
 
 export let schemeRefValue: string;
@@ -44,21 +43,38 @@ test("Prereg MB OD", async ({ page }) => {
   const myCasesPage = new MyCasesPage(page, casesPage);
   await casesPage.init();
 
-  await leftTabPage.leftBar.waitFor();
-  await expect(leftTabPage.leftBar).toBeVisible();
+  let loginUser = "hilmi.pks";
+  let caseFound = false;
 
-  await expect(leftTabPage.myCasesLink).toBeVisible();
-  await leftTabPage.myCasesLink.waitFor();
+  while (!caseFound) {
+    await leftTabPage.leftBar.waitFor();
+    await expect(leftTabPage.leftBar).toBeVisible();
 
-  //click my cases left tab
-  await leftTabPage.clickMyCases();
+    await expect(leftTabPage.myCasesLink).toBeVisible();
+    await leftTabPage.myCasesLink.waitFor();
 
-  //click  my cases tab
-  await myCasesPage.clickMyCases();
+    // Click my cases left tab
+    await leftTabPage.clickMyCases();
 
-  await page.waitForTimeout(5000);
+    // Click my cases tab
+    await myCasesPage.clickMyCases();
 
-  await myCasesPage.clickODMB();
+    // Check if the case exists for the current login user
+    if (await myCasesPage.clickOD("MB")) {
+      caseFound = true;
+      console.log(`Case found for user ${loginUser}`);
+      break;
+    } else {
+      // Re-login with the new user
+      await page.reload(); // Reload the page to start fresh
+
+      const headerPage = new HeaderPage(page);
+
+      headerPage.clickUserProfile();
+      headerPage.clickSignOut();
+      await login(page, "aslam.pks", "u@T_aslam");
+    }
+  }
 
   const pagePromise = page.waitForEvent("popup");
   await myCasesPage.frameLocator.getByText("Open Task").click();

@@ -27,9 +27,9 @@ import { SmbInformationPage } from "../../../pages/smb_info";
 import { CasesPage } from "../../../pages/cases";
 import { SubmitPage } from "../../../pages/submit";
 import { MyCasesPage } from "../../../pages/mycases";
+import { HeaderPage } from "../../../pages/header";
 
 test.beforeEach(async ({ page }) => {
-  //await login(page, "nazira.pks", "u@T_nazira");
   await login(page, "atilia.pks", "u@T_atilia");
 });
 
@@ -42,20 +42,38 @@ test("Prereg SCO OD", async ({ page }) => {
   const myCasesPage = new MyCasesPage(page, casesPage);
   await casesPage.init();
 
-  await leftTabPage.leftBar.waitFor();
-  await expect(leftTabPage.leftBar).toBeVisible();
+  let loginUser = "atilia.pks";
+  let caseFound = false;
 
-  await expect(leftTabPage.myCasesLink).toBeVisible();
-  await leftTabPage.myCasesLink.waitFor();
+  while (!caseFound) {
+    await leftTabPage.leftBar.waitFor();
+    await expect(leftTabPage.leftBar).toBeVisible();
 
-  //click my cases left tab
-  await leftTabPage.clickMyCases();
+    await expect(leftTabPage.myCasesLink).toBeVisible();
+    await leftTabPage.myCasesLink.waitFor();
 
-  //click  my cases tab
-  await myCasesPage.clickMyCases();
+    // Click my cases left tab
+    await leftTabPage.clickMyCases();
 
-  await page.waitForTimeout(5000);
-  await myCasesPage.clickOD();
+    // Click my cases tab
+    await myCasesPage.clickMyCases();
+
+    // Check if the case exists for the current login user
+    if (await myCasesPage.clickOD("OD")) {
+      caseFound = true;
+      console.log(`Case found for user ${loginUser}`);
+      break;
+    } else {
+      // Re-login with the new user
+      await page.reload(); // Reload the page to start fresh
+
+      const headerPage = new HeaderPage(page);
+
+      headerPage.clickUserProfile();
+      headerPage.clickSignOut();
+      await login(page, "nazira.pks", "u@T_nazira");
+    }
+  }
 
   const pagePromise = page.waitForEvent("popup");
   await myCasesPage.frameLocator.getByText("Open Task").click();
