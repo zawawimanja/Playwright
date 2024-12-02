@@ -56,18 +56,12 @@ test("Prereg MB OD", async ({ page }) => {
     // Click my cases left tab
     await leftTabPage.clickMyCases();
 
-    // Click my cases tab
-    await myCasesPage.clickMyCases();
-
     // Check if the case exists for the current login user
     if (await myCasesPage.clickOD("MB")) {
       caseFound = true;
       console.log(`Case found for user ${loginUser}`);
       break;
     } else {
-      // Re-login with the new user
-      await page.reload(); // Reload the page to start fresh
-
       const headerPage = new HeaderPage(page);
 
       headerPage.clickUserProfile();
@@ -77,7 +71,7 @@ test("Prereg MB OD", async ({ page }) => {
   }
 
   const pagePromise = page.waitForEvent("popup");
-  await myCasesPage.frameLocator.getByText("Open Task").click();
+  await page.frameLocator("#baristaPageOut").frameLocator("#APWorkCenter").getByText("Open Task").click();
   const page2 = await pagePromise;
 
   const draftPage = new DraftPage(page2);

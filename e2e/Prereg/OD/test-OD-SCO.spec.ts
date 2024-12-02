@@ -55,9 +55,6 @@ test("Prereg SCO OD", async ({ page }) => {
     // Click my cases left tab
     await leftTabPage.clickMyCases();
 
-    // Click my cases tab
-    await myCasesPage.clickMyCases();
-
     // Check if the case exists for the current login user
     if (await myCasesPage.clickOD("OD")) {
       caseFound = true;
@@ -76,7 +73,7 @@ test("Prereg SCO OD", async ({ page }) => {
   }
 
   const pagePromise = page.waitForEvent("popup");
-  await myCasesPage.frameLocator.getByText("Open Task").click();
+  await page.frameLocator("#baristaPageOut").frameLocator("#APWorkCenter").getByText("Open Task").click();
   const page2 = await pagePromise;
 
   const draftPage = new DraftPage(page2);
@@ -146,7 +143,8 @@ test("Prereg SCO OD", async ({ page }) => {
     page2.getByText("Reco History Approval History RECOMMENDATIONhide history SAO Approval - Before")
   ).toBeVisible();
   await recommendationPage.actionRecommendSCO.waitFor();
-  await recommendationPage.selectActionOptionSCO();
+  await recommendationPage.selectActionOption1();
+  await recommendationPage.selectActionOption2();
 
   //hus info
   const medicalCertificatePage = new MedicalCertificatePage(page2);
