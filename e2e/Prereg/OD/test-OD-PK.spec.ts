@@ -38,11 +38,30 @@ test("Prereg PK OD", async ({ page }) => {
   leftTabPage.clickPreregistration();
 
   await preregPage.selectNoticeTypePreRegOption("OD");
+  // Verify the selected option text
+  const selectedOptionText = await preregPage.getSelectedNoticeTypeText();
+  expect(selectedOptionText).toBe("OD"); // Assert the selected text is correct
+
   await preregPage.selectInsuredPersonEmployment("Yes");
+  const selectedEmploymentText = await preregPage.getSelectedInsuredPersonEmploymentText();
+  expect(selectedEmploymentText).toBe("Yes");
+
   await preregPage.selectIdentificationType("2");
-  await preregPage.fillIdentificationNo("760524085706");
+  const selectedIdentificationTypeText = await preregPage.getSelectedIdentificationTypeText();
+  expect(selectedIdentificationTypeText).toBe("New IC");
+
   await preregPage.selectNoticeAndBenefitClaimFormOption("Insured Person");
-  await preregPage.fillEmployerCode("B3201014851P");
+  const NoticeAndBenefitClaimFormOptionText = await preregPage.getselectNoticeAndBenefitClaimFormText();
+  expect(NoticeAndBenefitClaimFormOptionText).toBe("Insured Person");
+
+  await preregPage.fillIdentificationNo("880822435926");
+  const filledIdentificationNo = await preregPage.getIdentificationNo();
+  expect(filledIdentificationNo).toBe("880822435926");
+
+  await preregPage.fillEmployerCode("A3702087818V");
+  const filledEmployerCode = await preregPage.getEmployerCode();
+  expect(filledEmployerCode).toBe("A3702087818V");
+
   await preregPage.clickClaimFormSubmissionByListButton();
   await preregPage.clickSearchButton();
   const pagePromise = page.waitForEvent("popup");
@@ -50,6 +69,8 @@ test("Prereg PK OD", async ({ page }) => {
   const page1 = await pagePromise;
 
   const draftPage = new DraftPage(page1);
+
+  await page1.waitForTimeout(30000);
   if ((await draftPage.closeButton.count()) > 0) {
     await draftPage.closeButton.waitFor();
     await draftPage.clickCloseButton();

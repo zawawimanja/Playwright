@@ -1,24 +1,19 @@
 // loginPage.ts
 
-import { Page } from '@playwright/test';
+import { Page } from "@playwright/test";
 
 export class DraftPage {
-    private page: Page;
+  private page: Page;
 
-    constructor(page: Page) {
-        this.page = page;
-    }
+  constructor(page: Page) {
+    this.page = page;
+  }
 
-    get closeButton() {
-  
-        return this.page.locator('#btnClose');
-    }
+  get closeButton() {
+    return this.page.getByRole("button", { name: "Close" });
+  }
 
-    async clickCloseButton() {
-        await this.closeButton.click();
-    }
-
-
-
-
+  async clickCloseButton() {
+    await this.closeButton.click();
+  }
 }
