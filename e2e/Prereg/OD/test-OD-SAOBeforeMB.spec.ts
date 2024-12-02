@@ -30,6 +30,7 @@ import { HeaderPage } from "../../../pages/header";
 
 test.beforeEach(async ({ page }) => {
   await login(page, "roliana.pks", "u@T_roliana");
+  // await login(page, "uat_ali", "u@T_ali");
 });
 
 export let schemeRefValue: string;
@@ -41,6 +42,7 @@ test("Prereg SAO OD", async ({ page }) => {
   const myCasesPage = new MyCasesPage(page, casesPage);
   await casesPage.init();
 
+  //let loginUser = "uat_ali";
   let loginUser = "roliana.pks";
   let caseFound = false;
 
@@ -53,9 +55,6 @@ test("Prereg SAO OD", async ({ page }) => {
 
     // Click my cases left tab
     await leftTabPage.clickMyCases();
-
-    // Click my cases tab
-    await myCasesPage.clickMyCases();
 
     // Check if the case exists for the current login user
     if (await myCasesPage.clickOD("SAO")) {
@@ -71,11 +70,12 @@ test("Prereg SAO OD", async ({ page }) => {
       headerPage.clickUserProfile();
       headerPage.clickSignOut();
       await login(page, "uat_ali", "u@T_ali");
+      //await login(page, "roliana.pks", "u@T_roliana");
     }
   }
 
   const pagePromise = page.waitForEvent("popup");
-  await myCasesPage.frameLocator.getByText("Open Task").click();
+  await page.frameLocator("#baristaPageOut").frameLocator("#APWorkCenter").getByText("Open Task").click();
   const page2 = await pagePromise;
 
   const draftPage = new DraftPage(page2);
@@ -133,9 +133,6 @@ test("Prereg SAO OD", async ({ page }) => {
   await expect(page2.getByRole("heading", { name: "Approval", exact: true })).toBeVisible();
   await expect(page2.locator("#Approval")).toContainText("Approval");
 
-  await page2.locator("#ctrlField2089").getByText("Action*").click();
-  await expect(page2.locator("#ctrlField2089").getByText("Action*")).toBeVisible();
-  await expect(page2.locator("#ctrlField2089")).toContainText("Action*");
   await expect(approvalPage.actionApprove).toBeVisible();
   await approvalPage.actionApprove.waitFor();
   await approvalPage.selectSAOActionOption();

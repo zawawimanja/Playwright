@@ -54,7 +54,11 @@ export class RecommendationPage {
     await this.SAOrecommendationButton.click();
   }
 
-  async selectActionOption() {
+  async selectActionOption2() {
+    await this.actionRecommendSCO.selectOption("10201");
+  }
+
+  async selectActionOption1() {
     await this.actionRecommend.selectOption("10207");
   }
 

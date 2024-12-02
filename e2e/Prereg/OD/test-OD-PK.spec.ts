@@ -54,9 +54,9 @@ test("Prereg PK OD", async ({ page }) => {
   const NoticeAndBenefitClaimFormOptionText = await preregPage.getselectNoticeAndBenefitClaimFormText();
   expect(NoticeAndBenefitClaimFormOptionText).toBe("Insured Person");
 
-  await preregPage.fillIdentificationNo("880822435926");
+  await preregPage.fillIdentificationNo("850302015891");
   const filledIdentificationNo = await preregPage.getIdentificationNo();
-  expect(filledIdentificationNo).toBe("880822435926");
+  expect(filledIdentificationNo).toBe("850302015891");
 
   await preregPage.fillEmployerCode("A3702087818V");
   const filledEmployerCode = await preregPage.getEmployerCode();
@@ -67,11 +67,10 @@ test("Prereg PK OD", async ({ page }) => {
   const pagePromise = page.waitForEvent("popup");
   await preregPage.clickNextButton();
   const page1 = await pagePromise;
-
+  // await page1.waitForTimeout(30000);
   const draftPage = new DraftPage(page1);
 
-  await page1.waitForTimeout(30000);
-  if ((await draftPage.closeButton.count()) > 0) {
+  if (await draftPage.closeButton.isVisible()) {
     await draftPage.closeButton.waitFor();
     await draftPage.clickCloseButton();
   }
@@ -183,8 +182,6 @@ test("Prereg PK OD", async ({ page }) => {
 
   await previewSubmissionPage.clickSubmitButton();
   await previewSubmissionPage.clickYesButton();
-
-  await page1.waitForTimeout(30000);
 
   submitPage = new SubmitPage(page1);
 

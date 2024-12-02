@@ -54,18 +54,12 @@ test("Prereg IO OD", async ({ page }) => {
     // Click my cases left tab
     await leftTabPage.clickMyCases();
 
-    // Click my cases tab
-    await myCasesPage.clickMyCases();
-
     // Check if the case exists for the current login user
     if (await myCasesPage.clickOD("OD")) {
       caseFound = true;
       console.log(`Case found for user ${loginUser}`);
       break;
     } else {
-      // Re-login with the new user
-      await page.reload(); // Reload the page to start fresh
-
       const headerPage = new HeaderPage(page);
 
       headerPage.clickUserProfile();
@@ -75,13 +69,17 @@ test("Prereg IO OD", async ({ page }) => {
   }
 
   // Proceed with the rest of the test if the case is found
-
-  const pagePromise = page.waitForEvent("popup");
-  await casesPage.frameLocator.getByText("Open Task").click();
-  const page2 = await pagePromise;
+  const page1Promise = page.waitForEvent("popup");
+  await page
+    .frameLocator("#baristaPageOut")
+    .frameLocator("#APWorkCenter")
+    .getByRole("menuitem", { name: "Open Task" })
+    .click();
+  const page2 = await page1Promise;
 
   const draftPage = new DraftPage(page2);
-  if ((await draftPage.closeButton.count()) > 0) {
+
+  if (await draftPage.closeButton.isVisible()) {
     await draftPage.closeButton.waitFor();
     await draftPage.clickCloseButton();
   }
@@ -132,7 +130,6 @@ test("Prereg IO OD", async ({ page }) => {
   await expect(medicalOpinionPage.medicalOpinionButton).toBeVisible();
   medicalOpinionPage.clickMedicalOpinionButton();
 
-  await page.waitForTimeout(10000);
   const recommendationPage = new RecommendationPage(page2);
   await recommendationPage.recommendationButton.waitFor();
   await expect(recommendationPage.recommendationButton).toBeVisible();
@@ -149,7 +146,8 @@ test("Prereg IO OD", async ({ page }) => {
   await expect(recommendationPage.actionRecommend).toBeVisible();
   await recommendationPage.actionRecommend.waitFor();
 
-  recommendationPage.selectActionOption();
+  recommendationPage.selectActionOption1();
+  recommendationPage.selectActionOption2();
 
   const medicalCertificatePage = new MedicalCertificatePage(page2);
   await medicalCertificatePage.clickHusInfoButton();
@@ -167,8 +165,6 @@ test("Prereg IO OD", async ({ page }) => {
   await previewSubmissionPage.clickSubmitButton();
 
   await previewSubmissionPage.clickYesButton();
-
-  await page2.waitForTimeout(30000);
 
   submitPage = new SubmitPage(page2);
 
