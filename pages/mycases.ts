@@ -46,9 +46,11 @@ export class MyCasesPage {
       case "MB":
         locator = this.page
           .frameLocator("#baristaPageOut")
+          .frameLocator("#APWorkCenter")
           .locator(
             `//td[a[contains(text(), '${this.casespage.casesCreated}')]]/following-sibling::td[contains(@title, 'Medical Board Info')]`
           );
+
         console.log(`Locator: ${locator}`);
         break;
       default:

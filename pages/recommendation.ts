@@ -61,8 +61,4 @@ export class RecommendationPage {
   async selectActionOption1() {
     await this.actionRecommend.selectOption("10207");
   }
-
-  async selectActionOptionSCO() {
-    await this.actionRecommendSCO.selectOption("10201");
-  }
 }
