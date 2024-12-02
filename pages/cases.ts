@@ -14,16 +14,10 @@ export class CasesPage {
   async init() {
     //this.schemeRefValue = await this.submitPage.getSchemeRefValue();
 
-    this.schemeRefValue = "E11NTO20240010196";
+    this.schemeRefValue = "E11NTO20240010253";
 
     console.log(" SRN " + this.schemeRefValue);
   }
-
-  // async init() {
-  //   this.schemeRefValue = "E11NTO20240000082";
-
-  //   console.log(" SRN " + this.schemeRefValue);
-  // }
 
   get casesCreated() {
     return this.schemeRefValue;
