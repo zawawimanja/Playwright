@@ -133,7 +133,7 @@ test("Prereg SCO OD", async ({ page }) => {
   await expect(medicalOpinionPage.medicalOpinionButton).toBeVisible();
   await medicalOpinionPage.clickMedicalOpinionButton();
 
-  await page.waitForTimeout(10000);
+  await page2.waitForTimeout(30000);
 
   //temporary solution
   const recommendationPage = new RecommendationPage(page2);
@@ -143,7 +143,6 @@ test("Prereg SCO OD", async ({ page }) => {
     page2.getByText("Reco History Approval History RECOMMENDATIONhide history SAO Approval - Before")
   ).toBeVisible();
   await recommendationPage.actionRecommendSCO.waitFor();
-  await recommendationPage.selectActionOption1();
   await recommendationPage.selectActionOption2();
 
   //hus info
