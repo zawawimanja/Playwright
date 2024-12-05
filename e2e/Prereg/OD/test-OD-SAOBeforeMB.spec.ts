@@ -119,6 +119,8 @@ test("Prereg SAO OD", async ({ page }) => {
   const inconsistentDoubtfulPage = new InconsistentDoubtfulPage(page2);
   await inconsistentDoubtfulPage.clickInconsistentDoubtfulButton();
 
+  await page.waitForTimeout(10000);
+
   const medicalOpinionPagePage = new MedicalOpinionPage(page2);
   await medicalOpinionPagePage.clickMedicalOpinionButton();
 
