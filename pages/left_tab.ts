@@ -10,11 +10,21 @@ export class LeftTabPage {
   }
 
   async clickPreregistration() {
-    await this.page.getByRole("link", { name: "Pre-Registration", exact: true }).click();
+    await this.page
+      .locator("div")
+      .filter({ hasText: /^Pre-Registration$/ })
+      .nth(1)
+      .click();
   }
 
   async clickMyCases() {
-    await this.page.getByRole("link", { name: "My Cases" }).click();
+    //await this.page.getByRole("link", { name: "My Cases" }).click();
+
+    await this.page
+      .locator("div")
+      .filter({ hasText: /^My Cases$/ })
+      .nth(1)
+      .click();
   }
 
   async clickHUKPreregistration() {

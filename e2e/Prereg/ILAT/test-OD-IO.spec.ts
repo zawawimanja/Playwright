@@ -1,34 +1,34 @@
 import { test, expect } from "@playwright/test";
-import { login } from "../../../../utils/base"; // Import from base.ts
-import { PreregistrationPage } from "../../../../pages/prereg";
-import { LeftTabPage } from "../../../../pages/left_tab";
-import { DraftPage } from "../../../../pages/draft";
-import { RemarksPage } from "../../../../pages/remarks";
-import { PreviewSubmissionPage } from "../../../../pages/preview_submission";
-import { OccupationalDiseasePage } from "../../../../pages/od_info";
-import { EmployerInfoPage } from "../../../../pages/employer_info";
-import { MedicalCertificatePage } from "../../../../pages/mc_info";
-import { WagesInfoPage } from "../../../../pages/wages_info";
-import { InsuredPersonInfoPage } from "../../../../pages/insured_person_info";
-import { PreferredSOCSOOfficePage } from "../../../../pages/socso_office";
-import { CertificationByEmployerPage } from "../../../../pages/cert_employer";
-import { BankInformationPage } from "../../../../pages/bank_info";
-import { SupportingDocumentPage } from "../../../../pages/support_doc";
-import { ConfirmationOfInsuredPage } from "../../../../pages/confirm_person";
-import { RecommendationPage } from "../../../../pages/recommendation";
-import { MedicalOpinionPage } from "../../../../pages/medical_opinion";
-import { PreparerInformationPage } from "../../../../pages/preparer_info";
-import { CaseInformationPage } from "../../../../pages/case_info";
-import { AppointmentPage } from "../../../../pages/appointment";
-import { InconsistentDoubtfulPage } from "../../../../pages/inconsistentdoubtful";
-import { CalendarPage } from "../../../../utils/calendar";
-import { CasesPage } from "../../../../pages/cases";
-import { SubmitPage } from "../../../../pages/submit";
-import { MyCasesPage } from "../../../../pages/mycases";
+import { login } from "../../../utils/base"; // Import from base.ts
+import { PreregistrationPage } from "../../../pages/prereg";
+import { LeftTabPage } from "../../../pages/left_tab";
+import { DraftPage } from "../../../pages/draft";
+import { RemarksPage } from "../../../pages/remarks";
+import { PreviewSubmissionPage } from "../../../pages/preview_submission";
+import { OccupationalDiseasePage } from "../../../pages/od_info";
+import { EmployerInfoPage } from "../../../pages/employer_info";
+import { MedicalCertificatePage } from "../../../pages/mc_info";
+import { WagesInfoPage } from "../../../pages/wages_info";
+import { InsuredPersonInfoPage } from "../../../pages/insured_person_info";
+import { PreferredSOCSOOfficePage } from "../../../pages/socso_office";
+import { CertificationByEmployerPage } from "../../../pages/cert_employer";
+import { BankInformationPage } from "../../../pages/bank_info";
+import { SupportingDocumentPage } from "../../../pages/support_doc";
+import { ConfirmationOfInsuredPage } from "../../../pages/confirm_person";
+import { RecommendationPage } from "../../../pages/recommendation";
+import { MedicalOpinionPage } from "../../../pages/medical_opinion";
+import { PreparerInformationPage } from "../../../pages/preparer_info";
+import { CaseInformationPage } from "../../../pages/case_info";
+import { AppointmentPage } from "../../../pages/appointment";
+import { InconsistentDoubtfulPage } from "../../../pages/inconsistentdoubtful";
+import { CalendarPage } from "../../../utils/calendar";
+import { CasesPage } from "../../../pages/cases";
+import { SubmitPage } from "../../../pages/submit";
+import { MyCasesPage } from "../../../pages/mycases";
+import { HeaderPage } from "../../../pages/header";
 
 test.beforeEach(async ({ page }) => {
   await login(page, "uat_muthu", "u@T_muthu");
-  // await login(page, "uat_akaw", "u@T_akaw");
 });
 
 export let schemeRefValue: string;
@@ -41,28 +41,45 @@ test("Prereg IO OD", async ({ page }) => {
   const myCasesPage = new MyCasesPage(page, casesPage);
   await casesPage.init();
 
-  await leftTabPage.leftBar.waitFor();
-  await expect(leftTabPage.leftBar).toBeVisible();
+  let loginUser = "uat_muthu";
+  let caseFound = false;
 
-  await expect(leftTabPage.myCasesLink).toBeVisible();
-  await leftTabPage.myCasesLink.waitFor();
+  while (!caseFound) {
+    await leftTabPage.leftBar.waitFor();
+    await expect(leftTabPage.leftBar).toBeVisible();
 
-  //click my cases left tab
-  await leftTabPage.clickMyCases();
+    await expect(leftTabPage.myCasesLink).toBeVisible();
+    await leftTabPage.myCasesLink.waitFor();
 
-  //click  my cases tab
-  await myCasesPage.clickMyCases();
+    // Click my cases left tab
+    await leftTabPage.clickMyCases();
 
-  await page.waitForTimeout(5000);
+    // Check if the case exists for the current login user
+    if (await myCasesPage.clickOD("OD")) {
+      caseFound = true;
+      console.log(`Case found for user ${loginUser}`);
+      break;
+    } else {
+      const headerPage = new HeaderPage(page);
 
-  await myCasesPage.clickOD();
+      headerPage.clickUserProfile();
+      headerPage.clickSignOut();
+      await login(page, "uat_akaw", "u@T_akaw");
+    }
+  }
 
-  const pagePromise = page.waitForEvent("popup");
-  await casesPage.frameLocator.getByText("Open Task").click();
-  const page2 = await pagePromise;
+  // Proceed with the rest of the test if the case is found
+  const page1Promise = page.waitForEvent("popup");
+  await page
+    .frameLocator("#baristaPageOut")
+    .frameLocator("#APWorkCenter")
+    .getByRole("menuitem", { name: "Open Task" })
+    .click();
+  const page2 = await page1Promise;
 
   const draftPage = new DraftPage(page2);
-  if ((await draftPage.closeButton.count()) > 0) {
+
+  if (await draftPage.closeButton.isVisible()) {
     await draftPage.closeButton.waitFor();
     await draftPage.clickCloseButton();
   }
@@ -113,7 +130,6 @@ test("Prereg IO OD", async ({ page }) => {
   await expect(medicalOpinionPage.medicalOpinionButton).toBeVisible();
   medicalOpinionPage.clickMedicalOpinionButton();
 
-  await page.waitForTimeout(10000);
   const recommendationPage = new RecommendationPage(page2);
   await recommendationPage.recommendationButton.waitFor();
   await expect(recommendationPage.recommendationButton).toBeVisible();
@@ -130,7 +146,7 @@ test("Prereg IO OD", async ({ page }) => {
   await expect(recommendationPage.actionRecommend).toBeVisible();
   await recommendationPage.actionRecommend.waitFor();
 
-  recommendationPage.selectActionOption();
+  recommendationPage.selectActionOption1();
 
   const medicalCertificatePage = new MedicalCertificatePage(page2);
   await medicalCertificatePage.clickHusInfoButton();
@@ -148,8 +164,6 @@ test("Prereg IO OD", async ({ page }) => {
   await previewSubmissionPage.clickSubmitButton();
 
   await previewSubmissionPage.clickYesButton();
-
-  await page2.waitForTimeout(15000);
 
   submitPage = new SubmitPage(page2);
 

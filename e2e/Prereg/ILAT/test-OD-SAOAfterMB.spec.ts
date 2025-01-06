@@ -30,11 +30,11 @@ import { MyCasesPage } from "../../../pages/mycases";
 import { HeaderPage } from "../../../pages/header";
 
 test.beforeEach(async ({ page }) => {
-  await login(page, "atilia.pks", "u@T_atilia");
+  await login(page, "roliana.pks", "u@T_roliana");
 });
 
 export let schemeRefValue: string;
-test("Prereg SCO OD", async ({ page }) => {
+test("Prereg SAO OD", async ({ page }) => {
   const preregPage = new PreregistrationPage(page);
   const leftTabPage = new LeftTabPage(page);
   let submitPage = new SubmitPage(page);
@@ -42,7 +42,7 @@ test("Prereg SCO OD", async ({ page }) => {
   const myCasesPage = new MyCasesPage(page, casesPage);
   await casesPage.init();
 
-  let loginUser = "atilia.pks";
+  let loginUser = "roliana.pks";
   let caseFound = false;
 
   while (!caseFound) {
@@ -56,19 +56,16 @@ test("Prereg SCO OD", async ({ page }) => {
     await leftTabPage.clickMyCases();
 
     // Check if the case exists for the current login user
-    if (await myCasesPage.clickOD("OD")) {
+    if (await myCasesPage.clickOD("SAO")) {
       caseFound = true;
       console.log(`Case found for user ${loginUser}`);
       break;
     } else {
-      // Re-login with the new user
-      await page.reload(); // Reload the page to start fresh
-
       const headerPage = new HeaderPage(page);
 
       headerPage.clickUserProfile();
       headerPage.clickSignOut();
-      await login(page, "nazira.pks", "u@T_nazira");
+      await login(page, "uat_ali", "u@T_ali");
     }
   }
 
@@ -88,7 +85,7 @@ test("Prereg SCO OD", async ({ page }) => {
   await expect(remarksPage.sectionTabs).toContainText("Remarks");
   await remarksPage.remarksButton.waitFor();
   await remarksPage.addRemarksButton.click();
-  await remarksPage.textboxIO.fill("test sco");
+  await remarksPage.textboxIO.fill("test io");
 
   await remarksPage.saveRemarksButton.click();
 
@@ -96,7 +93,7 @@ test("Prereg SCO OD", async ({ page }) => {
   await preparerInformationPage.clickpreparerInformationButton();
 
   const caseInformationPage = new CaseInformationPage(page2);
-  caseInformationPage.clickCaseInformationButton();
+  await caseInformationPage.clickCaseInformationButton();
 
   const insuredPersonInfoPage = new InsuredPersonInfoPage(page2);
   await insuredPersonInfoPage.clickInsuredPersonInfoButton();
@@ -120,37 +117,32 @@ test("Prereg SCO OD", async ({ page }) => {
   const inconsistentDoubtfulPage = new InconsistentDoubtfulPage(page2);
   await inconsistentDoubtfulPage.clickInconsistentDoubtfulButton();
 
-  //appointment
-  const appointmentPage = new AppointmentPage(page2);
-  await appointmentPage.clickAppointmentButton();
-
   //smb info
-  const SmbInformationPagePage = new SmbInformationPage(page2);
-  await SmbInformationPagePage.clickSMBInfoButton();
+  const SMBInformationPage = new SmbInformationPage(page2);
+  await SMBInformationPage.clickSMBInfoButton();
 
-  const medicalOpinionPage = new MedicalOpinionPage(page2);
-  await medicalOpinionPage.medicalOpinionButton.waitFor();
-  await expect(medicalOpinionPage.medicalOpinionButton).toBeVisible();
-  await medicalOpinionPage.clickMedicalOpinionButton();
+  const medicalOpinionPagePage = new MedicalOpinionPage(page2);
+  await medicalOpinionPagePage.clickMedicalOpinionButton();
 
-  await page2.waitForTimeout(30000);
-
-  //temporary solution
   const recommendationPage = new RecommendationPage(page2);
-  await recommendationPage.clickRecommendationButton();
+  await recommendationPage.clickSAORecommendationButton();
 
-  await expect(
-    page2.getByText("Reco History Approval History RECOMMENDATIONhide history SAO Approval - Before")
-  ).toBeVisible();
-  await recommendationPage.actionRecommendSCO.waitFor();
-  await recommendationPage.selectActionOption2();
+  await page.waitForTimeout(10000);
+  const approvalPage = new ApprovalPage(page2);
+  await approvalPage.clickApprovalButton();
+
+  await expect(approvalPage.actionApproveAfterMB).toBeVisible();
+  await approvalPage.actionApproveAfterMB.waitFor();
+
+  await approvalPage.selectSAOActionOptionAfterMB();
+
+  //wages info
+  const wagesInfoPage = new WagesInfoPage(page2);
+  await wagesInfoPage.clickWagesInfoButton();
 
   //hus info
   const medicalCertificatePage = new MedicalCertificatePage(page2);
   await medicalCertificatePage.clickHusInfoButton();
-  //bank info
-  const bankInformationPage = new BankInformationPage(page2);
-  await bankInformationPage.clickBankInformationButton();
 
   const supportingDocumentPage = new SupportingDocumentPage(page2);
   await supportingDocumentPage.clickSupportingDocumentButton();
@@ -162,12 +154,13 @@ test("Prereg SCO OD", async ({ page }) => {
   await previewSubmissionPage.clickSubmitButton();
   await previewSubmissionPage.clickYesButton();
 
-  await page2.waitForTimeout(30000);
+  await page.waitForTimeout(15000);
 
   submitPage = new SubmitPage(page2);
+
   await expect(submitPage.schemeRefNo).toBeVisible();
 
-  await expect(submitPage.caseStatusPendingApproval_IO_SCO).toBeVisible();
+  await expect(submitPage.caseStatusPendingEndorsement_SAO).toBeVisible();
 
   await submitPage.submitButton.click();
 });

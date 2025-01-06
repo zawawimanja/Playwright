@@ -104,18 +104,15 @@ test("Prereg SCO OD", async ({ page }) => {
   const employerInfoPage = new EmployerInfoPage(page2);
   await employerInfoPage.clickEmployerInfoButton();
 
-  const certificationByEmployerPage = new CertificationByEmployerPage(page2);
-  await certificationByEmployerPage.clickCertificationByEmployerButton();
+  //add Reference Notice Information
 
-  const occupationalDiseasePage = new OccupationalDiseasePage(page2);
-  await occupationalDiseasePage.clickOccupationalDiseaseButton();
-  occupationalDiseasePage.selectCausativeAgentOption();
+  //add Accident Information
 
   const preferredSOCSOOfficePage = new PreferredSOCSOOfficePage(page2);
   await preferredSOCSOOfficePage.clickPreferredSOCSOOfficeButton();
 
-  const confirmationOfInsuredPage = new ConfirmationOfInsuredPage(page2);
-  await confirmationOfInsuredPage.clickConfirmationOfInsuredButton();
+  const certificationByEmployerPage = new CertificationByEmployerPage(page2);
+  await certificationByEmployerPage.clickCertificationByEmployerButton();
 
   const inconsistentDoubtfulPage = new InconsistentDoubtfulPage(page2);
   await inconsistentDoubtfulPage.clickInconsistentDoubtfulButton();
@@ -124,9 +121,7 @@ test("Prereg SCO OD", async ({ page }) => {
   const appointmentPage = new AppointmentPage(page2);
   await appointmentPage.clickAppointmentButton();
 
-  //smb info
-  const SmbInformationPagePage = new SmbInformationPage(page2);
-  await SmbInformationPagePage.clickSMBInfoButton();
+  //add Investigation Document
 
   const medicalOpinionPage = new MedicalOpinionPage(page2);
   await medicalOpinionPage.medicalOpinionButton.waitFor();
@@ -145,12 +140,8 @@ test("Prereg SCO OD", async ({ page }) => {
   await recommendationPage.actionRecommendSCO.waitFor();
   await recommendationPage.selectActionOption2();
 
-  //hus info
-  const medicalCertificatePage = new MedicalCertificatePage(page2);
-  await medicalCertificatePage.clickHusInfoButton();
-  //bank info
-  const bankInformationPage = new BankInformationPage(page2);
-  await bankInformationPage.clickBankInformationButton();
+  const confirmationOfInsuredPage = new ConfirmationOfInsuredPage(page2);
+  await confirmationOfInsuredPage.clickConfirmationOfInsuredButton();
 
   const supportingDocumentPage = new SupportingDocumentPage(page2);
   await supportingDocumentPage.clickSupportingDocumentButton();

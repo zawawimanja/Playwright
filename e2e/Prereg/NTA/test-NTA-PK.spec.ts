@@ -107,14 +107,9 @@ test("Prereg PK OD", async ({ page }) => {
   const employerInfoPage = new EmployerInfoPage(page1);
   await employerInfoPage.clickEmployerInfoButton();
 
-  const occupationalDiseasePage = new OccupationalDiseasePage(page1);
-  await occupationalDiseasePage.clickOccupationalDiseaseButton();
-  await occupationalDiseasePage.fillDescriptionOfOccupational("test");
+  //add Reference Notice Information
+  //add Accident Information
 
-  await occupationalDiseasePage.selectDiseaseRelatedEMploymentOption("Yes");
-
-  await occupationalDiseasePage.fillSpecifyDutiesAndHow("test");
-  await occupationalDiseasePage.fillPleaseExplainSymptoms("test");
   const medicalCertificatePage = new MedicalCertificatePage(page1);
   await medicalCertificatePage.clickMedicalCertificateButton();
 

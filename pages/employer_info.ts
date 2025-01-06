@@ -1,24 +1,23 @@
-import { Page } from '@playwright/test';
+import { Page } from "@playwright/test";
 
 export class EmployerInfoPage {
+  private page: Page;
 
-private page: Page;
-
-    constructor(page: Page) {
+  constructor(page: Page) {
     this.page = page;
   }
   /**
    * Employer Information button
    */
   get employerInfoButton() {
-    return this.page.getByRole('button', { name: 'Employer Information' });
+    return this.page.getByRole("button", { name: "Employer Information" });
   }
 
   /**
    * Section tabs element
    */
   get sectionTabs() {
-    return this.page.locator('#sectionTabs');
+    return this.page.locator("#sectionTabs");
   }
 
   /**
@@ -27,16 +26,6 @@ private page: Page;
   async clickEmployerInfoButton() {
     await this.employerInfoButton.click();
   }
-
-  /**
-   * Verify the Employer Information button is visible
-   */
-
-  /**
-   * Verify the section tabs contain the text 'Employer Information'
-   */
-
 }
-
 
 export default EmployerInfoPage;
