@@ -70,45 +70,56 @@ export class MyCasesPage {
     }
   }
 
-  async clickODSAO() {
-    const locator = this.page
-      .frameLocator("#baristaPageOut")
-      .locator(
-        `//td[a[contains(text(), '${this.casespage.casesCreated}')]]/following-sibling::td[contains(@title, 'Occupation Disease Notice SAO')]`
-      );
+  async clickILAT(type: string): Promise<boolean> {
+    let locator;
 
-    // Log the locator to the console
-    console.log(`Locator: ${locator}`);
+    // Choose the locator based on the type
+    switch (type) {
+      case "OD":
+        locator = this.page
+          .frameLocator("#baristaPageOut")
+          .frameLocator("#APWorkCenter")
+          .locator(
+            `//td[a[contains(text(), '${this.casespage.casesCreated}')]]/following-sibling::td[contains(@title, 'Occupational Disease Notice')]`
+          );
+        console.log(`Locator: ${locator}`);
+        break;
 
-    // Check the number of elements matched
-    const count = await locator.count();
-    console.log(`Number of matching elements: ${count}`);
+      case "SAO":
+        locator = this.page
+          .frameLocator("#baristaPageOut")
+          .frameLocator("#APWorkCenter")
+          .locator(
+            `//td[a[contains(text(), '${this.casespage.casesCreated}')]]/following-sibling::td[contains(@title, 'SAO Form')]`
+          );
 
-    if (count > 0) {
-      await locator.click();
-    } else {
-      console.log("No matching elements found.");
+        console.log(`Locator: ${locator}`);
+        break;
+
+      case "MB":
+        locator = this.page
+          .frameLocator("#baristaPageOut")
+          .frameLocator("#APWorkCenter")
+          .locator(
+            `//td[a[contains(text(), '${this.casespage.casesCreated}')]]/following-sibling::td[contains(@title, 'Medical Board Info')]`
+          );
+
+        console.log(`Locator: ${locator}`);
+        break;
+      default:
+        console.log("Invalid type provided.");
+        return false; // Return false if the type is invalid
     }
-  }
-
-  async clickODMB() {
-    const locator = this.page
-      .frameLocator("#baristaPageOut")
-      .locator(
-        `//td[a[contains(text(), '${this.casespage.casesCreated}')]]/following-sibling::td[contains(@title, 'Medical Board Info')]`
-      );
 
     // Log the locator to the console
-    console.log(`Locator: ${locator}`);
 
-    // Check the number of elements matched
-    const count = await locator.count();
-    console.log(`Number of matching elements: ${count}`);
-
-    if (count > 0) {
-      await locator.click();
-    } else {
-      console.log("No matching elements found.");
+    try {
+      await locator.click({ timeout: 30000 }); // Attempt to click with a timeout
+      console.log("Case found and clicked.");
+      return true; // Return true if element was found and clicked
+    } catch (error) {
+      console.log("No matching elements found or failed to click.");
+      return false; // Return false if element was not found or click failed
     }
   }
 }

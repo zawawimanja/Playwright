@@ -92,46 +92,18 @@ test("Prereg SCO OD", async ({ page }) => {
 
   await remarksPage.saveRemarksButton.click();
 
-  const preparerInformationPage = new PreparerInformationPage(page2);
-  await preparerInformationPage.clickpreparerInformationButton();
-
-  const caseInformationPage = new CaseInformationPage(page2);
-  caseInformationPage.clickCaseInformationButton();
+  //add Revision Information
 
   const insuredPersonInfoPage = new InsuredPersonInfoPage(page2);
   await insuredPersonInfoPage.clickInsuredPersonInfoButton();
 
-  const employerInfoPage = new EmployerInfoPage(page2);
-  await employerInfoPage.clickEmployerInfoButton();
+  //add wages information
 
-  const certificationByEmployerPage = new CertificationByEmployerPage(page2);
-  await certificationByEmployerPage.clickCertificationByEmployerButton();
+  //add mb board decision
 
-  const occupationalDiseasePage = new OccupationalDiseasePage(page2);
-  await occupationalDiseasePage.clickOccupationalDiseaseButton();
-  occupationalDiseasePage.selectCausativeAgentOption();
+  //add Scheme Qualifying
 
-  const preferredSOCSOOfficePage = new PreferredSOCSOOfficePage(page2);
-  await preferredSOCSOOfficePage.clickPreferredSOCSOOfficeButton();
-
-  const confirmationOfInsuredPage = new ConfirmationOfInsuredPage(page2);
-  await confirmationOfInsuredPage.clickConfirmationOfInsuredButton();
-
-  const inconsistentDoubtfulPage = new InconsistentDoubtfulPage(page2);
-  await inconsistentDoubtfulPage.clickInconsistentDoubtfulButton();
-
-  //appointment
-  const appointmentPage = new AppointmentPage(page2);
-  await appointmentPage.clickAppointmentButton();
-
-  //smb info
-  const SmbInformationPagePage = new SmbInformationPage(page2);
-  await SmbInformationPagePage.clickSMBInfoButton();
-
-  const medicalOpinionPage = new MedicalOpinionPage(page2);
-  await medicalOpinionPage.medicalOpinionButton.waitFor();
-  await expect(medicalOpinionPage.medicalOpinionButton).toBeVisible();
-  await medicalOpinionPage.clickMedicalOpinionButton();
+  //add medical opinion
 
   await page2.waitForTimeout(30000);
 
@@ -144,13 +116,6 @@ test("Prereg SCO OD", async ({ page }) => {
   ).toBeVisible();
   await recommendationPage.actionRecommendSCO.waitFor();
   await recommendationPage.selectActionOption2();
-
-  //hus info
-  const medicalCertificatePage = new MedicalCertificatePage(page2);
-  await medicalCertificatePage.clickHusInfoButton();
-  //bank info
-  const bankInformationPage = new BankInformationPage(page2);
-  await bankInformationPage.clickBankInformationButton();
 
   const supportingDocumentPage = new SupportingDocumentPage(page2);
   await supportingDocumentPage.clickSupportingDocumentButton();

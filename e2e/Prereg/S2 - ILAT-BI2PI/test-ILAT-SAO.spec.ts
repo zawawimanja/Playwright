@@ -28,13 +28,15 @@ import { CasesPage } from "../../../pages/cases";
 import { SubmitPage } from "../../../pages/submit";
 import { MyCasesPage } from "../../../pages/mycases";
 import { HeaderPage } from "../../../pages/header";
+import { Contribution56Page } from "../../../pages/contribution_56";
 
 test.beforeEach(async ({ page }) => {
-  await login(page, "atilia.pks", "u@T_atilia");
+  //await login(page, "roliana.pks", "u@T_roliana");
+  await login(page, "uat_ali", "u@T_ali");
 });
 
 export let schemeRefValue: string;
-test("Prereg SCO OD", async ({ page }) => {
+test("Prereg SAO OD", async ({ page }) => {
   const preregPage = new PreregistrationPage(page);
   const leftTabPage = new LeftTabPage(page);
   let submitPage = new SubmitPage(page);
@@ -42,7 +44,7 @@ test("Prereg SCO OD", async ({ page }) => {
   const myCasesPage = new MyCasesPage(page, casesPage);
   await casesPage.init();
 
-  let loginUser = "atilia.pks";
+  let loginUser = "roliana.pks";
   let caseFound = false;
 
   while (!caseFound) {
@@ -56,19 +58,17 @@ test("Prereg SCO OD", async ({ page }) => {
     await leftTabPage.clickMyCases();
 
     // Check if the case exists for the current login user
-    if (await myCasesPage.clickOD("OD")) {
+    if (await myCasesPage.clickILAT("SAO")) {
       caseFound = true;
       console.log(`Case found for user ${loginUser}`);
       break;
     } else {
-      // Re-login with the new user
-      await page.reload(); // Reload the page to start fresh
-
       const headerPage = new HeaderPage(page);
 
       headerPage.clickUserProfile();
       headerPage.clickSignOut();
-      await login(page, "nazira.pks", "u@T_nazira");
+      //await login(page, "uat_ali", "u@T_ali");
+      await login(page, "roliana.pks", "u@T_roliana");
     }
   }
 
@@ -76,11 +76,11 @@ test("Prereg SCO OD", async ({ page }) => {
   await page.frameLocator("#baristaPageOut").frameLocator("#APWorkCenter").getByText("Open Task").click();
   const page2 = await pagePromise;
 
-  const draftPage = new DraftPage(page2);
-  if ((await draftPage.closeButton.count()) > 0) {
-    await draftPage.closeButton.waitFor();
-    await draftPage.clickCloseButton();
-  }
+  // const draftPage = new DraftPage(page2);
+  // if ((await draftPage.closeButton.count()) > 0) {
+  //   await draftPage.closeButton.waitFor();
+  //   await draftPage.clickCloseButton();
+  // }
 
   const remarksPage = new RemarksPage(page2);
   await remarksPage.remarksButton.waitFor();
@@ -88,69 +88,74 @@ test("Prereg SCO OD", async ({ page }) => {
   await expect(remarksPage.sectionTabs).toContainText("Remarks");
   await remarksPage.remarksButton.waitFor();
   await remarksPage.addRemarksButton.click();
-  await remarksPage.textboxIO.fill("test sco");
+  //await remarksPage.textboxIO.fill("test io");
 
-  await remarksPage.saveRemarksButton.click();
+  // await page2.locator("#subCtrlPreviewRow1-65e9-46724-95aa-00ad").getByRole("textbox").click();
+  // await page2.locator("#subCtrlPreviewRow1-65e9-46724-95aa-00ad").getByRole("textbox").fill("test sao");
+  // await page2.getByRole("button", { name: "Save Remarks" }).click();
 
-  const preparerInformationPage = new PreparerInformationPage(page2);
-  await preparerInformationPage.clickpreparerInformationButton();
-
-  const caseInformationPage = new CaseInformationPage(page2);
-  caseInformationPage.clickCaseInformationButton();
+  // await remarksPage.saveRemarksButton.click();
 
   const insuredPersonInfoPage = new InsuredPersonInfoPage(page2);
   await insuredPersonInfoPage.clickInsuredPersonInfoButton();
 
-  const employerInfoPage = new EmployerInfoPage(page2);
-  await employerInfoPage.clickEmployerInfoButton();
+  //add wages info
+  //add Inconsistent & Doubtful Information
+  // add Medical Board Decision
+  //add Scheme Qualifying
 
-  const certificationByEmployerPage = new CertificationByEmployerPage(page2);
-  await certificationByEmployerPage.clickCertificationByEmployerButton();
+  const contribution56Page = new Contribution56Page(page2);
+  await contribution56Page.clickContribution56Button();
 
-  const occupationalDiseasePage = new OccupationalDiseasePage(page2);
-  await occupationalDiseasePage.clickOccupationalDiseaseButton();
-  occupationalDiseasePage.selectCausativeAgentOption();
+  await page2.getByRole("button", { name: "Add Record" }).click();
 
-  const preferredSOCSOOfficePage = new PreferredSOCSOOfficePage(page2);
-  await preferredSOCSOOfficePage.clickPreferredSOCSOOfficeButton();
+  // await page2.locator("#Contribution56").getByRole("textbox").first().fill("E1300001143K");
 
-  const confirmationOfInsuredPage = new ConfirmationOfInsuredPage(page2);
-  await confirmationOfInsuredPage.clickConfirmationOfInsuredButton();
+  await page2.locator('[id^="Contribution56_EmployerCode-"]').nth(1).fill("E1300001143K");
 
-  const inconsistentDoubtfulPage = new InconsistentDoubtfulPage(page2);
-  await inconsistentDoubtfulPage.clickInconsistentDoubtfulButton();
+  await page2.getByRole("button", { name: "Search" }).click();
 
-  //appointment
-  const appointmentPage = new AppointmentPage(page2);
-  await appointmentPage.clickAppointmentButton();
+  for (let i = 104; i < 200; i++) {
+    //await page.waitForTimeout(1000);
+
+    await page2.getByRole("button", { name: "Add Record" }).first().click();
+
+    // Fill the input field for year
+    await page2.locator("input.textInput[id^='Contribution56_WagesInfo_Year-']").nth(i).fill("2012");
+
+    // Select the month option
+    await page2.locator("[id^='Contribution56_WagesInfo_Month-']").nth(i).selectOption("2");
+
+    // Fill the wages input
+    await page2.locator("input.textInput[id^='Contribution56_WagesInfo_Wages-']").nth(i).fill("100");
+
+    // Select an option from the combobox (3rd combobox)
+
+    await page2.locator("[id^='Contribution56_WagesInfo_Source-']").nth(i).selectOption("9607901");
+
+    // Check the checkbox with the label "Recommend"
+    //  await page2.getByRole("checkbox", { name: "Recommend", exact: true }).nth(i).check();
+  }
 
   //smb info
-  const SmbInformationPagePage = new SmbInformationPage(page2);
-  await SmbInformationPagePage.clickSMBInfoButton();
+  const SMBInformationPage = new SmbInformationPage(page2);
+  await SMBInformationPage.clickSMBInfoButton();
 
-  const medicalOpinionPage = new MedicalOpinionPage(page2);
-  await medicalOpinionPage.medicalOpinionButton.waitFor();
-  await expect(medicalOpinionPage.medicalOpinionButton).toBeVisible();
-  await medicalOpinionPage.clickMedicalOpinionButton();
-
-  await page2.waitForTimeout(30000);
-
-  //temporary solution
   const recommendationPage = new RecommendationPage(page2);
-  await recommendationPage.clickRecommendationButton();
+  await recommendationPage.clickSAORecommendationButton();
 
-  await expect(
-    page2.getByText("Reco History Approval History RECOMMENDATIONhide history SAO Approval - Before")
-  ).toBeVisible();
-  await recommendationPage.actionRecommendSCO.waitFor();
-  await recommendationPage.selectActionOption2();
+  await page.waitForTimeout(10000);
+  const approvalPage = new ApprovalPage(page2);
+  await approvalPage.clickApprovalButton();
 
-  //hus info
-  const medicalCertificatePage = new MedicalCertificatePage(page2);
-  await medicalCertificatePage.clickHusInfoButton();
-  //bank info
-  const bankInformationPage = new BankInformationPage(page2);
-  await bankInformationPage.clickBankInformationButton();
+  await expect(approvalPage.actionApproveAfterMB).toBeVisible();
+  await approvalPage.actionApproveAfterMB.waitFor();
+
+  await approvalPage.selectSAOActionOptionAfterMB();
+
+  //wages info
+  const wagesInfoPage = new WagesInfoPage(page2);
+  await wagesInfoPage.clickWagesInfoButton();
 
   const supportingDocumentPage = new SupportingDocumentPage(page2);
   await supportingDocumentPage.clickSupportingDocumentButton();
@@ -162,12 +167,13 @@ test("Prereg SCO OD", async ({ page }) => {
   await previewSubmissionPage.clickSubmitButton();
   await previewSubmissionPage.clickYesButton();
 
-  await page2.waitForTimeout(30000);
+  await page.waitForTimeout(15000);
 
   submitPage = new SubmitPage(page2);
+
   await expect(submitPage.schemeRefNo).toBeVisible();
 
-  await expect(submitPage.caseStatusPendingApproval_IO_SCO).toBeVisible();
+  await expect(submitPage.caseStatusPendingEndorsement_SAO).toBeVisible();
 
   await submitPage.submitButton.click();
 });
