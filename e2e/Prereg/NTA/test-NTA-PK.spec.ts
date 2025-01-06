@@ -16,6 +16,7 @@ import { BankInformationPage } from "../../../pages/bank_info";
 import { SupportingDocumentPage } from "../../../pages/support_doc";
 import { ConfirmationOfInsuredPage } from "../../../pages/confirm_person";
 import { CalendarPage } from "../../../utils/calendar";
+import { TimePage } from "../../../utils/time";
 import { SubmitPage } from "../../../pages/submit";
 import { CasesPage } from "../../../pages/cases";
 
@@ -37,33 +38,41 @@ test("Prereg PK OD", async ({ page }) => {
   await expect(leftTabPage.preregistrationLink).toBeVisible();
   leftTabPage.clickPreregistration();
 
-  await preregPage.selectNoticeTypePreRegOption("OD");
+  await preregPage.selectNoticeTypePreRegOption("Accident");
   // Verify the selected option text
   const selectedOptionText = await preregPage.getSelectedNoticeTypeText();
-  expect(selectedOptionText).toBe("OD"); // Assert the selected text is correct
+  expect(selectedOptionText).toBe("Accident"); // Assert the selected text is correct
 
-  await preregPage.selectInsuredPersonEmployment("Yes");
-  const selectedEmploymentText = await preregPage.getSelectedInsuredPersonEmploymentText();
-  expect(selectedEmploymentText).toBe("Yes");
+  const calendarPage1 = new CalendarPage(page);
+  //add accident date
+  //add accident time
+  await page.frameLocator("#baristaPageOut").getByLabel("Accident Date*").click();
+  await page.frameLocator("#baristaPageOut").getByRole("combobox").nth(3).selectOption("2000");
+  await page.frameLocator("#baristaPageOut").getByRole("combobox").nth(2).selectOption("7");
+  await page.frameLocator("#baristaPageOut").getByRole("link", { name: "15" }).click();
+  // calendarPage1.selectDateAccident("1999", "11", "15");
+
+  const time = new TimePage(page);
+
+  await page.frameLocator("#baristaPageOut").getByLabel("Accident Time*").click();
+
+  time.selectTimeOption("12", "00", "00");
 
   await preregPage.selectIdentificationType("2");
   const selectedIdentificationTypeText = await preregPage.getSelectedIdentificationTypeText();
   expect(selectedIdentificationTypeText).toBe("New IC");
 
-  await preregPage.selectNoticeAndBenefitClaimFormOption("Insured Person");
-  const NoticeAndBenefitClaimFormOptionText = await preregPage.getselectNoticeAndBenefitClaimFormText();
-  expect(NoticeAndBenefitClaimFormOptionText).toBe("Insured Person");
-
-  await preregPage.fillIdentificationNo("610611015059");
+  await preregPage.fillIdentificationNo("770628015322");
   const filledIdentificationNo = await preregPage.getIdentificationNo();
   //expect(filledIdentificationNo).toBe("910227016078");
 
-  await preregPage.fillEmployerCode("E1100000958P");
+  await preregPage.fillEmployerCode("E1100020713X");
   const filledEmployerCode = await preregPage.getEmployerCode();
   //expect(filledEmployerCode).toBe("A3700059551B");
 
-  await preregPage.clickClaimFormSubmissionByListButton();
+  await page.frameLocator("#baristaPageOut").locator("#row23column2").click();
   await preregPage.clickSearchButton();
+
   const pagePromise = page.waitForEvent("popup");
   await preregPage.clickNextButton();
   const page1 = await pagePromise;
@@ -90,19 +99,19 @@ test("Prereg PK OD", async ({ page }) => {
   await insuredPersonInfoPage.clickInsuredPersonInfoButton();
   await insuredPersonInfoPage.noticeAndBenefitClaimFormReceivedDateInput.click();
 
-  await calendarPage.selectDateInsuredPersonPage("2021", "8", "10");
-  await insuredPersonInfoPage.fillOccupation("CS");
-  await insuredPersonInfoPage.selectOccupation("1000002");
-  await insuredPersonInfoPage.selectSubOccupation("1001132");
-  await insuredPersonInfoPage.selectSubOccupationalList("1002058");
+  await calendarPage.selectDateInsuredPersonPage("2001", "1", "1");
+  // await insuredPersonInfoPage.fillOccupation("CS");
+  // await insuredPersonInfoPage.selectOccupation("1000002");
+  // await insuredPersonInfoPage.selectSubOccupation("1001132");
+  // await insuredPersonInfoPage.selectSubOccupationalList("1002058");
 
-  await insuredPersonInfoPage.fillAddress1("Taman");
-  await insuredPersonInfoPage.fillAddress(2, "Lorong 10");
-  await insuredPersonInfoPage.fillAddress(3, "Jalan 1");
-  await insuredPersonInfoPage.selectState("200714");
-  await insuredPersonInfoPage.selectCity("201460");
-  await insuredPersonInfoPage.fillPostcode("51000");
-  await insuredPersonInfoPage.selectNationality("201749");
+  // await insuredPersonInfoPage.fillAddress1("Taman");
+  // await insuredPersonInfoPage.fillAddress(2, "Lorong 10");
+  // await insuredPersonInfoPage.fillAddress(3, "Jalan 1");
+  // await insuredPersonInfoPage.selectState("200714");
+  // await insuredPersonInfoPage.selectCity("201460");
+  // await insuredPersonInfoPage.fillPostcode("51000");
+  // await insuredPersonInfoPage.selectNationality("201749");
 
   const employerInfoPage = new EmployerInfoPage(page1);
   await employerInfoPage.clickEmployerInfoButton();
@@ -118,24 +127,11 @@ test("Prereg PK OD", async ({ page }) => {
   await medicalCertificatePage.enterClinicHospitalName("kl");
 
   await page1.getByRole("textbox").nth(1).click();
-  await calendarPage.selectDateInsuredPersonPage("2017", "1", "10");
+  await calendarPage.selectDateInsuredPersonPage("2000", "8", "1");
 
   await page1.getByRole("textbox").nth(2).click();
-  await calendarPage.selectDateMCEndDate("2017", "2", "20");
+  await calendarPage.selectDateMCEndDate("2000", "9", "20");
   await medicalCertificatePage.submitButton().click();
-
-  //2nd mc
-  // await medicalCertificatePage.addRecord();
-  // await medicalCertificatePage.enterClinicHospitalName("kl");
-
-  // await calendarPage.startDateInput.click();
-
-  // await calendarPage.selectDateInsuredPersonPage("2021", "7", "9");
-
-  // await calendarPage.endDateInput.click();
-
-  // await calendarPage.selectDateMCEndDate("2021", "7", "14");
-  // await medicalCertificatePage.submitButton().click();
 
   const wagesInfoPage = new WagesInfoPage(page1);
   await wagesInfoPage.clickWagesInfoButton();
@@ -148,7 +144,7 @@ test("Prereg PK OD", async ({ page }) => {
   await certificationByEmployerPage.fillName("MAT");
   await certificationByEmployerPage.fillDesignation("CEO");
   await certificationByEmployerPage.calendar.click();
-  await calendarPage.selectDateInsuredPersonPage("2021", "8", "11");
+  await calendarPage.selectDateInsuredPersonPage("2020", "8", "11");
 
   const bankInformationPage = new BankInformationPage(page1);
   await bankInformationPage.clickBankInformationButton();
