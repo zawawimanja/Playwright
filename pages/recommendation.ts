@@ -42,6 +42,10 @@ export class RecommendationPage {
     return this.page.locator("#ActionRecommend");
   }
 
+  get actionRecommendNTA() {
+    return this.page.getByLabel("Action*");
+  }
+
   get actionRecommendSCO() {
     return this.page.locator("#ActionSCO");
   }
@@ -58,7 +62,19 @@ export class RecommendationPage {
     await this.actionRecommendSCO.selectOption("10201");
   }
 
-  async selectActionOption1() {
+  async selectActionRecommend() {
     await this.actionRecommend.selectOption("10207");
+  }
+
+  async selectActionRecommendNTA(text) {
+    await this.actionRecommendNTA.selectOption(text);
+  }
+
+  async selectUnderSectionEmploymentInjury() {
+    await this.underSectionEmploymentInjury.first().selectOption("205601");
+  }
+
+  get underSectionEmploymentInjury() {
+    return this.page.locator('[id^="UnderSectionEmploymentInjury-"]');
   }
 }

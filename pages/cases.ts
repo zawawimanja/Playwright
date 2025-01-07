@@ -14,7 +14,7 @@ export class CasesPage {
   async init() {
     //this.schemeRefValue = await this.submitPage.getSchemeRefValue();
 
-    this.schemeRefValue = "E11NTI20240010080-004";
+    this.schemeRefValue = "E11NTA20250000005";
 
     console.log(" SRN " + this.schemeRefValue);
   }

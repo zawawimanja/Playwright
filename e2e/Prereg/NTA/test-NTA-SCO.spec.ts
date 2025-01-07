@@ -24,6 +24,7 @@ import { ApprovalPage } from "../../../pages/approval";
 import { InconsistentDoubtfulPage } from "../../../pages/inconsistentdoubtful";
 import { CalendarPage } from "../../../utils/calendar";
 import { SmbInformationPage } from "../../../pages/smb_info";
+import { AccidentInformationPage } from "../../../pages/accident_info";
 import { CasesPage } from "../../../pages/cases";
 import { SubmitPage } from "../../../pages/submit";
 import { MyCasesPage } from "../../../pages/mycases";
@@ -34,7 +35,7 @@ test.beforeEach(async ({ page }) => {
 });
 
 export let schemeRefValue: string;
-test("Prereg SCO OD", async ({ page }) => {
+test("Prereg SCO NTA", async ({ page }) => {
   const preregPage = new PreregistrationPage(page);
   const leftTabPage = new LeftTabPage(page);
   let submitPage = new SubmitPage(page);
@@ -56,7 +57,7 @@ test("Prereg SCO OD", async ({ page }) => {
     await leftTabPage.clickMyCases();
 
     // Check if the case exists for the current login user
-    if (await myCasesPage.clickOD("OD")) {
+    if (await myCasesPage.clickAccident("SCO")) {
       caseFound = true;
       console.log(`Case found for user ${loginUser}`);
       break;
@@ -107,6 +108,8 @@ test("Prereg SCO OD", async ({ page }) => {
   //add Reference Notice Information
 
   //add Accident Information
+  const accidentInformationPage = new AccidentInformationPage(page2);
+  await accidentInformationPage.clickAccidentInformationButton();
 
   const preferredSOCSOOfficePage = new PreferredSOCSOOfficePage(page2);
   await preferredSOCSOOfficePage.clickPreferredSOCSOOfficeButton();
@@ -128,20 +131,28 @@ test("Prereg SCO OD", async ({ page }) => {
   await expect(medicalOpinionPage.medicalOpinionButton).toBeVisible();
   await medicalOpinionPage.clickMedicalOpinionButton();
 
-  await page2.waitForTimeout(30000);
-
   //temporary solution
   const recommendationPage = new RecommendationPage(page2);
   await recommendationPage.clickRecommendationButton();
+  await recommendationPage.selectActionRecommendNTA("Recommend");
+  await recommendationPage.selectUnderSectionEmploymentInjury();
 
-  await expect(
-    page2.getByText("Reco History Approval History RECOMMENDATIONhide history SAO Approval - Before")
-  ).toBeVisible();
-  await recommendationPage.actionRecommendSCO.waitFor();
-  await recommendationPage.selectActionOption2();
+  //add wages info page
+  const wagesInfoPage = new WagesInfoPage(page2);
+  await wagesInfoPage.clickWagesInfoButton();
+  await wagesInfoPage.selectWagesInfoSection("Yes");
+
+  //add medical certificate pages
+  const medicalCertificatePage = new MedicalCertificatePage(page2);
+  await medicalCertificatePage.clickMedicalCertificateButton();
+
+  //add bank info
+  const bankInformationPage = new BankInformationPage(page2);
+  await bankInformationPage.clickBankInformationButton();
 
   const confirmationOfInsuredPage = new ConfirmationOfInsuredPage(page2);
   await confirmationOfInsuredPage.clickConfirmationOfInsuredButton();
+  await confirmationOfInsuredPage.checkCompletedCheckbox();
 
   const supportingDocumentPage = new SupportingDocumentPage(page2);
   await supportingDocumentPage.clickSupportingDocumentButton();

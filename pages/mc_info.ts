@@ -12,6 +12,10 @@ export class MedicalCertificatePage {
     return this.page.getByRole("button", { name: "Medical Certificate" });
   }
 
+  get medicalCertificateNTAButton() {
+    return this.page.getByText("HUS Information");
+  }
+
   get husInfoButton() {
     return this.page.getByRole("button", { name: "HUS Information" });
   }
@@ -51,6 +55,16 @@ export class MedicalCertificatePage {
    */
   async clickMedicalCertificateButton() {
     await this.medicalCertificateButton.click();
+  }
+
+  async clickMedicalCertificateNTAButton() {
+    await this.medicalCertificateNTAButton.click();
+  }
+
+  async clickMCApprovalStatus() {
+    await this.page.getByRole("button", { name: "Edit Record" }).click();
+    await this.page.getByRole("combobox").nth(2).selectOption("Approved");
+    await this.page.getByRole("button", { name: "OK" }).click();
   }
 
   async clickHusInfoButton() {

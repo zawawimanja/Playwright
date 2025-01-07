@@ -46,6 +46,10 @@ export class ApprovalPage {
     return this.page.locator("#ActionApprove");
   }
 
+  get actionApproveSAONTA() {
+    return this.page.getByLabel("Action");
+  }
+
   get actionApproveAfterMB() {
     return this.page.locator("#ActionApprovalAfterMB");
   }
@@ -68,5 +72,17 @@ export class ApprovalPage {
 
   async selectSAOActionOption() {
     await this.actionApprove.selectOption("10222");
+  }
+
+  async selectSAOActionOptionNTA(text) {
+    await this.actionApproveSAONTA.selectOption(text);
+  }
+
+  async selectUnderSectionEmploymentInjury() {
+    await this.underSectionEmploymentInjury.first().selectOption("205601");
+  }
+
+  get underSectionEmploymentInjury() {
+    return this.page.locator('[id^="UnderSectionADetailsSAOA-"]');
   }
 }
