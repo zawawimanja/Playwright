@@ -147,6 +147,8 @@ test("Prereg PK OD", async ({ page }) => {
 
   const preferredSOCSOOfficePage = new PreferredSOCSOOfficePage(page1);
   await preferredSOCSOOfficePage.clickPreferredSOCSOOfficeButton();
+  preferredSOCSOOfficePage.selectSOCSOState("200701");
+  await preferredSOCSOOfficePage.selectSOCSOOffice("200419");
 
   const certificationByEmployerPage = new CertificationByEmployerPage(page1);
   await certificationByEmployerPage.clickCertificationByEmployerButton();

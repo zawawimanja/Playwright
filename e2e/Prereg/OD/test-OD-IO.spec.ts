@@ -146,7 +146,7 @@ test("Prereg IO OD", async ({ page }) => {
   await expect(recommendationPage.actionRecommend).toBeVisible();
   await recommendationPage.actionRecommend.waitFor();
 
-  recommendationPage.selectActionOption1();
+  recommendationPage.selectActionRecommend();
 
   const medicalCertificatePage = new MedicalCertificatePage(page2);
   await medicalCertificatePage.clickHusInfoButton();

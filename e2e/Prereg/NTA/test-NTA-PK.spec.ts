@@ -15,6 +15,7 @@ import { CertificationByEmployerPage } from "../../../pages/cert_employer";
 import { BankInformationPage } from "../../../pages/bank_info";
 import { SupportingDocumentPage } from "../../../pages/support_doc";
 import { ConfirmationOfInsuredPage } from "../../../pages/confirm_person";
+import { AccidentInformationPage } from "../../../pages/accident_info";
 import { CalendarPage } from "../../../utils/calendar";
 import { TimePage } from "../../../utils/time";
 import { SubmitPage } from "../../../pages/submit";
@@ -44,18 +45,18 @@ test("Prereg PK OD", async ({ page }) => {
   expect(selectedOptionText).toBe("Accident"); // Assert the selected text is correct
 
   const calendarPage1 = new CalendarPage(page);
+
   //add accident date
-  //add accident time
   await page.frameLocator("#baristaPageOut").getByLabel("Accident Date*").click();
   await page.frameLocator("#baristaPageOut").getByRole("combobox").nth(3).selectOption("2000");
-  await page.frameLocator("#baristaPageOut").getByRole("combobox").nth(2).selectOption("7");
+  //month will be add 1 month
+  await page.frameLocator("#baristaPageOut").getByRole("combobox").nth(2).selectOption("6");
   await page.frameLocator("#baristaPageOut").getByRole("link", { name: "15" }).click();
   // calendarPage1.selectDateAccident("1999", "11", "15");
 
   const time = new TimePage(page);
-
+  //add accident time
   await page.frameLocator("#baristaPageOut").getByLabel("Accident Time*").click();
-
   time.selectTimeOption("12", "00", "00");
 
   await preregPage.selectIdentificationType("2");
@@ -100,24 +101,16 @@ test("Prereg PK OD", async ({ page }) => {
   await insuredPersonInfoPage.noticeAndBenefitClaimFormReceivedDateInput.click();
 
   await calendarPage.selectDateInsuredPersonPage("2001", "1", "1");
-  // await insuredPersonInfoPage.fillOccupation("CS");
-  // await insuredPersonInfoPage.selectOccupation("1000002");
-  // await insuredPersonInfoPage.selectSubOccupation("1001132");
-  // await insuredPersonInfoPage.selectSubOccupationalList("1002058");
-
-  // await insuredPersonInfoPage.fillAddress1("Taman");
-  // await insuredPersonInfoPage.fillAddress(2, "Lorong 10");
-  // await insuredPersonInfoPage.fillAddress(3, "Jalan 1");
-  // await insuredPersonInfoPage.selectState("200714");
-  // await insuredPersonInfoPage.selectCity("201460");
-  // await insuredPersonInfoPage.fillPostcode("51000");
-  // await insuredPersonInfoPage.selectNationality("201749");
 
   const employerInfoPage = new EmployerInfoPage(page1);
   await employerInfoPage.clickEmployerInfoButton();
 
   //add Reference Notice Information
-  //add Accident Information
+
+  const accidentInformationPage = new AccidentInformationPage(page1);
+  await accidentInformationPage.clickAccidentInformationButton();
+  await accidentInformationPage.fillAccidentHappened("test");
+  await accidentInformationPage.fillAccidentInjury("test");
 
   const medicalCertificatePage = new MedicalCertificatePage(page1);
   await medicalCertificatePage.clickMedicalCertificateButton();
@@ -138,6 +131,8 @@ test("Prereg PK OD", async ({ page }) => {
 
   const preferredSOCSOOfficePage = new PreferredSOCSOOfficePage(page1);
   await preferredSOCSOOfficePage.clickPreferredSOCSOOfficeButton();
+  preferredSOCSOOfficePage.selectSOCSOState("200701");
+  await preferredSOCSOOfficePage.selectSOCSOOffice("200419");
 
   const certificationByEmployerPage = new CertificationByEmployerPage(page1);
   await certificationByEmployerPage.clickCertificationByEmployerButton();
@@ -147,19 +142,6 @@ test("Prereg PK OD", async ({ page }) => {
   await calendarPage.selectDateInsuredPersonPage("2020", "8", "11");
 
   const bankInformationPage = new BankInformationPage(page1);
-  await bankInformationPage.clickBankInformationButton();
-
-  await bankInformationPage.accountNoSelect.waitFor();
-  await expect(bankInformationPage.accountNoSelect).toBeVisible();
-  await bankInformationPage.accountNoSelect.click();
-
-  await page1.getByLabel("Account No.*", { exact: true }).selectOption("Yes");
-  await bankInformationPage.selectAccountNo("Yes");
-  await bankInformationPage.selectBankLocation("204101");
-  await bankInformationPage.selectBankName("802121");
-  await bankInformationPage.selectBankAccountType("204401");
-  await bankInformationPage.fillBankBranch("KL");
-  await bankInformationPage.fillBankAccountNo("12345678");
 
   const confirmationOfInsuredPage = new ConfirmationOfInsuredPage(page1);
   await confirmationOfInsuredPage.clickConfirmationOfInsuredButton();

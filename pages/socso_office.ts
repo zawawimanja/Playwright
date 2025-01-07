@@ -1,12 +1,9 @@
-import { Page } from '@playwright/test';
-
+import { Page } from "@playwright/test";
 
 export class PreferredSOCSOOfficePage {
+  private page: Page;
 
-      private page: Page;
-
-
-    constructor(page: Page) {
+  constructor(page: Page) {
     this.page = page;
   }
 
@@ -14,21 +11,25 @@ export class PreferredSOCSOOfficePage {
    * Preferred SOCSO Office button
    */
   get preferredSOCSOOfficeButton() {
-    return this.page.getByRole('button', { name: 'Preferred SOCSO Office' });
+    return this.page.getByRole("button", { name: "Preferred SOCSO Office" });
   }
 
   /**
    * Section tabs element
    */
   get sectionTabs() {
-    return this.page.locator('#sectionTabs');
+    return this.page.locator("#sectionTabs");
   }
 
   /**
    * SOCSO Office select element
    */
   get socsoOfficeSelect() {
-    return this.page.getByLabel('SOCSO Office*');
+    return this.page.getByLabel("SOCSO Office*");
+  }
+
+  get socsoOfficeState() {
+    return this.page.getByLabel("State*");
   }
 
   /**
@@ -43,7 +44,10 @@ export class PreferredSOCSOOfficePage {
    * @param {string} option - The value of the option to select
    */
   async selectSOCSOOffice(option) {
-    await this.socsoOfficeSelect.selectOption(option);
+    await this.socsoOfficeSelect.selectOption("200419");
+  }
+
+  async selectSOCSOState(option) {
+    await this.socsoOfficeState.selectOption("200701");
   }
 }
-
