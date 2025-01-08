@@ -1,10 +1,7 @@
-import { Page } from '@playwright/test';
+import { Page } from "@playwright/test";
 
 export class BankInformationPage {
-
-
-    private page: Page;
-
+  private page: Page;
 
   constructor(page: Page) {
     this.page = page;
@@ -13,96 +10,99 @@ export class BankInformationPage {
    * Bank Information button
    */
   get bankInformationButton() {
-    return this.page.getByRole('button', { name: 'Bank Information' });
+    return this.page.getByRole("button", { name: "Bank Information" });
   }
 
   /**
    * Section tabs element
    */
   get sectionTabs() {
-    return this.page.locator('#sectionTabs');
+    return this.page.locator("#sectionTabs");
   }
 
   /**
    * Account No. label element
    */
   get accountNoLabel() {
-    return this.page.getByText('Account No.', { exact: true });
+    return this.page.getByText("Account No.", { exact: true });
   }
 
   /**
    * Account No. select element
    */
   get accountNoSelect() {
-    return this.page.getByLabel('Account No.*', { exact: true });
+    return this.page.getByLabel("Account No.*", { exact: true });
   }
 
   /**
    * Bank Location select element
    */
   get bankLocationSelect() {
-    return this.page.getByLabel('Bank Location*');
+    return this.page.getByLabel("Bank Location*");
   }
 
   /**
    * Bank Name label element
    */
   get bankNameLabel() {
-    return this.page.locator('#ctrlField1521').getByText('Bank Name');
+    return this.page.locator("#ctrlField1521").getByText("Bank Name");
   }
 
   /**
    * Bank Name select element
    */
   get bankNameSelect() {
-    return this.page.locator('#BankNameLB');
+    return this.page.locator("#BankNameLB");
   }
 
+  get bankNameSelectILAT() {
+    return this.page.locator("#BankNameLocalBank");
+  }
 
-    get bankNameSelectAccident() {
-    return this.page.locator('#BankNameLocalBank');
+  get bankNameSelectAccident() {
+    return this.page.locator("#BankNameLocalBank");
   }
 
   /**
    * Bank Swift Code label element
    */
   get bankSwiftCodeLabel() {
-    return this.page.locator('#ctrlField1041').getByText('Bank Swift Code');
+    return this.page.locator("#ctrlField1041").getByText("Bank Swift Code");
   }
 
   /**
    * Bank Account Type label element
    */
   get bankAccountTypeLabel() {
-    return this.page.getByText('Bank Account Type');
+    return this.page.getByText("Bank Account Type");
   }
 
   /**
    * Bank Account Type select element
    */
   get bankAccountTypeSelect() {
-    return this.page.getByLabel('Bank Account Type*');
+    return this.page.getByLabel("Bank Account Type*");
   }
 
   /**
    * Bank Branch label element
    */
   get bankBranchLabel() {
-    return this.page.getByText('Bank Branch');
+    return this.page.getByText("Bank Branch");
   }
 
   /**
    * Bank Branch input field
    */
   get bankBranchInput() {
-    return this.page.getByLabel('Bank Branch*');
+    return this.page.getByLabel("Bank Branch*");
   }
 
   /**
    * Bank Account No. input field
    */
   get bankAccountNoInput() {
-    return this.page.getByLabel('Bank Account No.*');
+    return this.page.getByLabel("Bank Account No.*");
   }
 
   /**
@@ -136,6 +136,10 @@ export class BankInformationPage {
     await this.bankNameSelect.selectOption(option);
   }
 
+  async selectBankNameILAT(option) {
+    await this.bankNameSelectILAT.selectOption(option);
+  }
+
   async selectBankNameAccident(option) {
     await this.bankNameSelectAccident.selectOption(option);
   }
@@ -164,4 +168,3 @@ export class BankInformationPage {
     await this.bankAccountNoInput.fill(accountNo);
   }
 }
-
