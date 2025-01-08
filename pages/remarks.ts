@@ -34,6 +34,10 @@ export class RemarksPage {
     return this.page.locator("#AddRemarksDetailsR").getByRole("textbox");
   }
 
+  get textboxSCO() {
+    return this.page.locator("#AddRemarksDetails_Subform_Remarks").getByRole("textbox");
+  }
+
   get caseInformationButton() {
     return this.page.getByRole("button", { name: "Remarks" });
   }

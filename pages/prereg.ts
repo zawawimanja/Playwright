@@ -209,6 +209,14 @@ export class PreregistrationPage {
     return this.baristaPageOut.getByLabel("Scheme Reference Number");
   }
 
+  private get identificationTypeLocator() {
+    return this.baristaPageOut.locator("#IdentificationType");
+  }
+
+  private get identificationNoLocator() {
+    return this.baristaPageOut.getByLabel("Identification No.");
+  }
+
   private get searchButtonLocator() {
     return this.baristaPageOut.getByRole("button", { name: "Search" });
   }
@@ -223,5 +231,13 @@ export class PreregistrationPage {
 
   async enterSchemeRefNo(value: string) {
     await this.schemeRefNoLocator.fill(value);
+  }
+
+  async enterIdentificationType(value: string) {
+    await this.identificationTypeLocator.fill(value);
+  }
+
+  async enterIdentificationNo(value: string) {
+    await this.identificationNoLocator.fill(value);
   }
 }

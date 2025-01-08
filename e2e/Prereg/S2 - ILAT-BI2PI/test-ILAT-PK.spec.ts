@@ -25,7 +25,7 @@ test.beforeEach(async ({ page }) => {
 
 export let schemeRefValue: string;
 
-test("Prereg PK OD", async ({ page }) => {
+test("Prereg PK ILAT", async ({ page }) => {
   const preregPage = new PreregistrationPage(page);
   const leftTabPage = new LeftTabPage(page);
   let submitPage = new SubmitPage(page);
@@ -34,41 +34,23 @@ test("Prereg PK OD", async ({ page }) => {
   await leftTabPage.leftBar.waitFor();
   await expect(leftTabPage.leftBar).toBeVisible();
 
-  await expect(leftTabPage.preregistrationLink).toBeVisible();
-  leftTabPage.clickPreregistration();
+  leftTabPage.clickCreateRevision();
 
-  await preregPage.selectNoticeTypePreRegOption("OD");
-  // Verify the selected option text
-  const selectedOptionText = await preregPage.getSelectedNoticeTypeText();
-  expect(selectedOptionText).toBe("OD"); // Assert the selected text is correct
+  await preregPage.selectRevisionType("INVALIDITY");
 
-  await preregPage.selectInsuredPersonEmployment("Yes");
-  const selectedEmploymentText = await preregPage.getSelectedInsuredPersonEmploymentText();
-  expect(selectedEmploymentText).toBe("Yes");
+  await preregPage.setSearchByOption("IC");
 
-  await preregPage.selectIdentificationType("2");
-  const selectedIdentificationTypeText = await preregPage.getSelectedIdentificationTypeText();
-  expect(selectedIdentificationTypeText).toBe("New IC");
+  await preregPage.enterIdentificationNo("770628015322");
 
-  await preregPage.selectNoticeAndBenefitClaimFormOption("Insured Person");
-  const NoticeAndBenefitClaimFormOptionText = await preregPage.getselectNoticeAndBenefitClaimFormText();
-  expect(NoticeAndBenefitClaimFormOptionText).toBe("Insured Person");
-
-  await preregPage.fillIdentificationNo("910227016078");
-  const filledIdentificationNo = await preregPage.getIdentificationNo();
-  expect(filledIdentificationNo).toBe("910227016078");
-
-  await preregPage.fillEmployerCode("A3700059551B");
-  const filledEmployerCode = await preregPage.getEmployerCode();
-  expect(filledEmployerCode).toBe("A3700059551B");
-
-  await preregPage.clickClaimFormSubmissionByListButton();
   await preregPage.clickSearchButton();
+  await preregPage.clickCreateRevisionButton();
+
   const pagePromise = page.waitForEvent("popup");
-  await preregPage.clickNextButton();
+
   const page1 = await pagePromise;
-  await page1.waitForTimeout(30000);
-  const draftPage = new DraftPage(page1);
+
+  await page.waitForTimeout(30000);
+  const draftPage = new DraftPage(page);
 
   if (await draftPage.closeButton.isVisible()) {
     await draftPage.closeButton.waitFor();

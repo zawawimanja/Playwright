@@ -32,7 +32,11 @@ export class LeftTabPage {
   }
 
   async clickCreateRevision() {
-    await this.page.getByRole("link", { name: "Create Revision" }).click();
+    await this.page
+      .locator("div")
+      .filter({ hasText: /^Create Revision$/ })
+      .nth(1)
+      .click();
   }
 
   get preregistrationLink() {
