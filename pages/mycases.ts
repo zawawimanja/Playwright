@@ -127,12 +127,12 @@ export class MyCasesPage {
 
     // Choose the locator based on the type
     switch (type) {
-      case "OD":
+      case "SCO":
         locator = this.page
           .frameLocator("#baristaPageOut")
           .frameLocator("#APWorkCenter")
           .locator(
-            `//td[a[contains(text(), '${this.casespage.casesCreated}')]]/following-sibling::td[contains(@title, 'Occupational Disease Notice')]`
+            `//td[a[contains(text(), '${this.casespage.casesCreated}')]]/following-sibling::td[contains(@title, 'SCO IO Form')]`
           );
         console.log(`Locator: ${locator}`);
         break;

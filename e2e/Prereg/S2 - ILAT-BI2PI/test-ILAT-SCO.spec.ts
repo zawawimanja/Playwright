@@ -34,7 +34,7 @@ test.beforeEach(async ({ page }) => {
 });
 
 export let schemeRefValue: string;
-test("Prereg SCO OD", async ({ page }) => {
+test("Prereg SCO ILAT", async ({ page }) => {
   const preregPage = new PreregistrationPage(page);
   const leftTabPage = new LeftTabPage(page);
   let submitPage = new SubmitPage(page);
@@ -56,7 +56,7 @@ test("Prereg SCO OD", async ({ page }) => {
     await leftTabPage.clickMyCases();
 
     // Check if the case exists for the current login user
-    if (await myCasesPage.clickOD("OD")) {
+    if (await myCasesPage.clickILAT("SCO")) {
       caseFound = true;
       console.log(`Case found for user ${loginUser}`);
       break;
@@ -88,7 +88,8 @@ test("Prereg SCO OD", async ({ page }) => {
   await expect(remarksPage.sectionTabs).toContainText("Remarks");
   await remarksPage.remarksButton.waitFor();
   await remarksPage.addRemarksButton.click();
-  await remarksPage.textboxIO.fill("test sco");
+
+  await remarksPage.textboxSCO.fill("test sco");
 
   await remarksPage.saveRemarksButton.click();
 
@@ -105,17 +106,11 @@ test("Prereg SCO OD", async ({ page }) => {
 
   //add medical opinion
 
-  await page2.waitForTimeout(30000);
-
   //temporary solution
   const recommendationPage = new RecommendationPage(page2);
   await recommendationPage.clickRecommendationButton();
 
-  await expect(
-    page2.getByText("Reco History Approval History RECOMMENDATIONhide history SAO Approval - Before")
-  ).toBeVisible();
-  await recommendationPage.actionRecommendSCO.waitFor();
-  await recommendationPage.selectActionOption2();
+  await recommendationPage.selectActionOptionSCOILATS2();
 
   const supportingDocumentPage = new SupportingDocumentPage(page2);
   await supportingDocumentPage.clickSupportingDocumentButton();

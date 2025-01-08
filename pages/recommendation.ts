@@ -50,6 +50,10 @@ export class RecommendationPage {
     return this.page.locator("#ActionSCO");
   }
 
+  get actionRecommendSCOILATS2() {
+    return this.page.getByLabel("Action*");
+  }
+
   async clickRecommendationButton() {
     await this.recommendationButton.click();
   }
@@ -60,6 +64,10 @@ export class RecommendationPage {
 
   async selectActionOption2() {
     await this.actionRecommendSCO.selectOption("10201");
+  }
+
+  async selectActionOptionSCOILATS2() {
+    await this.actionRecommendSCOILATS2.selectOption("10201");
   }
 
   async selectActionRecommend() {

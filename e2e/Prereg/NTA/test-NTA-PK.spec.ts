@@ -27,7 +27,7 @@ test.beforeEach(async ({ page }) => {
 
 export let schemeRefValue: string;
 
-test("Prereg PK OD", async ({ page }) => {
+test("Prereg PK NTA", async ({ page }) => {
   const preregPage = new PreregistrationPage(page);
   const leftTabPage = new LeftTabPage(page);
   let submitPage = new SubmitPage(page);
@@ -48,9 +48,9 @@ test("Prereg PK OD", async ({ page }) => {
 
   //add accident date
   await page.frameLocator("#baristaPageOut").getByLabel("Accident Date*").click();
-  await page.frameLocator("#baristaPageOut").getByRole("combobox").nth(3).selectOption("2000");
+  await page.frameLocator("#baristaPageOut").getByRole("combobox").nth(3).selectOption("2006");
   //month will be add 1 month
-  await page.frameLocator("#baristaPageOut").getByRole("combobox").nth(2).selectOption("6");
+  await page.frameLocator("#baristaPageOut").getByRole("combobox").nth(2).selectOption("5");
   await page.frameLocator("#baristaPageOut").getByRole("link", { name: "15" }).click();
   // calendarPage1.selectDateAccident("1999", "11", "15");
 
@@ -63,11 +63,11 @@ test("Prereg PK OD", async ({ page }) => {
   const selectedIdentificationTypeText = await preregPage.getSelectedIdentificationTypeText();
   expect(selectedIdentificationTypeText).toBe("New IC");
 
-  await preregPage.fillIdentificationNo("770628015322");
+  await preregPage.fillIdentificationNo("610611015059");
   const filledIdentificationNo = await preregPage.getIdentificationNo();
   //expect(filledIdentificationNo).toBe("910227016078");
 
-  await preregPage.fillEmployerCode("E1100020713X");
+  await preregPage.fillEmployerCode("E1100000958P");
   const filledEmployerCode = await preregPage.getEmployerCode();
   //expect(filledEmployerCode).toBe("A3700059551B");
 
@@ -100,7 +100,7 @@ test("Prereg PK OD", async ({ page }) => {
   await insuredPersonInfoPage.clickInsuredPersonInfoButton();
   await insuredPersonInfoPage.noticeAndBenefitClaimFormReceivedDateInput.click();
 
-  await calendarPage.selectDateInsuredPersonPage("2001", "1", "1");
+  await calendarPage.selectDateInsuredPersonPage("2006", "5", "1");
 
   const employerInfoPage = new EmployerInfoPage(page1);
   await employerInfoPage.clickEmployerInfoButton();
@@ -120,10 +120,10 @@ test("Prereg PK OD", async ({ page }) => {
   await medicalCertificatePage.enterClinicHospitalName("kl");
 
   await page1.getByRole("textbox").nth(1).click();
-  await calendarPage.selectDateInsuredPersonPage("2000", "8", "1");
+  await calendarPage.selectDateInsuredPersonPage("2006", "8", "1");
 
   await page1.getByRole("textbox").nth(2).click();
-  await calendarPage.selectDateMCEndDate("2000", "9", "20");
+  await calendarPage.selectDateMCEndDate("2006", "9", "20");
   await medicalCertificatePage.submitButton().click();
 
   const wagesInfoPage = new WagesInfoPage(page1);
