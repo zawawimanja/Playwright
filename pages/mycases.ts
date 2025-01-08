@@ -148,12 +148,23 @@ export class MyCasesPage {
         console.log(`Locator: ${locator}`);
         break;
 
+      case "SAOS1":
+        locator = this.page
+          .frameLocator("#baristaPageOut")
+          .frameLocator("#APWorkCenter")
+          .locator(
+            `//td[a[contains(text(), '${this.casespage.casesCreated}')]]/following-sibling::td[contains(@title, 'Invalidity Notice SAO')]`
+          );
+
+        console.log(`Locator: ${locator}`);
+        break;
+
       case "MB":
         locator = this.page
           .frameLocator("#baristaPageOut")
           .frameLocator("#APWorkCenter")
           .locator(
-            `//td[a[contains(text(), '${this.casespage.casesCreated}')]]/following-sibling::td[contains(@title, 'Medical Board Info')]`
+            `//td[a[contains(text(), '${this.casespage.casesCreated}')]]/following-sibling::td[contains(@title, 'Invalidity Notice Process')]`
           );
 
         console.log(`Locator: ${locator}`);

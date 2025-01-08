@@ -109,7 +109,6 @@ test("Prereg SCO ILAT", async ({ page }) => {
   //temporary solution
   const recommendationPage = new RecommendationPage(page2);
   await recommendationPage.clickRecommendationButton();
-
   await recommendationPage.selectActionOptionSCOILATS2();
 
   const supportingDocumentPage = new SupportingDocumentPage(page2);

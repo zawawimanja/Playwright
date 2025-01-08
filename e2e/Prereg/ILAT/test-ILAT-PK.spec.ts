@@ -96,6 +96,8 @@ test("Prereg PK OD", async ({ page }) => {
 
   await invalidtyInformation.clickInvalidityInformation();
   await invalidtyInformation.selectInsuredPersonEmployment("No");
+  await page1.getByLabel("Date of Cessation of").click();
+  await calendarPage.selectDateInsuredPersonPage("2019", "8", "1");
 
   const wagesInfoPage = new WagesInfoPage(page1);
   await wagesInfoPage.clickWagesInfoButton();

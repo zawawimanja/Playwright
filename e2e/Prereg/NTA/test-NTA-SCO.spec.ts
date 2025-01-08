@@ -134,7 +134,7 @@ test("Prereg SCO NTA", async ({ page }) => {
   //temporary solution
   const recommendationPage = new RecommendationPage(page2);
   await recommendationPage.clickRecommendationButton();
-  await recommendationPage.selectActionRecommendNTA("Recommend");
+  await recommendationPage.selectActionRecommendNTAILAT("Recommend");
   await recommendationPage.selectUnderSectionEmploymentInjury();
 
   //add wages info page

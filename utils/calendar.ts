@@ -40,17 +40,6 @@ export class CalendarPage {
     await this.page.getByRole("link", { name: day, exact: true }).click();
   }
 
-  async selectDatePrereg(year: string, month: string, day: string) {
-    let monthNumber = parseInt(month, 10) - 1;
-    const formattedMonth = monthNumber.toString();
-
-    await this.baristaPageOut.getByRole("combobox").nth(1).selectOption(year);
-    //+1
-    await this.baristaPageOut.getByRole("combobox").first().selectOption(formattedMonth);
-
-    await this.page.getByRole("link", { name: day, exact: true }).click();
-  }
-
   async selectDateAccident(year: string, month: string, day: string) {
     await this.baristaPageOut.getByRole("combobox").nth(3).selectOption(year);
     //+1

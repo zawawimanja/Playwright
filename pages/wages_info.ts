@@ -13,11 +13,19 @@ export class WagesInfoPage {
     return this.page.getByRole("button", { name: "Wages Information" });
   }
 
+  get SIwagesInfoButton() {
+    return this.page.getByRole("button", { name: "SI Wages Information" });
+  }
+
   /**
    * Click on the Wages Information button
    */
   async clickWagesInfoButton() {
     await this.wagesInfoButton.click();
+  }
+
+  async clickSIWagesInfoButton() {
+    await this.SIwagesInfoButton.click();
   }
 
   get acceptwagesInfo() {
