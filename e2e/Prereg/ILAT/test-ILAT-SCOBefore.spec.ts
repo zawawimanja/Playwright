@@ -28,6 +28,7 @@ import { CasesPage } from "../../../pages/cases";
 import { SubmitPage } from "../../../pages/submit";
 import { MyCasesPage } from "../../../pages/mycases";
 import { HeaderPage } from "../../../pages/header";
+import { InvalidityInfoPage } from "../../../pages/invalidity_info";
 
 test.beforeEach(async ({ page }) => {
   await login(page, "atilia.pks", "u@T_atilia");
@@ -56,7 +57,7 @@ test("Prereg SCO OD", async ({ page }) => {
     await leftTabPage.clickMyCases();
 
     // Check if the case exists for the current login user
-    if (await myCasesPage.clickOD("OD")) {
+    if (await myCasesPage.clickILAT("SCO")) {
       caseFound = true;
       console.log(`Case found for user ${loginUser}`);
       break;
@@ -82,15 +83,14 @@ test("Prereg SCO OD", async ({ page }) => {
     await draftPage.clickCloseButton();
   }
 
-  const remarksPage = new RemarksPage(page2);
-  await remarksPage.remarksButton.waitFor();
-  await expect(remarksPage.remarksButton).toBeVisible();
-  await expect(remarksPage.sectionTabs).toContainText("Remarks");
-  await remarksPage.remarksButton.waitFor();
-  await remarksPage.addRemarksButton.click();
-  await remarksPage.textboxIO.fill("test sco");
-
-  await remarksPage.saveRemarksButton.click();
+  // const remarksPage = new RemarksPage(page2);
+  // await remarksPage.remarksButton.waitFor();
+  // await expect(remarksPage.remarksButton).toBeVisible();
+  // await expect(remarksPage.sectionTabs).toContainText("Remarks");
+  // await remarksPage.remarksButton.waitFor();
+  // await remarksPage.addRemarksButton.click();
+  // await remarksPage.textbox.fill("test");
+  // await remarksPage.saveRemarksButton.click();
 
   const preparerInformationPage = new PreparerInformationPage(page2);
   await preparerInformationPage.clickpreparerInformationButton();
@@ -101,56 +101,37 @@ test("Prereg SCO OD", async ({ page }) => {
   const insuredPersonInfoPage = new InsuredPersonInfoPage(page2);
   await insuredPersonInfoPage.clickInsuredPersonInfoButton();
 
-  const employerInfoPage = new EmployerInfoPage(page2);
-  await employerInfoPage.clickEmployerInfoButton();
+  //add reference notice information
+  const invalidtyInformation = new InvalidityInfoPage(page2);
 
-  const certificationByEmployerPage = new CertificationByEmployerPage(page2);
-  await certificationByEmployerPage.clickCertificationByEmployerButton();
-
-  const occupationalDiseasePage = new OccupationalDiseasePage(page2);
-  await occupationalDiseasePage.clickOccupationalDiseaseButton();
-  occupationalDiseasePage.selectCausativeAgentOption();
+  await invalidtyInformation.clickInvalidityInformation();
 
   const preferredSOCSOOfficePage = new PreferredSOCSOOfficePage(page2);
   await preferredSOCSOOfficePage.clickPreferredSOCSOOfficeButton();
+
+  //bank info
+  const bankInformationPage = new BankInformationPage(page2);
+  await bankInformationPage.clickBankInformationButton();
 
   const confirmationOfInsuredPage = new ConfirmationOfInsuredPage(page2);
   await confirmationOfInsuredPage.clickConfirmationOfInsuredButton();
 
   const inconsistentDoubtfulPage = new InconsistentDoubtfulPage(page2);
   await inconsistentDoubtfulPage.clickInconsistentDoubtfulButton();
-
-  //appointment
-  const appointmentPage = new AppointmentPage(page2);
-  await appointmentPage.clickAppointmentButton();
-
-  //smb info
-  const SmbInformationPagePage = new SmbInformationPage(page2);
-  await SmbInformationPagePage.clickSMBInfoButton();
+  //wages
+  const wagesInfoPage = new WagesInfoPage(page2);
+  await wagesInfoPage.clickWagesInfoButton();
+  //qc
 
   const medicalOpinionPage = new MedicalOpinionPage(page2);
   await medicalOpinionPage.medicalOpinionButton.waitFor();
   await expect(medicalOpinionPage.medicalOpinionButton).toBeVisible();
   await medicalOpinionPage.clickMedicalOpinionButton();
 
-  await page2.waitForTimeout(30000);
-
   //temporary solution
   const recommendationPage = new RecommendationPage(page2);
   await recommendationPage.clickRecommendationButton();
-
-  await expect(
-    page2.getByText("Reco History Approval History RECOMMENDATIONhide history SAO Approval - Before")
-  ).toBeVisible();
-  await recommendationPage.actionRecommendSCO.waitFor();
-  await recommendationPage.selectActionOption2();
-
-  //hus info
-  const medicalCertificatePage = new MedicalCertificatePage(page2);
-  await medicalCertificatePage.clickHusInfoButton();
-  //bank info
-  const bankInformationPage = new BankInformationPage(page2);
-  await bankInformationPage.clickBankInformationButton();
+  await recommendationPage.selectActionRecommendNTAILAT("10207");
 
   const supportingDocumentPage = new SupportingDocumentPage(page2);
   await supportingDocumentPage.clickSupportingDocumentButton();

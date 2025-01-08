@@ -42,7 +42,7 @@ export class RecommendationPage {
     return this.page.locator("#ActionRecommend");
   }
 
-  get actionRecommendNTA() {
+  get actionRecommendNTAILAT() {
     return this.page.getByLabel("Action*");
   }
 
@@ -74,8 +74,8 @@ export class RecommendationPage {
     await this.actionRecommend.selectOption("10207");
   }
 
-  async selectActionRecommendNTA(text) {
-    await this.actionRecommendNTA.selectOption(text);
+  async selectActionRecommendNTAILAT(text) {
+    await this.actionRecommendNTAILAT.selectOption(text);
   }
 
   async selectUnderSectionEmploymentInjury() {
