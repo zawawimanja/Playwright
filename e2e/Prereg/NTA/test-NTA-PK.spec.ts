@@ -48,7 +48,7 @@ test("Prereg PK NTA", async ({ page }) => {
 
   //add accident date
   await page.frameLocator("#baristaPageOut").getByLabel("Accident Date*").click();
-  await page.frameLocator("#baristaPageOut").getByRole("combobox").nth(3).selectOption("2006");
+  await page.frameLocator("#baristaPageOut").getByRole("combobox").nth(3).selectOption("2021");
   //month will be add 1 month
   await page.frameLocator("#baristaPageOut").getByRole("combobox").nth(2).selectOption("5");
   await page.frameLocator("#baristaPageOut").getByRole("link", { name: "15" }).click();
@@ -63,11 +63,11 @@ test("Prereg PK NTA", async ({ page }) => {
   const selectedIdentificationTypeText = await preregPage.getSelectedIdentificationTypeText();
   expect(selectedIdentificationTypeText).toBe("New IC");
 
-  await preregPage.fillIdentificationNo("610611015059");
+  await preregPage.fillIdentificationNo("881006086603");
   const filledIdentificationNo = await preregPage.getIdentificationNo();
   //expect(filledIdentificationNo).toBe("910227016078");
 
-  await preregPage.fillEmployerCode("E1100000958P");
+  await preregPage.fillEmployerCode("A3702087818V");
   const filledEmployerCode = await preregPage.getEmployerCode();
   //expect(filledEmployerCode).toBe("A3700059551B");
 
@@ -100,7 +100,17 @@ test("Prereg PK NTA", async ({ page }) => {
   await insuredPersonInfoPage.clickInsuredPersonInfoButton();
   await insuredPersonInfoPage.noticeAndBenefitClaimFormReceivedDateInput.click();
 
-  await calendarPage.selectDateInsuredPersonPage("2006", "5", "1");
+  await calendarPage.selectDateInsuredPersonPage("2021", "7", "1");
+  //if done revision will auto pull field
+  await insuredPersonInfoPage.fillOccupation("CS");
+
+  await insuredPersonInfoPage.fillAddress1("Taman");
+  await insuredPersonInfoPage.fillAddress(2, "Lorong 10");
+  await insuredPersonInfoPage.fillAddress(3, "Jalan 1");
+  await insuredPersonInfoPage.selectState("200714");
+  await insuredPersonInfoPage.selectCity("201460");
+  await insuredPersonInfoPage.fillPostcode("51000");
+  await insuredPersonInfoPage.selectNationality("201749");
 
   const employerInfoPage = new EmployerInfoPage(page1);
   await employerInfoPage.clickEmployerInfoButton();
@@ -120,10 +130,10 @@ test("Prereg PK NTA", async ({ page }) => {
   await medicalCertificatePage.enterClinicHospitalName("kl");
 
   await page1.getByRole("textbox").nth(1).click();
-  await calendarPage.selectDateInsuredPersonPage("2006", "8", "1");
+  await calendarPage.selectDateInsuredPersonPage("2021", "8", "1");
 
   await page1.getByRole("textbox").nth(2).click();
-  await calendarPage.selectDateMCEndDate("2006", "9", "20");
+  await calendarPage.selectDateMCEndDate("2021", "9", "20");
   await medicalCertificatePage.submitButton().click();
 
   const wagesInfoPage = new WagesInfoPage(page1);
@@ -139,9 +149,22 @@ test("Prereg PK NTA", async ({ page }) => {
   await certificationByEmployerPage.fillName("MAT");
   await certificationByEmployerPage.fillDesignation("CEO");
   await certificationByEmployerPage.calendar.click();
-  await calendarPage.selectDateInsuredPersonPage("2020", "8", "11");
+  await calendarPage.selectDateInsuredPersonPage("2021", "8", "11");
 
   const bankInformationPage = new BankInformationPage(page1);
+  await bankInformationPage.clickBankInformationButton();
+
+  await bankInformationPage.accountNoSelect.waitFor();
+  await expect(bankInformationPage.accountNoSelect).toBeVisible();
+  await bankInformationPage.accountNoSelect.click();
+
+  await page1.getByLabel("Account No.*", { exact: true }).selectOption("Yes");
+  await bankInformationPage.selectAccountNo("Yes");
+  await bankInformationPage.selectBankLocation("204101");
+  await bankInformationPage.selectBankNameAccident("802121");
+  await bankInformationPage.selectBankAccountType("204401");
+  await bankInformationPage.fillBankBranch("KL");
+  await bankInformationPage.fillBankAccountNo("12345678");
 
   const confirmationOfInsuredPage = new ConfirmationOfInsuredPage(page1);
   await confirmationOfInsuredPage.clickConfirmationOfInsuredButton();

@@ -34,6 +34,10 @@ export class RemarksPage {
     return this.page.locator("#AddRemarksDetailsR").getByRole("textbox");
   }
 
+  get textboxSCONTA() {
+    return this.page.getByRole("textbox");
+  }
+
   get textboxSCO() {
     return this.page.locator("#AddRemarksDetails_Subform_Remarks").getByRole("textbox");
   }

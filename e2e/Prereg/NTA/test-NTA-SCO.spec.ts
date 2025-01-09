@@ -31,7 +31,8 @@ import { MyCasesPage } from "../../../pages/mycases";
 import { HeaderPage } from "../../../pages/header";
 
 test.beforeEach(async ({ page }) => {
-  await login(page, "atilia.pks", "u@T_atilia");
+  //await login(page, "atilia.pks", "u@T_atilia");
+  await login(page, "nazira.pks", "u@T_nazira");
 });
 
 export let schemeRefValue: string;
@@ -69,7 +70,8 @@ test("Prereg SCO NTA", async ({ page }) => {
 
       headerPage.clickUserProfile();
       headerPage.clickSignOut();
-      await login(page, "nazira.pks", "u@T_nazira");
+      // await login(page, "nazira.pks", "u@T_nazira");
+      await login(page, "atilia.pks", "u@T_atilia");
     }
   }
 
@@ -83,13 +85,14 @@ test("Prereg SCO NTA", async ({ page }) => {
     await draftPage.clickCloseButton();
   }
 
+  await page2.waitForTimeout(15000);
   const remarksPage = new RemarksPage(page2);
   await remarksPage.remarksButton.waitFor();
   await expect(remarksPage.remarksButton).toBeVisible();
   await expect(remarksPage.sectionTabs).toContainText("Remarks");
   await remarksPage.remarksButton.waitFor();
   await remarksPage.addRemarksButton.click();
-  await remarksPage.textboxIO.fill("test sco");
+  await remarksPage.textboxSCONTA.fill("test sco");
 
   await remarksPage.saveRemarksButton.click();
 
@@ -140,11 +143,14 @@ test("Prereg SCO NTA", async ({ page }) => {
   //add wages info page
   const wagesInfoPage = new WagesInfoPage(page2);
   await wagesInfoPage.clickWagesInfoButton();
-  await wagesInfoPage.selectWagesInfoSection("Yes");
+  //not valid because different contribution
+  for (let i = 0; i < 6; i++) {
+    await wagesInfoPage.selectWagesInfoSection("Yes", i);
+  }
 
   //add medical certificate pages
   const medicalCertificatePage = new MedicalCertificatePage(page2);
-  await medicalCertificatePage.clickMedicalCertificateButton();
+  await medicalCertificatePage.clickMedicalCertificateNTASCOButton();
 
   //add bank info
   const bankInformationPage = new BankInformationPage(page2);

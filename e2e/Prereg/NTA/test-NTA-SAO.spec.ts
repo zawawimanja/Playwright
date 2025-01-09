@@ -31,7 +31,8 @@ import { MyCasesPage } from "../../../pages/mycases";
 import { HeaderPage } from "../../../pages/header";
 
 test.beforeEach(async ({ page }) => {
-  await login(page, "roliana.pks", "u@T_roliana");
+  //await login(page, "roliana.pks", "u@T_roliana");
+  await login(page, "uat_ali", "u@T_ali");
 });
 
 export let schemeRefValue: string;
@@ -66,7 +67,8 @@ test("Prereg SAO NTA", async ({ page }) => {
 
       headerPage.clickUserProfile();
       headerPage.clickSignOut();
-      await login(page, "uat_ali", "u@T_ali");
+      // await login(page, "uat_ali", "u@T_ali");
+      await login(page, "roliana.pks", "u@T_roliana");
     }
   }
 
@@ -86,7 +88,7 @@ test("Prereg SAO NTA", async ({ page }) => {
   await expect(remarksPage.sectionTabs).toContainText("Remarks");
   await remarksPage.remarksButton.waitFor();
   await remarksPage.addRemarksButton.click();
-  await remarksPage.textboxIO.fill("test io");
+  await remarksPage.textboxIO.fill("test sao");
 
   await remarksPage.saveRemarksButton.click();
 
@@ -129,13 +131,16 @@ test("Prereg SAO NTA", async ({ page }) => {
   await approvalPage.selectSAOActionOptionNTA("Approve");
   await approvalPage.selectUnderSectionEmploymentInjury();
 
+  const recommendationPage1 = new RecommendationPage(page2);
+  await recommendationPage1.clickSAORecommendationButton();
+
   //add wages information page
   const wagesInfoPage = new WagesInfoPage(page2);
   await wagesInfoPage.clickWagesInfoButton();
   //loop 6 times method below
-  for (let i = 0; i < 6; i++) {
-    await wagesInfoPage.acceptwagesInfo.nth(i).selectOption("Yes");
-  }
+  // for (let i = 0; i < 6; i++) {
+  //   await wagesInfoPage.acceptwagesInfo.nth(i).selectOption("Yes");
+  // }
 
   //add  medical certificate page
   const medicalCertificatePage = new MedicalCertificatePage(page2);
