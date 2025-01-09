@@ -35,7 +35,7 @@ export class RemarksPage {
   }
 
   get textboxSCONTA() {
-    return this.page.getByRole("textbox");
+    return this.page.locator('[id^="subCtrlPreviewRow2-"]').first().getByRole("textbox");
   }
 
   get textboxSCO() {
@@ -47,5 +47,9 @@ export class RemarksPage {
   }
   async clickRemarksButton() {
     await this.remarksButton.click();
+  }
+
+  async inputRemarks(text) {
+    await this.textboxSCONTA.fill(text);
   }
 }
