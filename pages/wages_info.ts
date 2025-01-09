@@ -32,7 +32,7 @@ export class WagesInfoPage {
     return this.page.locator('[id^="AcceptWagesInfo-"]');
   }
 
-  async selectWagesInfoSection(text) {
-    await this.acceptwagesInfo.first().selectOption(text);
+  async selectWagesInfoSection(text, i) {
+    await this.acceptwagesInfo.nth(i).selectOption(text);
   }
 }
