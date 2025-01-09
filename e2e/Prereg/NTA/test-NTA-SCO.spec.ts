@@ -85,14 +85,14 @@ test("Prereg SCO NTA", async ({ page }) => {
     await draftPage.clickCloseButton();
   }
 
-  await page2.waitForTimeout(15000);
+  await page2.waitForTimeout(20000);
   const remarksPage = new RemarksPage(page2);
   await remarksPage.remarksButton.waitFor();
   await expect(remarksPage.remarksButton).toBeVisible();
   await expect(remarksPage.sectionTabs).toContainText("Remarks");
   await remarksPage.remarksButton.waitFor();
   await remarksPage.addRemarksButton.click();
-  await remarksPage.textboxSCONTA.fill("test sco");
+  await remarksPage.inputRemarks("sco");
 
   await remarksPage.saveRemarksButton.click();
 
@@ -113,6 +113,10 @@ test("Prereg SCO NTA", async ({ page }) => {
   //add Accident Information
   const accidentInformationPage = new AccidentInformationPage(page2);
   await accidentInformationPage.clickAccidentInformationButton();
+  //mode transport
+  await accidentInformationPage.selectModeOfTransport("10301");
+  //cause accident
+  await accidentInformationPage.selectCauseofAccident("10602");
 
   const preferredSOCSOOfficePage = new PreferredSOCSOOfficePage(page2);
   await preferredSOCSOOfficePage.clickPreferredSOCSOOfficeButton();
@@ -140,13 +144,16 @@ test("Prereg SCO NTA", async ({ page }) => {
   await recommendationPage.selectActionRecommendNTAILAT("Recommend");
   await recommendationPage.selectUnderSectionEmploymentInjury();
 
+  const medicalOpinionPage1 = new MedicalOpinionPage(page2);
+  await medicalOpinionPage1.clickMedicalOpinionButton();
+
   //add wages info page
   const wagesInfoPage = new WagesInfoPage(page2);
   await wagesInfoPage.clickWagesInfoButton();
   //not valid because different contribution
-  for (let i = 0; i < 6; i++) {
-    await wagesInfoPage.selectWagesInfoSection("Yes", i);
-  }
+  // for (let i = 0; i < 6; i++) {
+  //   await wagesInfoPage.selectWagesInfoSection("Yes", i);
+  // }
 
   //add medical certificate pages
   const medicalCertificatePage = new MedicalCertificatePage(page2);
