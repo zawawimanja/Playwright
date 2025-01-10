@@ -48,9 +48,9 @@ test("Prereg PK NTA", async ({ page }) => {
 
   //add accident date
   await page.frameLocator("#baristaPageOut").getByLabel("Accident Date*").click();
-  await page.frameLocator("#baristaPageOut").getByRole("combobox").nth(3).selectOption("2021");
+  await page.frameLocator("#baristaPageOut").getByRole("combobox").nth(3).selectOption("1988");
   //month will be add 1 month
-  await page.frameLocator("#baristaPageOut").getByRole("combobox").nth(2).selectOption("5");
+  await page.frameLocator("#baristaPageOut").getByRole("combobox").nth(2).selectOption("2");
   await page.frameLocator("#baristaPageOut").getByRole("link", { name: "15" }).click();
   // calendarPage1.selectDateAccident("1999", "11", "15");
 
@@ -63,11 +63,11 @@ test("Prereg PK NTA", async ({ page }) => {
   const selectedIdentificationTypeText = await preregPage.getSelectedIdentificationTypeText();
   expect(selectedIdentificationTypeText).toBe("New IC");
 
-  await preregPage.fillIdentificationNo("881108135875");
+  await preregPage.fillIdentificationNo("660101088990");
   const filledIdentificationNo = await preregPage.getIdentificationNo();
   //expect(filledIdentificationNo).toBe("910227016078");
 
-  await preregPage.fillEmployerCode("A3702087818V");
+  await preregPage.fillEmployerCode("C5100004904Z");
   const filledEmployerCode = await preregPage.getEmployerCode();
   //expect(filledEmployerCode).toBe("A3700059551B");
 
@@ -100,7 +100,7 @@ test("Prereg PK NTA", async ({ page }) => {
   await insuredPersonInfoPage.clickInsuredPersonInfoButton();
   await insuredPersonInfoPage.noticeAndBenefitClaimFormReceivedDateInput.click();
 
-  await calendarPage.selectDateInsuredPersonPage("2021", "7", "1");
+  await calendarPage.selectDateInsuredPersonPage("1988", "3", "20");
   //if done revision will auto pull field
   await insuredPersonInfoPage.fillOccupation("CS");
 
@@ -130,10 +130,10 @@ test("Prereg PK NTA", async ({ page }) => {
   await medicalCertificatePage.enterClinicHospitalName("kl");
 
   await page1.getByRole("textbox").nth(1).click();
-  await calendarPage.selectDateInsuredPersonPage("2021", "8", "1");
+  await calendarPage.selectDateInsuredPersonPage("1988", "8", "1");
 
   await page1.getByRole("textbox").nth(2).click();
-  await calendarPage.selectDateMCEndDate("2021", "9", "20");
+  await calendarPage.selectDateMCEndDate("1988", "9", "20");
   await medicalCertificatePage.submitButton().click();
 
   const wagesInfoPage = new WagesInfoPage(page1);

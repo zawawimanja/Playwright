@@ -54,11 +54,11 @@ test("Prereg PK OD", async ({ page }) => {
   const NoticeAndBenefitClaimFormOptionText = await preregPage.getselectNoticeAndBenefitClaimFormText();
   expect(NoticeAndBenefitClaimFormOptionText).toBe("Insured Person");
 
-  await preregPage.fillIdentificationNo("610611015059");
+  await preregPage.fillIdentificationNo("690805035640");
   const filledIdentificationNo = await preregPage.getIdentificationNo();
   //expect(filledIdentificationNo).toBe("910227016078");
 
-  await preregPage.fillEmployerCode("E1100000958P");
+  await preregPage.fillEmployerCode("F9200000909W");
   const filledEmployerCode = await preregPage.getEmployerCode();
   //expect(filledEmployerCode).toBe("A3700059551B");
 
@@ -90,7 +90,7 @@ test("Prereg PK OD", async ({ page }) => {
   await insuredPersonInfoPage.clickInsuredPersonInfoButton();
   await insuredPersonInfoPage.noticeAndBenefitClaimFormReceivedDateInput.click();
 
-  await calendarPage.selectDateInsuredPersonPage("2021", "8", "10");
+  await calendarPage.selectDateInsuredPersonPage("1991", "5", "10");
   await insuredPersonInfoPage.fillOccupation("CS");
   await insuredPersonInfoPage.selectOccupation("1000002");
   await insuredPersonInfoPage.selectSubOccupation("1001132");
@@ -123,10 +123,10 @@ test("Prereg PK OD", async ({ page }) => {
   await medicalCertificatePage.enterClinicHospitalName("kl");
 
   await page1.getByRole("textbox").nth(1).click();
-  await calendarPage.selectDateInsuredPersonPage("2017", "1", "10");
+  await calendarPage.selectDateInsuredPersonPage("1991", "1", "10");
 
   await page1.getByRole("textbox").nth(2).click();
-  await calendarPage.selectDateMCEndDate("2017", "2", "20");
+  await calendarPage.selectDateMCEndDate("1991", "2", "20");
   await medicalCertificatePage.submitButton().click();
 
   //2nd mc
@@ -155,7 +155,7 @@ test("Prereg PK OD", async ({ page }) => {
   await certificationByEmployerPage.fillName("MAT");
   await certificationByEmployerPage.fillDesignation("CEO");
   await certificationByEmployerPage.calendar.click();
-  await calendarPage.selectDateInsuredPersonPage("2021", "8", "11");
+  await calendarPage.selectDateInsuredPersonPage("1991", "8", "11");
 
   const bankInformationPage = new BankInformationPage(page1);
   await bankInformationPage.clickBankInformationButton();

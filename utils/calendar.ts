@@ -27,6 +27,8 @@ export class CalendarPage {
       await this.page.locator("#ctrlField1021").getByRole("textbox").click();
     } else if (type === "Provisional Date") {
       await this.page.locator("#ctrlField1030").getByRole("textbox").click();
+    } else if (type === "Session DateILAT") {
+      await this.page.locator("#ctrlField1041").getByRole("textbox").click();
     }
   }
 
