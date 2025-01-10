@@ -95,7 +95,7 @@ test("Prereg MB OD", async ({ page }) => {
   const mbSessionPage = new MBSessionPage(page3);
 
   //session venue hkl
-  await mbSessionPage.selectSessionVenue();
+  await mbSessionPage.selectSessionVenue("OD");
 
   //session date
   calendarPage.clickDate("Session Date");

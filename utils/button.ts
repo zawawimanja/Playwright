@@ -26,4 +26,8 @@ export class ButtonPage {
   async clickAdd() {
     await this.page.getByRole("button", { name: "Add" }).click();
   }
+
+  async clickSave() {
+    await this.page.getByRole("button", { name: "Save" }).click();
+  }
 }

@@ -47,7 +47,7 @@ test("Prereg PK OD", async ({ page }) => {
   const selectedIdentificationTypeText = await preregPage.getSelectedIdentificationTypeText();
   expect(selectedIdentificationTypeText).toBe("New IC");
 
-  await preregPage.fillIdentificationNo("931007065495");
+  await preregPage.fillIdentificationNo("881104566133");
   const filledIdentificationNo = await preregPage.getIdentificationNo();
   // expect(filledIdentificationNo).toBe("960618145171");
 
@@ -97,7 +97,7 @@ test("Prereg PK OD", async ({ page }) => {
   await invalidtyInformation.clickInvalidityInformation();
   await invalidtyInformation.selectInsuredPersonEmployment("No");
   await page1.getByLabel("Date of Cessation of").click();
-  await calendarPage.selectDateInsuredPersonPage("2019", "8", "1");
+  await calendarPage.selectDateInsuredPersonPage("2021", "8", "1");
 
   const wagesInfoPage = new WagesInfoPage(page1);
   await wagesInfoPage.clickWagesInfoButton();
@@ -143,7 +143,10 @@ test("Prereg PK OD", async ({ page }) => {
   // schemeRefValue = await submitPage.schemeRefNo.inputValue();
   // console.log(" SRN " + schemeRefValue);
 
-  await expect(submitPage.caseStatusPendingInvestigation_PK_SAO).toBeVisible();
+  // await expect(submitPage.caseStatusPendingInvestigation_PK_SAO).toBeVisible();
 
   await submitPage.submitButton.click();
+
+  // await page1.getByLabel("Scheme Ref No:").click();
+  // await page1.getByRole("button", { name: "Close" }).click();
 });

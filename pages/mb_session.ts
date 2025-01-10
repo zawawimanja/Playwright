@@ -34,8 +34,16 @@ export class MBSessionPage {
     return this.page.locator("#ctrlField1020");
   }
 
-  async selectSessionVenue() {
-    await this.sessionVenue.getByRole("combobox").selectOption("708056");
+  get sessionVenueILAT() {
+    return this.page.locator("#ctrlField1040");
+  }
+
+  async selectSessionVenue(type) {
+    if (type === "OD") {
+      await this.sessionVenue.getByRole("combobox").selectOption("708056");
+    } else if (type === "ILAT") {
+      await this.sessionVenueILAT.getByRole("combobox").selectOption("708056");
+    }
   }
 
   get diseaseSchedule5() {
@@ -72,6 +80,14 @@ export class MBSessionPage {
 
   get descDisease() {
     return this.page.locator("#ctrlField1025");
+  }
+
+  get resultILAT() {
+    return this.page.locator('[id^="ILATSF1Result-"]');
+  }
+
+  async setResultILat(text) {
+    await this.resultILAT.selectOption(text);
   }
 
   async setdescDis() {

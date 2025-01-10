@@ -164,7 +164,7 @@ export class MyCasesPage {
           .frameLocator("#baristaPageOut")
           .frameLocator("#APWorkCenter")
           .locator(
-            `//td[a[contains(text(), '${this.casespage.casesCreated}')]]/following-sibling::td[contains(@title, 'Invalidity Notice Process')]`
+            `//td[a[contains(text(), '${this.casespage.casesCreated}')]]/following-sibling::td[contains(@title, 'Medical Board')]`
           );
 
         console.log(`Locator: ${locator}`);

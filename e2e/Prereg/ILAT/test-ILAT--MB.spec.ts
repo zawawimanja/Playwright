@@ -72,6 +72,11 @@ test("Prereg MB OD", async ({ page }) => {
       //await login(page, "aslam.pks", "u@T_aslam");
     }
   }
+  await page
+    .frameLocator("#baristaPageOut")
+    .frameLocator("#APWorkCenter")
+    .getByRole("gridcell", { name: "Medical Board", exact: true })
+    .click();
 
   const pagePromise = page.waitForEvent("popup");
   await page.frameLocator("#baristaPageOut").frameLocator("#APWorkCenter").getByText("Open Task").click();
@@ -82,6 +87,31 @@ test("Prereg MB OD", async ({ page }) => {
     await draftPage.closeButton.waitFor();
     await draftPage.clickCloseButton();
   }
+
+  const page3Promise = page2.waitForEvent("popup");
+  await page2.getByRole("button", { name: "New" }).click();
+
+  const page4 = await page3Promise;
+  await page4.getByRole("button", { name: "Add" }).click();
+  //session venue
+  const mbSessionPage = new MBSessionPage(page4);
+  await mbSessionPage.selectSessionVenue("ILAT");
+  //session date
+
+  const calendarPage = new CalendarPage(page4);
+  calendarPage.clickDate("Session DateILAT");
+  await calendarPage.selectDateInsuredPersonPage("2021", "8", "15");
+  //result
+  await mbSessionPage.setResultILat("9608101");
+  //els
+  // await page4.locator("#ctrlField1044").getByRole("combobox").selectOption("Yes");
+  //recommendation for rehab
+  //await page4.locator("#ILATSF1RecommendationForRehab-bea1-46656-b97e-24ab").selectOption("Yes");
+
+  const button = new ButtonPage(page4);
+  await button.clickOK();
+  await button.clickSubmit();
+  await button.clickYes();
 
   const remarksPage = new RemarksPage(page2);
   await remarksPage.remarksButton.waitFor();
@@ -140,6 +170,8 @@ test("Prereg MB OD", async ({ page }) => {
 
   const supportingDocumentPage = new SupportingDocumentPage(page2);
   await supportingDocumentPage.clickSupportingDocumentButton();
+
+  await page2.reload();
 
   const previewSubmissionPage = new PreviewSubmissionPage(page2);
   await previewSubmissionPage.clickPreviewSubmissionButton();
