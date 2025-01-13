@@ -5,7 +5,6 @@ import { LeftTabPage } from "../../../pages/left_tab";
 import { DraftPage } from "../../../pages/draft";
 import { RemarksPage } from "../../../pages/remarks";
 import { PreviewSubmissionPage } from "../../../pages/preview_submission";
-import { OccupationalDiseasePage } from "../../../pages/od_info";
 import { EmployerInfoPage } from "../../../pages/employer_info";
 import { MedicalCertificatePage } from "../../../pages/mc_info";
 import { WagesInfoPage } from "../../../pages/wages_info";
@@ -48,10 +47,10 @@ test("Prereg PK NTA", async ({ page }) => {
 
   //add accident date
   await page.frameLocator("#baristaPageOut").getByLabel("Accident Date*").click();
-  await page.frameLocator("#baristaPageOut").getByRole("combobox").nth(3).selectOption("1988");
+  await page.frameLocator("#baristaPageOut").getByRole("combobox").nth(3).selectOption("1997");
   //month will be add 1 month
-  await page.frameLocator("#baristaPageOut").getByRole("combobox").nth(2).selectOption("2");
-  await page.frameLocator("#baristaPageOut").getByRole("link", { name: "15" }).click();
+  await page.frameLocator("#baristaPageOut").getByRole("combobox").nth(2).selectOption("7");
+  await page.frameLocator("#baristaPageOut").getByRole("link", { name: "16" }).click();
   // calendarPage1.selectDateAccident("1999", "11", "15");
 
   const time = new TimePage(page);
@@ -63,11 +62,11 @@ test("Prereg PK NTA", async ({ page }) => {
   const selectedIdentificationTypeText = await preregPage.getSelectedIdentificationTypeText();
   expect(selectedIdentificationTypeText).toBe("New IC");
 
-  await preregPage.fillIdentificationNo("660101088990");
+  await preregPage.fillIdentificationNo("660127015431");
   const filledIdentificationNo = await preregPage.getIdentificationNo();
   //expect(filledIdentificationNo).toBe("910227016078");
 
-  await preregPage.fillEmployerCode("C5100004904Z");
+  await preregPage.fillEmployerCode("E1100000366Y");
   const filledEmployerCode = await preregPage.getEmployerCode();
   //expect(filledEmployerCode).toBe("A3700059551B");
 
@@ -100,7 +99,7 @@ test("Prereg PK NTA", async ({ page }) => {
   await insuredPersonInfoPage.clickInsuredPersonInfoButton();
   await insuredPersonInfoPage.noticeAndBenefitClaimFormReceivedDateInput.click();
 
-  await calendarPage.selectDateInsuredPersonPage("1988", "3", "20");
+  await calendarPage.selectDateInsuredPersonPage("1997", "9", "20");
   //if done revision will auto pull field
   await insuredPersonInfoPage.fillOccupation("CS");
 
@@ -130,10 +129,10 @@ test("Prereg PK NTA", async ({ page }) => {
   await medicalCertificatePage.enterClinicHospitalName("kl");
 
   await page1.getByRole("textbox").nth(1).click();
-  await calendarPage.selectDateInsuredPersonPage("1988", "8", "1");
+  await calendarPage.selectDateInsuredPersonPage("1997", "9", "1");
 
   await page1.getByRole("textbox").nth(2).click();
-  await calendarPage.selectDateMCEndDate("1988", "9", "20");
+  await calendarPage.selectDateMCEndDate("1997", "11", "20");
   await medicalCertificatePage.submitButton().click();
 
   const wagesInfoPage = new WagesInfoPage(page1);

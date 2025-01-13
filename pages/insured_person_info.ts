@@ -26,6 +26,10 @@ export class InsuredPersonInfoPage {
     return this.page.getByLabel("Occupation(Based on Form 34)*");
   }
 
+  get occupationInputPKT() {
+    return this.page.getByLabel("Occupation (Based on Form 34)*");
+  }
+
   get occupationInputILAT() {
     return this.page.getByLabel("Occupation (Based on Notice");
   }
@@ -75,6 +79,10 @@ export class InsuredPersonInfoPage {
 
   async fillOccupation(occupation) {
     await this.occupationInput.fill(occupation);
+  }
+
+  async fillOccupationPKT(occupation) {
+    await this.occupationInputPKT.fill(occupation);
   }
 
   getSubOccupation() {

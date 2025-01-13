@@ -34,6 +34,10 @@ export class BankInformationPage {
     return this.page.getByLabel("Account No.*", { exact: true });
   }
 
+  get accountNoSelectPKT() {
+    return this.page.getByLabel("Account No.*");
+  }
+
   /**
    * Bank Location select element
    */
@@ -46,6 +50,10 @@ export class BankInformationPage {
    */
   get bankNameLabel() {
     return this.page.locator("#ctrlField1521").getByText("Bank Name");
+  }
+
+  get bankNameLabelPKT() {
+    return this.page.getByLabel("Bank Name*");
   }
 
   /**
@@ -98,6 +106,10 @@ export class BankInformationPage {
     return this.page.getByLabel("Bank Branch*");
   }
 
+  async selectBankNamePKT(option) {
+    await this.bankNameLabelPKT.selectOption(option);
+  }
+
   /**
    * Bank Account No. input field
    */
@@ -118,6 +130,10 @@ export class BankInformationPage {
    */
   async selectAccountNo(option) {
     await this.accountNoSelect.selectOption(option);
+  }
+
+  async selectAccountNoPKT(option) {
+    await this.accountNoSelectPKT.selectOption(option);
   }
 
   /**

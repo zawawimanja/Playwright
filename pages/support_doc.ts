@@ -1,26 +1,23 @@
-import { Page } from '@playwright/test';
+import { Page } from "@playwright/test";
 
 export class SupportingDocumentPage {
+  private page: Page;
 
-
-                 private page: Page;
-
-
-    constructor(page: Page) {
+  constructor(page: Page) {
     this.page = page;
   }
   /**
    * Supporting Document button
    */
   get supportingDocumentButton() {
-    return this.page.getByRole('button', { name: 'Supporting Document' });
+    return this.page.getByRole("button", { name: "Supporting Document" });
   }
 
   /**
    * Section tabs element
    */
   get sectionTabs() {
-    return this.page.locator('#sectionTabs');
+    return this.page.locator("#sectionTabs");
   }
 
   /**
@@ -30,14 +27,15 @@ export class SupportingDocumentPage {
     await this.supportingDocumentButton.click();
   }
 
+  async clickSupportingDocumentButtonPKT() {
+    await this.supportingDocumentButton.nth(0).click();
+  }
+
   /**
    * Check if the Supporting Document button is visible
    */
 
-
   /**
    * Check if the section tabs element contains the text 'Supporting Document'
    */
-
 }
-
