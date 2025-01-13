@@ -5,19 +5,15 @@ import { LeftTabPage } from "../../../pages/left_tab";
 import { DraftPage } from "../../../pages/draft";
 import { RemarksPage } from "../../../pages/remarks";
 import { PreviewSubmissionPage } from "../../../pages/preview_submission";
-import { OccupationalDiseasePage } from "../../../pages/od_info";
-import { EmployerInfoPage } from "../../../pages/employer_info";
-import { MedicalCertificatePage } from "../../../pages/mc_info";
 import { WagesInfoPage } from "../../../pages/wages_info";
 import { InsuredPersonInfoPage } from "../../../pages/insured_person_info";
 import { PreferredSOCSOOfficePage } from "../../../pages/socso_office";
-import { CertificationByEmployerPage } from "../../../pages/cert_employer";
 import { BankInformationPage } from "../../../pages/bank_info";
 import { SupportingDocumentPage } from "../../../pages/support_doc";
-import { ConfirmationOfInsuredPage } from "../../../pages/confirm_person";
 import { CalendarPage } from "../../../utils/calendar";
 import { SubmitPage } from "../../../pages/submit";
 import { CasesPage } from "../../../pages/cases";
+import { ButtonPage } from "../../../utils/button";
 
 test.beforeEach(async ({ page }) => {
   await login(page, "afzan.pks", "u@T_afzan");
@@ -25,7 +21,7 @@ test.beforeEach(async ({ page }) => {
 
 export let schemeRefValue: string;
 
-test("Prereg PK OD", async ({ page }) => {
+test("Prereg PK PKT", async ({ page }) => {
   const preregPage = new PreregistrationPage(page);
   const leftTabPage = new LeftTabPage(page);
   let submitPage = new SubmitPage(page);
@@ -37,33 +33,32 @@ test("Prereg PK OD", async ({ page }) => {
   await expect(leftTabPage.preregistrationLink).toBeVisible();
   leftTabPage.clickPreregistration();
 
-  await preregPage.selectNoticeTypePreRegOption("OD");
+  await preregPage.selectNoticeTypePreRegOption("Death - PKT");
   // Verify the selected option text
   const selectedOptionText = await preregPage.getSelectedNoticeTypeText();
-  expect(selectedOptionText).toBe("OD"); // Assert the selected text is correct
+  expect(selectedOptionText).toBe("Death - PKT"); // Assert the selected text is correct
 
-  await preregPage.selectInsuredPersonEmployment("Yes");
-  const selectedEmploymentText = await preregPage.getSelectedInsuredPersonEmploymentText();
-  expect(selectedEmploymentText).toBe("Yes");
+  const calendarPage1 = new CalendarPage(page);
 
   await preregPage.selectIdentificationType("2");
   const selectedIdentificationTypeText = await preregPage.getSelectedIdentificationTypeText();
   expect(selectedIdentificationTypeText).toBe("New IC");
 
-  await preregPage.selectNoticeAndBenefitClaimFormOption("Insured Person");
+  await preregPage.selectNoticeAndBenefitClaimFormOption("Others");
   const NoticeAndBenefitClaimFormOptionText = await preregPage.getselectNoticeAndBenefitClaimFormText();
-  expect(NoticeAndBenefitClaimFormOptionText).toBe("Insured Person");
+  expect(NoticeAndBenefitClaimFormOptionText).toBe("Others");
 
-  await preregPage.fillIdentificationNo("660813015036");
+  await preregPage.fillIdentificationNo("820325085473");
   const filledIdentificationNo = await preregPage.getIdentificationNo();
   //expect(filledIdentificationNo).toBe("910227016078");
 
-  await preregPage.fillEmployerCode("E1100031048P");
-  const filledEmployerCode = await preregPage.getEmployerCode();
+  // await preregPage.fillEmployerCode("E1100000366Y");
+  // const filledEmployerCode = await preregPage.getEmployerCode();
   //expect(filledEmployerCode).toBe("A3700059551B");
 
-  await preregPage.clickClaimFormSubmissionByListButton();
+  await page.frameLocator("#baristaPageOut").locator("#row23column2").click();
   await preregPage.clickSearchButton();
+
   const pagePromise = page.waitForEvent("popup");
   await preregPage.clickNextButton();
   const page1 = await pagePromise;
@@ -82,7 +77,7 @@ test("Prereg PK OD", async ({ page }) => {
   await expect(remarksPage.sectionTabs).toContainText("Remarks");
   await remarksPage.remarksButton.waitFor();
   await remarksPage.addRemarksButton.click();
-  await remarksPage.textbox.fill("test");
+  await remarksPage.textbox.fill("test PK");
   await remarksPage.saveRemarksButton.click();
 
   const insuredPersonInfoPage = new InsuredPersonInfoPage(page1);
@@ -90,11 +85,9 @@ test("Prereg PK OD", async ({ page }) => {
   await insuredPersonInfoPage.clickInsuredPersonInfoButton();
   await insuredPersonInfoPage.noticeAndBenefitClaimFormReceivedDateInput.click();
 
-  await calendarPage.selectDateInsuredPersonPage("2007", "8", "11");
-  await insuredPersonInfoPage.fillOccupation("CS");
-  await insuredPersonInfoPage.selectOccupation("1000002");
-  await insuredPersonInfoPage.selectSubOccupation("1001132");
-  await insuredPersonInfoPage.selectSubOccupationalList("1002058");
+  await calendarPage.selectDateInsuredPersonPage("1997", "9", "20");
+  //if done revision will auto pull field
+  await insuredPersonInfoPage.fillOccupationPKT("CS");
 
   await insuredPersonInfoPage.fillAddress1("Taman");
   await insuredPersonInfoPage.fillAddress(2, "Lorong 10");
@@ -104,77 +97,72 @@ test("Prereg PK OD", async ({ page }) => {
   await insuredPersonInfoPage.fillPostcode("51000");
   await insuredPersonInfoPage.selectNationality("201749");
 
-  const employerInfoPage = new EmployerInfoPage(page1);
-  await employerInfoPage.clickEmployerInfoButton();
+  //add death info
+  await page1.getByRole("button", { name: "Death Info" }).click();
 
-  const occupationalDiseasePage = new OccupationalDiseasePage(page1);
-  await occupationalDiseasePage.clickOccupationalDiseaseButton();
-  await occupationalDiseasePage.fillDescriptionOfOccupational("test");
+  await page1.getByLabel("Date of Death*").click();
+  await page1.getByRole("combobox").nth(3).selectOption("2021");
+  //add 1 more month like accident
+  await page1.getByRole("combobox").nth(2).selectOption("2");
+  await page1.getByRole("link", { name: "17" }).click();
+  await page1.getByLabel("Cause of Death*").fill("tst");
+  await page1.getByLabel("Marital Status of Insured").selectOption("90501");
 
-  await occupationalDiseasePage.selectDiseaseRelatedEMploymentOption("Yes");
+  //add dependent info
+  await page1.getByRole("button", { name: "Dependent Info" }).click();
+  await page1.getByLabel("Dependent Information").selectOption("Yes");
+  const page2Promise = page1.waitForEvent("popup");
+  await page1.getByRole("button", { name: "Add Dependent" }).click();
+  const page2 = await page2Promise;
 
-  await occupationalDiseasePage.fillSpecifyDutiesAndHow("test");
-  await occupationalDiseasePage.fillPleaseExplainSymptoms("test");
-  const medicalCertificatePage = new MedicalCertificatePage(page1);
-  await medicalCertificatePage.clickMedicalCertificateButton();
+  await page2.getByLabel("Relationship with Insured").selectOption("90404");
+  await page2.getByLabel("Gender*").selectOption("200602");
+  await page2.getByLabel("Dependent Name*").fill("umi");
 
-  //1st mc
-  await medicalCertificatePage.addRecord();
-  await medicalCertificatePage.enterClinicHospitalName("kl");
+  await page2.getByRole("textbox", { name: "Identification No.*" }).fill("680821045674");
 
-  await page1.getByRole("textbox").nth(1).click();
-  await calendarPage.selectDateInsuredPersonPage("2007", "10", "10");
+  await page2.getByRole("textbox", { name: "Address*" }).fill("taman");
 
-  await page1.getByRole("textbox").nth(2).click();
-  await calendarPage.selectDateMCEndDate("2007", "12", "27");
-  await medicalCertificatePage.submitButton().click();
+  await page2.locator("#AddressLine2").fill("lorong");
 
-  //2nd mc
-  // await medicalCertificatePage.addRecord();
-  // await medicalCertificatePage.enterClinicHospitalName("kl");
+  await page2.locator("#AddressLine3").fill("jalan");
 
-  // await calendarPage.startDateInput.click();
+  await page2.getByLabel("State*").selectOption("200714");
+  await page2.getByLabel("City*").selectOption("201460");
+  await page2.getByLabel("Postcode*").fill("51000");
+  await page2.getByLabel("Does Dependent has Guardian?*").selectOption("0");
 
-  // await calendarPage.selectDateInsuredPersonPage("2021", "7", "9");
+  const bankInformationPage = new BankInformationPage(page2);
 
-  // await calendarPage.endDateInput.click();
+  await bankInformationPage.selectAccountNoPKT("1");
 
-  // await calendarPage.selectDateMCEndDate("2021", "7", "14");
-  // await medicalCertificatePage.submitButton().click();
+  await bankInformationPage.selectBankLocation("204101");
+  await bankInformationPage.selectBankNamePKT("21");
+  await bankInformationPage.selectBankAccountType("204401");
+  await bankInformationPage.fillBankBranch("KL");
+  await bankInformationPage.fillBankAccountNo("12345678");
+
+  const button = new ButtonPage(page2);
+  await button.clickSave();
+
+  //add fmp info
+  await page1.getByRole("button", { name: "FPM Info" }).click();
+
+  await page1.getByRole("button", { name: "Pull Dependent" }).click();
+  await page1.getByRole("button", { name: "Yes" }).click();
 
   const wagesInfoPage = new WagesInfoPage(page1);
   await wagesInfoPage.clickWagesInfoButton();
 
+  //await page2.getByRole('button', { name: 'Preferred SOCSO Office' }).click();
   const preferredSOCSOOfficePage = new PreferredSOCSOOfficePage(page1);
   await preferredSOCSOOfficePage.clickPreferredSOCSOOfficeButton();
   preferredSOCSOOfficePage.selectSOCSOState("200701");
   await preferredSOCSOOfficePage.selectSOCSOOffice("200419");
 
-  const certificationByEmployerPage = new CertificationByEmployerPage(page1);
-  await certificationByEmployerPage.clickCertificationByEmployerButton();
-  await certificationByEmployerPage.fillName("MAT");
-  await certificationByEmployerPage.fillDesignation("CEO");
-  await certificationByEmployerPage.calendar.click();
-  await calendarPage.selectDateInsuredPersonPage("1991", "8", "11");
-
-  const bankInformationPage = new BankInformationPage(page1);
-  await bankInformationPage.clickBankInformationButton();
-
-  await bankInformationPage.accountNoSelect.waitFor();
-  await expect(bankInformationPage.accountNoSelect).toBeVisible();
-  await bankInformationPage.accountNoSelect.click();
-
-  await page1.getByLabel("Account No.*", { exact: true }).selectOption("Yes");
-  await bankInformationPage.selectAccountNo("Yes");
-  await bankInformationPage.selectBankLocation("204101");
-  await bankInformationPage.selectBankName("802121");
-  await bankInformationPage.selectBankAccountType("204401");
-  await bankInformationPage.fillBankBranch("KL");
-  await bankInformationPage.fillBankAccountNo("12345678");
-
-  const confirmationOfInsuredPage = new ConfirmationOfInsuredPage(page1);
-  await confirmationOfInsuredPage.clickConfirmationOfInsuredButton();
-  await confirmationOfInsuredPage.checkCompletedCheckbox();
+  await page1.getByRole("button", { name: "Confirmation of Dependent/" }).click();
+  await page1.getByRole("button", { name: "Supporting Document" }).click();
+  await page1.getByRole("button", { name: "Preview & Submission" }).click();
 
   const supportingDocumentPage = new SupportingDocumentPage(page1);
   await supportingDocumentPage.clickSupportingDocumentButton();
@@ -193,7 +181,7 @@ test("Prereg PK OD", async ({ page }) => {
   // schemeRefValue = await submitPage.schemeRefNo.inputValue();
   // console.log(" SRN " + schemeRefValue);
 
-  await expect(submitPage.caseStatusPendingInvestigation_PK_SAO).toBeVisible();
+  // await expect(submitPage.caseStatusPendingInvestigation_PK_SAO).toBeVisible();
 
-  await submitPage.submitButton.click();
+  // await submitPage.submitButton.click();
 });

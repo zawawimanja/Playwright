@@ -12,7 +12,7 @@ export class CasesPage {
   }
 
   async init() {
-    this.schemeRefValue = "E11NTI20250000005";
+    this.schemeRefValue = "E11NTPKT20250000047";
     console.log(" SRN " + this.schemeRefValue);
   }
 

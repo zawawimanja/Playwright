@@ -34,7 +34,15 @@ export class PreparerInformationPage {
     return this.page.getByRole("button", { name: "Preparer Information" });
   }
 
+  get preparerInformationButtonPKT() {
+    return this.page.getByRole("button", { name: "Preparer Info" });
+  }
+
   async clickpreparerInformationButton() {
     await this.preparerInformationButton.click();
+  }
+
+  async clickpreparerInformationButtonPKT() {
+    await this.preparerInformationButtonPKT.click();
   }
 }
