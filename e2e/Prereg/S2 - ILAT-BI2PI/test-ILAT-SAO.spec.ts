@@ -17,7 +17,7 @@ import { HeaderPage } from "../../../pages/header";
 import { Contribution56Page } from "../../../pages/contribution_56";
 
 test.beforeEach(async ({ page }) => {
-  //await login(page, "roliana.pks", "u@T_roliana");
+  // await login(page, "roliana.pks", "u@T_roliana");
   await login(page, "uat_ali", "u@T_ali");
 });
 
@@ -95,13 +95,17 @@ test("Prereg SAO ILAT", async ({ page }) => {
 
   await page2.getByRole("button", { name: "Add Record" }).click();
 
+  //await page2.getByRole("button", { name: "Edit" }).click();
+
   // await page2.locator("#Contribution56").getByRole("textbox").first().fill("E1300001143K");
 
-  await page2.locator('[id^="Contribution56_EmployerCode-"]').nth(1).fill("E1300001143K");
+  await page2.locator('[id^="Contribution56_EmployerCode-"]').nth(0).fill("E1100024537Z");
+  //await page2.locator('[id^="Contribution56_EmployerCode-"]').nth(1).fill("E1100022162V");
 
   await page2.getByRole("button", { name: "Search" }).click();
 
-  for (let i = 104; i < 200; i++) {
+  // if loop stop then row will be + 1
+  for (let i = 0; i < 180; i++) {
     //await page.waitForTimeout(1000);
 
     await page2.getByRole("button", { name: "Add Record" }).first().click();
@@ -114,13 +118,14 @@ test("Prereg SAO ILAT", async ({ page }) => {
 
     // Fill the wages input
     await page2.locator("input.textInput[id^='Contribution56_WagesInfo_Wages-']").nth(i).fill("100");
-
     // Select an option from the combobox (3rd combobox)
 
     await page2.locator("[id^='Contribution56_WagesInfo_Source-']").nth(i).selectOption("9607901");
 
-    // Check the checkbox with the label "Recommend"
+    //Check the checkbox with the label "Recommend"
     //  await page2.getByRole("checkbox", { name: "Recommend", exact: true }).nth(i).check();
+
+    await page2.locator("[id^='Contribution56_WagesInfo_Recommend-']").getByLabel("Recommend").nth(i).check();
   }
 
   //smb info

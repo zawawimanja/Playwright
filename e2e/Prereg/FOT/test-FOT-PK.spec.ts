@@ -14,14 +14,14 @@ import { CalendarPage } from "../../../utils/calendar";
 import { SubmitPage } from "../../../pages/submit";
 import { CasesPage } from "../../../pages/cases";
 import { ButtonPage } from "../../../utils/button";
-
+import { CertificationByEmployerPage } from "../../../pages/cert_employer";
 test.beforeEach(async ({ page }) => {
   await login(page, "afzan.pks", "u@T_afzan");
 });
 
 export let schemeRefValue: string;
 
-test("Prereg PK PKT", async ({ page }) => {
+test("Prereg PK FOT", async ({ page }) => {
   const preregPage = new PreregistrationPage(page);
   const leftTabPage = new LeftTabPage(page);
   let submitPage = new SubmitPage(page);
@@ -33,10 +33,10 @@ test("Prereg PK PKT", async ({ page }) => {
   await expect(leftTabPage.preregistrationLink).toBeVisible();
   leftTabPage.clickPreregistration();
 
-  await preregPage.selectNoticeTypePreRegOption("Death - PKT");
+  await preregPage.selectNoticeTypePreRegOption("Death - FOT");
   // Verify the selected option text
   const selectedOptionText = await preregPage.getSelectedNoticeTypeText();
-  expect(selectedOptionText).toBe("Death - PKT"); // Assert the selected text is correct
+  expect(selectedOptionText).toBe("Death - FOT"); // Assert the selected text is correct
 
   const calendarPage1 = new CalendarPage(page);
 
@@ -44,15 +44,15 @@ test("Prereg PK PKT", async ({ page }) => {
   const selectedIdentificationTypeText = await preregPage.getSelectedIdentificationTypeText();
   expect(selectedIdentificationTypeText).toBe("New IC");
 
-  await preregPage.selectNoticeAndBenefitClaimFormOption("Others");
-  const NoticeAndBenefitClaimFormOptionText = await preregPage.getselectNoticeAndBenefitClaimFormText();
-  expect(NoticeAndBenefitClaimFormOptionText).toBe("Others");
-
-  await preregPage.fillIdentificationNo("820325085473");
+  await preregPage.fillIdentificationNo("931008126229");
   const filledIdentificationNo = await preregPage.getIdentificationNo();
   //expect(filledIdentificationNo).toBe("910227016078");
 
-  // await preregPage.fillEmployerCode("E1100000366Y");
+  await preregPage.selectNoticeAndBenefitClaimFormOption("Others");
+  const NoticeAndBenefitClaimFormOptionText = await preregPage.getselectNoticeAndBenefitClaimFormText();
+  // expect(NoticeAndBenefitClaimFormOptionText).toBe("Others")
+
+  await preregPage.fillEmployerCode("A3702087818V");
   // const filledEmployerCode = await preregPage.getEmployerCode();
   //expect(filledEmployerCode).toBe("A3700059551B");
 
@@ -101,12 +101,21 @@ test("Prereg PK PKT", async ({ page }) => {
   await page1.getByRole("button", { name: "Death Info" }).click();
 
   await page1.getByLabel("Date of Death*").click();
-  await page1.getByRole("combobox").nth(3).selectOption("2021");
+
+  await page1.getByRole("combobox").nth(4).selectOption("2021");
   //add 1 more month like accident
-  await page1.getByRole("combobox").nth(2).selectOption("2");
-  await page1.getByRole("link", { name: "17" }).click();
-  await page1.getByLabel("Cause of Death*").fill("tst");
+  await page1.getByRole("combobox").nth(3).selectOption("5");
+  await page1.getByRole("link", { name: "9", exact: true }).click();
+
+  await page1.getByLabel("Cause of Death*").click();
+  await page1.getByLabel("Cause of Death*").fill("test");
+
   await page1.getByLabel("Marital Status of Insured").selectOption("90501");
+  await page1.getByLabel("Accident Date*").click();
+  await page1.getByRole("combobox").nth(4).selectOption("2021");
+  //add 1 more month like accident
+  await page1.getByRole("combobox").nth(3).selectOption("1");
+  await page1.getByRole("link", { name: "8", exact: true }).click();
 
   //add dependent info
   await page1.getByRole("button", { name: "Dependent Info" }).click();
@@ -145,14 +154,10 @@ test("Prereg PK PKT", async ({ page }) => {
   const button = new ButtonPage(page2);
   await button.clickSave();
 
-  //add fmp info
-  await page1.getByRole("button", { name: "FPM Info" }).click();
-
-  await page1.getByRole("button", { name: "Pull Dependent" }).click();
-  await page1.getByRole("button", { name: "Yes" }).click();
-
   const wagesInfoPage = new WagesInfoPage(page1);
   await wagesInfoPage.clickWagesInfoButton();
+
+  await page1.getByLabel("Is Wages Paid on the Day of").selectOption("No");
 
   //await page2.getByRole('button', { name: 'Preferred SOCSO Office' }).click();
   const preferredSOCSOOfficePage = new PreferredSOCSOOfficePage(page1);
@@ -164,11 +169,23 @@ test("Prereg PK PKT", async ({ page }) => {
   await button1.clickSave();
   await page1.reload();
 
+  //add fmp info
+  await page1.getByRole("button", { name: "FPM Info" }).click();
+  await page1.getByRole("button", { name: "Pull Dependent" }).click();
+  await page1.getByRole("button", { name: "Yes" }).click();
+
+  //add certificate by employer
+  const certificationByEmployerPage = new CertificationByEmployerPage(page1);
+  await certificationByEmployerPage.clickCertificationByEmployerButton();
+  await certificationByEmployerPage.fillName("MAT");
+  await certificationByEmployerPage.fillDesignation("CEO");
+  await certificationByEmployerPage.calendar.click();
+  await calendarPage.selectDateInsuredPersonPage("2021", "8", "11");
+
   await page1.getByRole("button", { name: "Confirmation of Dependent/" }).click();
 
   const supportingDocumentPage = new SupportingDocumentPage(page1);
   await supportingDocumentPage.clickSupportingDocumentButton();
-  await page1.reload();
 
   const previewSubmissionPage = new PreviewSubmissionPage(page1);
   await previewSubmissionPage.clickPreviewSubmissionButton();
