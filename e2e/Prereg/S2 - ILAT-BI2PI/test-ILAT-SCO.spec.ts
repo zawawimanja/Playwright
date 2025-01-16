@@ -26,7 +26,6 @@ test("Prereg SCO ILAT S2", async ({ page }) => {
   let submitPage = new SubmitPage(page);
   const casesPage = new CasesPage(page, submitPage);
   const myCasesPage = new MyCasesPage(page, casesPage);
-  await casesPage.init();
 
   let loginUser = "atilia.pks";
 
@@ -41,7 +40,9 @@ test("Prereg SCO ILAT S2", async ({ page }) => {
 
     // Click my cases left tab
     await leftTabPage.clickMyCases();
+    await casesPage.init(); // Initialize and read schemeRefValue
 
+    console.log("Retrieved SRN: " + casesPage.casesCreated); // Log retrieved value
     // Check if the case exists for the current login user
     if (await myCasesPage.clickILAT("SCO")) {
       caseFound = true;
@@ -116,19 +117,8 @@ test("Prereg SCO ILAT S2", async ({ page }) => {
   // Wait for the element to be present
   await page3.getByLabel("Scheme Ref No:").waitFor();
 
-  // Use evaluate to get the value from the input field
-  // const schemeRefValue: string | null = await page2.evaluate(() => {
-  //   const input = document.querySelector<HTMLInputElement>("#SchemeRefNo"); // Adjust selector as needed
-  //   return input ? input.value : null; // Return the value if the element exists
-  // });
-
-  // // Log the retrieved value
-  // console.log("SRN: " + schemeRefValue);
-
-  // Alternatively, if you want to use Playwright's locator methods:
   const schemeRefValueFromLocator = await page3.getByLabel("Scheme Ref No:").inputValue();
   console.log("SRN from locator: " + schemeRefValueFromLocator);
 
-  // Perform other actions as needed
-  await page2.getByRole("button", { name: "Close" }).click();
+  await page3.getByRole("button", { name: "Close" }).click();
 });

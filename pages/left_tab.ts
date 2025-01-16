@@ -18,8 +18,6 @@ export class LeftTabPage {
   }
 
   async clickMyCases() {
-    //await this.page.getByRole("link", { name: "My Cases" }).click();
-
     await this.page
       .locator("div")
       .filter({ hasText: /^My Cases$/ })
