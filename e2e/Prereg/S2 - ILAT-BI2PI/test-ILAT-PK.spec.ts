@@ -14,7 +14,6 @@ import { ButtonPage } from "../../../utils/button";
 // filepath: /c:/Users/aaror/Downloads/Playwright/e2e/Prereg/S2 - ILAT-BI2PI/test-ILAT-PK.spec.ts
 const fs = require("fs");
 const path = require("path");
-// Removed duplicate and converted require to import
 
 test.beforeEach(async ({ page }) => {
   await login(page, "afzan.pks", "u@T_afzan");
@@ -86,17 +85,6 @@ test("Prereg PK ILAT S2", async ({ page }) => {
   // Wait for the element to be present
   await page2.getByLabel("Scheme Ref No:").waitFor();
 
-  // Use evaluate to get the value from the input field
-  // const schemeRefValue: string | null = await page2.evaluate(() => {
-  //   const input = document.querySelector<HTMLInputElement>("#SchemeRefNo"); // Adjust selector as needed
-  //   return input ? input.value : null; // Return the value if the element exists
-  // });
-
-  // // Log the retrieved value
-  // console.log("SRN: " + schemeRefValue);
-
-  // Alternatively, if you want to use Playwright's locator methods:
-  // Get schemeRefValue and write to JSON file
   const schemeRefValue = await page2.getByLabel("Scheme Ref No:").inputValue();
   console.log("SRN from locator: " + schemeRefValue);
   const filePath = path.resolve(__dirname, "schemeRefValue.json");
@@ -108,12 +96,6 @@ test("Prereg PK ILAT S2", async ({ page }) => {
   } else {
     console.log("File schemeRefValue.json does not exist at path: " + filePath);
   }
-
-  // Initialize CasesPage with schemeRefValue
-  // const submitPage = new SubmitPage(page); // Assuming you have a SubmitPage instance
-  const casesPageInstance = new CasesPage(page, submitPage);
-  //return this schemeRefValue to cases.ts in init method
-  await casesPageInstance.init(schemeRefValue);
 
   // Perform other actions as needed
   await page2.getByRole("button", { name: "Close" }).click();

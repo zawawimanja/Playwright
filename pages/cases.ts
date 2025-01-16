@@ -1,13 +1,12 @@
-// filepath: /c:/Users/aaror/Downloads/Playwright/pages/cases.ts
 import { Page } from "@playwright/test";
-import { SubmitPage } from "../pages/submit";
+import { SubmitPage } from "../pages/submit"; // Ensure this path is correct
 import * as fs from "fs";
 import * as path from "path";
 
 export class CasesPage {
   private page: Page;
   private submitPage: SubmitPage;
-  private schemeRefValue: string;
+  private schemeRefValue: string | null = null; // Initialize as null
 
   constructor(page: Page, submitPage: SubmitPage) {
     this.page = page;
@@ -15,15 +14,27 @@ export class CasesPage {
   }
 
   async init() {
-    const filePath = path.join(__dirname, "schemeRefValue.json");
-    while (!fs.existsSync(filePath)) {
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+    // Use the absolute path to the JSON file
+    const filePath = "C:\\Users\\aaror\\Downloads\\Playwright\\e2e\\Prereg\\S2 - ILAT-BI2PI\\schemeRefValue.json";
+
+    // Check if the file exists before trying to read it
+    if (fs.existsSync(filePath)) {
+      try {
+        // Read the JSON file
+        const fileContent = await fs.promises.readFile(filePath, "utf8");
+        const parsedContent = JSON.parse(fileContent);
+
+        // Assign the value to schemeRefValue
+        this.schemeRefValue = parsedContent.schemeRefValue || null; // Use null if not found
+        console.log("Read SRN from JSON file: " + this.schemeRefValue);
+      } catch (error) {
+        console.error("Error reading or parsing schemeRefValue.json:", error);
+      }
+    } else {
+      console.log("File schemeRefValue.json does not exist at path: " + filePath);
     }
-    const fileContent = await fs.promises.readFile(filePath, "utf8");
-    const schemeRefValue = JSON.parse(fileContent).schemeRefValue;
-    this.schemeRefValue = schemeRefValue;
-    console.log(" SRN " + this.schemeRefValue);
   }
+
   get casesCreated() {
     return this.schemeRefValue;
   }
