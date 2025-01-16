@@ -10,6 +10,11 @@ import { SupportingDocumentPage } from "../../../pages/support_doc";
 import { CalendarPage } from "../../../utils/calendar";
 import { SubmitPage } from "../../../pages/submit";
 import { CasesPage } from "../../../pages/cases";
+import { ButtonPage } from "../../../utils/button";
+// filepath: /c:/Users/aaror/Downloads/Playwright/e2e/Prereg/S2 - ILAT-BI2PI/test-ILAT-PK.spec.ts
+const fs = require("fs");
+const path = require("path");
+// Removed duplicate and converted require to import
 
 test.beforeEach(async ({ page }) => {
   await login(page, "afzan.pks", "u@T_afzan");
@@ -17,10 +22,10 @@ test.beforeEach(async ({ page }) => {
 
 export let schemeRefValue: string;
 
-test("Prereg PK ILAT", async ({ page }) => {
+test("Prereg PK ILAT S2", async ({ page }) => {
   const preregPage = new PreregistrationPage(page);
   const leftTabPage = new LeftTabPage(page);
-  let submitPage = new SubmitPage(page);
+  const submitPage = new SubmitPage(page);
   const casesPage = new CasesPage(page, submitPage);
 
   await leftTabPage.leftBar.waitFor();
@@ -41,7 +46,6 @@ test("Prereg PK ILAT", async ({ page }) => {
 
   const page1 = await pagePromise;
 
-  await page.waitForTimeout(30000);
   const draftPage = new DraftPage(page);
 
   if (await draftPage.closeButton.isVisible()) {
@@ -71,18 +75,46 @@ test("Prereg PK ILAT", async ({ page }) => {
   const previewSubmissionPage = new PreviewSubmissionPage(page1);
   await previewSubmissionPage.clickPreviewSubmissionButton();
   await previewSubmissionPage.clickShowPreviewButton();
-
   await previewSubmissionPage.clickSubmitButton();
-  await previewSubmissionPage.clickYesButton();
 
-  submitPage = new SubmitPage(page1);
+  const buttonPage = new ButtonPage(page1);
+  buttonPage.clickYes();
 
-  await expect(submitPage.schemeRefNo).toBeVisible();
+  const page2Promise = page1.waitForEvent("popup");
+  const page2 = await page2Promise;
 
-  // schemeRefValue = await submitPage.schemeRefNo.inputValue();
-  // console.log(" SRN " + schemeRefValue);
+  // Wait for the element to be present
+  await page2.getByLabel("Scheme Ref No:").waitFor();
 
-  await expect(submitPage.caseStatusPendingInvestigation_PK_SAO).toBeVisible();
+  // Use evaluate to get the value from the input field
+  // const schemeRefValue: string | null = await page2.evaluate(() => {
+  //   const input = document.querySelector<HTMLInputElement>("#SchemeRefNo"); // Adjust selector as needed
+  //   return input ? input.value : null; // Return the value if the element exists
+  // });
 
-  await submitPage.submitButton.click();
+  // // Log the retrieved value
+  // console.log("SRN: " + schemeRefValue);
+
+  // Alternatively, if you want to use Playwright's locator methods:
+  // Get schemeRefValue and write to JSON file
+  const schemeRefValue = await page2.getByLabel("Scheme Ref No:").inputValue();
+  console.log("SRN from locator: " + schemeRefValue);
+  const filePath = path.resolve(__dirname, "schemeRefValue.json");
+  fs.writeFileSync(filePath, JSON.stringify({ schemeRefValue }));
+
+  // Check if the file exists
+  if (fs.existsSync(filePath)) {
+    console.log("File schemeRefValue.json exists at path: " + filePath);
+  } else {
+    console.log("File schemeRefValue.json does not exist at path: " + filePath);
+  }
+
+  // Initialize CasesPage with schemeRefValue
+  // const submitPage = new SubmitPage(page); // Assuming you have a SubmitPage instance
+  const casesPageInstance = new CasesPage(page, submitPage);
+  //return this schemeRefValue to cases.ts in init method
+  await casesPageInstance.init(schemeRefValue);
+
+  // Perform other actions as needed
+  await page2.getByRole("button", { name: "Close" }).click();
 });

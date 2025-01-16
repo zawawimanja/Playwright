@@ -12,14 +12,15 @@ import { CasesPage } from "../../../pages/cases";
 import { SubmitPage } from "../../../pages/submit";
 import { MyCasesPage } from "../../../pages/mycases";
 import { HeaderPage } from "../../../pages/header";
+import { ButtonPage } from "../../../utils/button";
 
 test.beforeEach(async ({ page }) => {
-  // await login(page, "atilia.pks", "u@T_atilia");
-  await login(page, "nazira.pks", "u@T_nazira");
+  await login(page, "atilia.pks", "u@T_atilia");
+  //await login(page, "nazira.pks", "u@T_nazira");
 });
 
 export let schemeRefValue: string;
-test("Prereg SCO ILAT", async ({ page }) => {
+test("Prereg SCO ILAT S2", async ({ page }) => {
   const preregPage = new PreregistrationPage(page);
   const leftTabPage = new LeftTabPage(page);
   let submitPage = new SubmitPage(page);
@@ -54,8 +55,8 @@ test("Prereg SCO ILAT", async ({ page }) => {
 
       headerPage.clickUserProfile();
       headerPage.clickSignOut();
-      // await login(page, "nazira.pks", "u@T_nazira");
-      await login(page, "atilia.pks", "u@T_atilia");
+      await login(page, "nazira.pks", "u@T_nazira");
+      // await login(page, "atilia.pks", "u@T_atilia");
     }
   }
 
@@ -104,16 +105,30 @@ test("Prereg SCO ILAT", async ({ page }) => {
   const previewSubmissionPage = new PreviewSubmissionPage(page2);
   await previewSubmissionPage.clickPreviewSubmissionButton();
   await previewSubmissionPage.clickShowPreviewButton();
-
   await previewSubmissionPage.clickSubmitButton();
-  await previewSubmissionPage.clickYesButton();
 
-  await page2.waitForTimeout(30000);
+  const buttonPage = new ButtonPage(page2);
+  buttonPage.clickYes();
 
-  submitPage = new SubmitPage(page2);
-  await expect(submitPage.schemeRefNo).toBeVisible();
+  const page3Promise = page2.waitForEvent("popup");
+  const page3 = await page3Promise;
 
-  await expect(submitPage.caseStatusPendingApproval_IO_SCO).toBeVisible();
+  // Wait for the element to be present
+  await page3.getByLabel("Scheme Ref No:").waitFor();
 
-  await submitPage.submitButton.click();
+  // Use evaluate to get the value from the input field
+  // const schemeRefValue: string | null = await page2.evaluate(() => {
+  //   const input = document.querySelector<HTMLInputElement>("#SchemeRefNo"); // Adjust selector as needed
+  //   return input ? input.value : null; // Return the value if the element exists
+  // });
+
+  // // Log the retrieved value
+  // console.log("SRN: " + schemeRefValue);
+
+  // Alternatively, if you want to use Playwright's locator methods:
+  const schemeRefValueFromLocator = await page3.getByLabel("Scheme Ref No:").inputValue();
+  console.log("SRN from locator: " + schemeRefValueFromLocator);
+
+  // Perform other actions as needed
+  await page2.getByRole("button", { name: "Close" }).click();
 });

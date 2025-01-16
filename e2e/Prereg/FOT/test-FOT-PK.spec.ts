@@ -44,7 +44,7 @@ test("Prereg PK FOT", async ({ page }) => {
   const selectedIdentificationTypeText = await preregPage.getSelectedIdentificationTypeText();
   expect(selectedIdentificationTypeText).toBe("New IC");
 
-  await preregPage.fillIdentificationNo("931008126229");
+  await preregPage.fillIdentificationNo("810412145383");
   const filledIdentificationNo = await preregPage.getIdentificationNo();
   //expect(filledIdentificationNo).toBe("910227016078");
 
@@ -62,11 +62,12 @@ test("Prereg PK FOT", async ({ page }) => {
   const pagePromise = page.waitForEvent("popup");
   await preregPage.clickNextButton();
   const page1 = await pagePromise;
-  await page1.waitForTimeout(30000);
+
   const draftPage = new DraftPage(page1);
 
+  await draftPage.closeButton.waitFor();
+
   if (await draftPage.closeButton.isVisible()) {
-    await draftPage.closeButton.waitFor();
     await draftPage.clickCloseButton();
   }
 
@@ -154,9 +155,22 @@ test("Prereg PK FOT", async ({ page }) => {
   const button = new ButtonPage(page2);
   await button.clickSave();
 
+  await page1.getByRole("button", { name: "Save" }).click();
+  await page1.locator("button").filter({ hasText: "Save" }).click();
+  await page1.getByRole("button", { name: "Close" }).click();
+
+  await page1.reload();
+  await page1.getByText("Death Notice App").click();
+
+  await page1.getByRole("button", { name: "Dependent Info" }).click();
+
+  //add fmp info
+  await page1.getByRole("button", { name: "FPM Info" }).click();
+  await page1.getByRole("button", { name: "Pull Dependent" }).click();
+  await page1.getByRole("button", { name: "Yes" }).click();
+
   const wagesInfoPage = new WagesInfoPage(page1);
   await wagesInfoPage.clickWagesInfoButton();
-
   await page1.getByLabel("Is Wages Paid on the Day of").selectOption("No");
 
   //await page2.getByRole('button', { name: 'Preferred SOCSO Office' }).click();
@@ -164,15 +178,6 @@ test("Prereg PK FOT", async ({ page }) => {
   await preferredSOCSOOfficePage.clickPreferredSOCSOOfficeButton();
   preferredSOCSOOfficePage.selectSOCSOState("200701");
   await preferredSOCSOOfficePage.selectSOCSOOffice("200419");
-
-  const button1 = new ButtonPage(page1);
-  await button1.clickSave();
-  await page1.reload();
-
-  //add fmp info
-  await page1.getByRole("button", { name: "FPM Info" }).click();
-  await page1.getByRole("button", { name: "Pull Dependent" }).click();
-  await page1.getByRole("button", { name: "Yes" }).click();
 
   //add certificate by employer
   const certificationByEmployerPage = new CertificationByEmployerPage(page1);
