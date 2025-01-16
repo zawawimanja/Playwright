@@ -76,11 +76,10 @@ test("Prereg PK NTA", async ({ page }) => {
   const pagePromise = page.waitForEvent("popup");
   await preregPage.clickNextButton();
   const page1 = await pagePromise;
-  await page1.waitForTimeout(30000);
-  const draftPage = new DraftPage(page1);
 
+  const draftPage = new DraftPage(page1);
+  await draftPage.closeButton.waitFor();
   if (await draftPage.closeButton.isVisible()) {
-    await draftPage.closeButton.waitFor();
     await draftPage.clickCloseButton();
   }
 

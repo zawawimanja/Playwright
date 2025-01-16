@@ -145,6 +145,12 @@ test("Prereg PK PKT", async ({ page }) => {
   const button = new ButtonPage(page2);
   await button.clickSave();
 
+  await page1.locator("button").filter({ hasText: "Save" }).click();
+  await page1.getByRole("button", { name: "Close" }).click();
+
+  await page1.reload();
+  await page1.getByText("Death Notice App").click();
+
   //add fmp info
   await page1.getByRole("button", { name: "FPM Info" }).click();
 
@@ -162,7 +168,6 @@ test("Prereg PK PKT", async ({ page }) => {
 
   const button1 = new ButtonPage(page1);
   await button1.clickSave();
-  await page1.reload();
 
   await page1.getByRole("button", { name: "Confirmation of Dependent/" }).click();
 

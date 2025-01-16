@@ -30,4 +30,8 @@ export class ButtonPage {
   async clickSave() {
     await this.page.getByRole("button", { name: "Save" }).click();
   }
+
+  async clickClose() {
+    await this.page.getByRole("button", { name: "Close" }).click();
+  }
 }

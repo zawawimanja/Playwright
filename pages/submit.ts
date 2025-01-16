@@ -26,9 +26,17 @@ export class SubmitPage {
     return this.page.getByRole("button", { name: "Save Remarks" });
   }
 
-  get schemeRefNo() {
-    return this.page.getByLabel("Scheme Ref No.");
+  // get schemeRefNo() {
+  //   return this.page.getByLabel("Scheme Ref No:");
+  // }
+
+  schemeRefNo() {
+    return this.page.getByLabel("Scheme Ref No:");
   }
+
+  // schemeRefNo() {
+  //   return this.page.getByLabel("Scheme Ref No:");
+  // }
 
   get textboxIO() {
     return this.page.locator("#AddRemarksDetailsR").getByRole("textbox");
