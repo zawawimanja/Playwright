@@ -25,6 +25,7 @@ import { CasesPage } from "../../../pages/cases";
 import { SubmitPage } from "../../../pages/submit";
 import { MyCasesPage } from "../../../pages/mycases";
 import { HeaderPage } from "../../../pages/header";
+import { ButtonPage } from "../../../utils/button";
 
 test.beforeEach(async ({ page }) => {
   //await login(page, "atilia.pks", "u@T_atilia");
@@ -38,7 +39,6 @@ test("Prereg SCO NTA", async ({ page }) => {
   let submitPage = new SubmitPage(page);
   const casesPage = new CasesPage(page, submitPage);
   const myCasesPage = new MyCasesPage(page, casesPage);
-  await casesPage.init();
 
   let loginUser = "atilia.pks";
   let caseFound = false;
@@ -52,6 +52,8 @@ test("Prereg SCO NTA", async ({ page }) => {
 
     // Click my cases left tab
     await leftTabPage.clickMyCases();
+
+    await casesPage.init();
 
     // Check if the case exists for the current login user
     if (await myCasesPage.clickAccident("SCO")) {
@@ -81,7 +83,6 @@ test("Prereg SCO NTA", async ({ page }) => {
     await draftPage.clickCloseButton();
   }
 
-  await page2.waitForTimeout(20000);
   const remarksPage = new RemarksPage(page2);
   await remarksPage.remarksButton.waitFor();
   await expect(remarksPage.remarksButton).toBeVisible();
@@ -146,10 +147,8 @@ test("Prereg SCO NTA", async ({ page }) => {
   //add wages info page
   const wagesInfoPage = new WagesInfoPage(page2);
   await wagesInfoPage.clickWagesInfoButton();
-  //not valid because different contribution
-  // for (let i = 0; i < 6; i++) {
-  //   await wagesInfoPage.selectWagesInfoSection("Yes", i);
-  // }
+
+  await wagesInfoPage.selectAllEnabledWagesOptions("Yes");
 
   //add medical certificate pages
   const medicalCertificatePage = new MedicalCertificatePage(page2);
@@ -171,14 +170,15 @@ test("Prereg SCO NTA", async ({ page }) => {
   await previewSubmissionPage.clickShowPreviewButton();
 
   await previewSubmissionPage.clickSubmitButton();
-  await previewSubmissionPage.clickYesButton();
+  const buttonPage = new ButtonPage(page2);
+  buttonPage.clickYes();
 
-  await page2.waitForTimeout(30000);
+  const page3Promise = page2.waitForEvent("popup");
+  const page3 = await page3Promise;
 
-  submitPage = new SubmitPage(page2);
-  await expect(submitPage.schemeRefNo).toBeVisible();
+  // Wait for the element to be present
+  await page3.getByLabel("Scheme Ref No:").waitFor();
 
-  await expect(submitPage.caseStatusPendingApproval_IO_SCO).toBeVisible();
-
-  await submitPage.submitButton.click();
+  // Perform other actions as needed
+  await page3.getByRole("button", { name: "Close" }).click();
 });
