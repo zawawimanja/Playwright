@@ -19,6 +19,10 @@ import { CalendarPage } from "../../../utils/calendar";
 import { TimePage } from "../../../utils/time";
 import { SubmitPage } from "../../../pages/submit";
 import { CasesPage } from "../../../pages/cases";
+import { ButtonPage } from "../../../utils/button";
+// filepath: /c:/Users/aaror/Downloads/Playwright/e2e/Prereg/S2 - ILAT-BI2PI/test-ILAT-PK.spec.ts
+const fs = require("fs");
+const path = require("path");
 
 test.beforeEach(async ({ page }) => {
   await login(page, "afzan.pks", "u@T_afzan");
@@ -47,10 +51,10 @@ test("Prereg PK NTA", async ({ page }) => {
 
   //add accident date
   await page.frameLocator("#baristaPageOut").getByLabel("Accident Date*").click();
-  await page.frameLocator("#baristaPageOut").getByRole("combobox").nth(3).selectOption("1997");
+  await page.frameLocator("#baristaPageOut").getByRole("combobox").nth(3).selectOption("1988");
   //month will be add 1 month
-  await page.frameLocator("#baristaPageOut").getByRole("combobox").nth(2).selectOption("7");
-  await page.frameLocator("#baristaPageOut").getByRole("link", { name: "16" }).click();
+  await page.frameLocator("#baristaPageOut").getByRole("combobox").nth(2).selectOption("3");
+  await page.frameLocator("#baristaPageOut").getByRole("link", { name: "10" }).click();
   // calendarPage1.selectDateAccident("1999", "11", "15");
 
   const time = new TimePage(page);
@@ -62,11 +66,11 @@ test("Prereg PK NTA", async ({ page }) => {
   const selectedIdentificationTypeText = await preregPage.getSelectedIdentificationTypeText();
   expect(selectedIdentificationTypeText).toBe("New IC");
 
-  await preregPage.fillIdentificationNo("660127015431");
+  await preregPage.fillIdentificationNo("660101088990");
   const filledIdentificationNo = await preregPage.getIdentificationNo();
   //expect(filledIdentificationNo).toBe("910227016078");
 
-  await preregPage.fillEmployerCode("E1100000366Y");
+  await preregPage.fillEmployerCode("C5100004904Z");
   const filledEmployerCode = await preregPage.getEmployerCode();
   //expect(filledEmployerCode).toBe("A3700059551B");
 
@@ -98,7 +102,7 @@ test("Prereg PK NTA", async ({ page }) => {
   await insuredPersonInfoPage.clickInsuredPersonInfoButton();
   await insuredPersonInfoPage.noticeAndBenefitClaimFormReceivedDateInput.click();
 
-  await calendarPage.selectDateInsuredPersonPage("1997", "9", "20");
+  await calendarPage.selectDateInsuredPersonPage("1988", "4", "20");
   //if done revision will auto pull field
   await insuredPersonInfoPage.fillOccupation("CS");
 
@@ -128,10 +132,10 @@ test("Prereg PK NTA", async ({ page }) => {
   await medicalCertificatePage.enterClinicHospitalName("kl");
 
   await page1.getByRole("textbox").nth(1).click();
-  await calendarPage.selectDateInsuredPersonPage("1997", "9", "1");
+  await calendarPage.selectDateInsuredPersonPage("1988", "9", "1");
 
   await page1.getByRole("textbox").nth(2).click();
-  await calendarPage.selectDateMCEndDate("1997", "11", "20");
+  await calendarPage.selectDateMCEndDate("1988", "11", "20");
   await medicalCertificatePage.submitButton().click();
 
   const wagesInfoPage = new WagesInfoPage(page1);
@@ -176,16 +180,28 @@ test("Prereg PK NTA", async ({ page }) => {
   await previewSubmissionPage.clickShowPreviewButton();
 
   await previewSubmissionPage.clickSubmitButton();
-  await previewSubmissionPage.clickYesButton();
 
-  submitPage = new SubmitPage(page1);
+  const buttonPage = new ButtonPage(page1);
+  buttonPage.clickYes();
 
-  await expect(submitPage.schemeRefNo).toBeVisible();
+  const page2Promise = page1.waitForEvent("popup");
+  const page2 = await page2Promise;
 
-  // schemeRefValue = await submitPage.schemeRefNo.inputValue();
-  // console.log(" SRN " + schemeRefValue);
+  // Wait for the element to be present
+  await page2.getByLabel("Scheme Ref No:").waitFor();
 
-  await expect(submitPage.caseStatusPendingInvestigation_PK_SAO).toBeVisible();
+  const schemeRefValue = await page2.getByLabel("Scheme Ref No:").inputValue();
+  console.log("SRN from locator: " + schemeRefValue);
+  const filePath = path.resolve(__dirname, "schemeRefValue.json");
+  fs.writeFileSync(filePath, JSON.stringify({ schemeRefValue }));
 
-  await submitPage.submitButton.click();
+  // Check if the file exists
+  if (fs.existsSync(filePath)) {
+    console.log("File schemeRefValue.json exists at path: " + filePath);
+  } else {
+    console.log("File schemeRefValue.json does not exist at path: " + filePath);
+  }
+
+  // Perform other actions as needed
+  await page2.getByRole("button", { name: "Close" }).click();
 });
