@@ -33,7 +33,7 @@ export class PreregistrationPage {
     return this.baristaPageOut.locator("#NoticeTypePreReg");
   }
 
-  private get noticeAndBenefitClaimFormSelect() {
+  get noticeAndBenefitClaimFormSelect() {
     return this.baristaPageOut.getByLabel("Notice and Benefit Claim Form");
   }
 

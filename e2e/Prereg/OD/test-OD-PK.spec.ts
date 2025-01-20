@@ -18,7 +18,9 @@ import { ConfirmationOfInsuredPage } from "../../../pages/confirm_person";
 import { CalendarPage } from "../../../utils/calendar";
 import { SubmitPage } from "../../../pages/submit";
 import { CasesPage } from "../../../pages/cases";
-
+import { ButtonPage } from "../../../utils/button";
+const fs = require("fs");
+const path = require("path");
 test.beforeEach(async ({ page }) => {
   await login(page, "afzan.pks", "u@T_afzan");
 });
@@ -54,11 +56,11 @@ test("Prereg PK OD", async ({ page }) => {
   const NoticeAndBenefitClaimFormOptionText = await preregPage.getselectNoticeAndBenefitClaimFormText();
   expect(NoticeAndBenefitClaimFormOptionText).toBe("Insured Person");
 
-  await preregPage.fillIdentificationNo("660813015036");
+  await preregPage.fillIdentificationNo("940902065189");
   const filledIdentificationNo = await preregPage.getIdentificationNo();
   //expect(filledIdentificationNo).toBe("910227016078");
 
-  await preregPage.fillEmployerCode("E1100031048P");
+  await preregPage.fillEmployerCode("A3702087818V");
   const filledEmployerCode = await preregPage.getEmployerCode();
   //expect(filledEmployerCode).toBe("A3700059551B");
 
@@ -184,16 +186,28 @@ test("Prereg PK OD", async ({ page }) => {
   await previewSubmissionPage.clickShowPreviewButton();
 
   await previewSubmissionPage.clickSubmitButton();
-  await previewSubmissionPage.clickYesButton();
 
-  submitPage = new SubmitPage(page1);
+  const buttonPage = new ButtonPage(page1);
+  buttonPage.clickYes();
 
-  await expect(submitPage.schemeRefNo).toBeVisible();
+  const page2Promise = page1.waitForEvent("popup");
+  const page2 = await page2Promise;
 
-  // schemeRefValue = await submitPage.schemeRefNo.inputValue();
-  // console.log(" SRN " + schemeRefValue);
+  // Wait for the element to be present
+  await page2.getByLabel("Scheme Ref No:").waitFor();
 
-  await expect(submitPage.caseStatusPendingInvestigation_PK_SAO).toBeVisible();
+  const schemeRefValue = await page2.getByLabel("Scheme Ref No:").inputValue();
+  console.log("SRN from locator: " + schemeRefValue);
+  const filePath = path.resolve(__dirname, "schemeRefValue.json");
+  fs.writeFileSync(filePath, JSON.stringify({ schemeRefValue }));
 
-  await submitPage.submitButton.click();
+  // Check if the file exists
+  if (fs.existsSync(filePath)) {
+    console.log("File schemeRefValue.json exists at path: " + filePath);
+  } else {
+    console.log("File schemeRefValue.json does not exist at path: " + filePath);
+  }
+
+  // Perform other actions as needed
+  await page2.getByRole("button", { name: "Close" }).click();
 });

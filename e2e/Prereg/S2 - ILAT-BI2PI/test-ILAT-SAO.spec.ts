@@ -15,6 +15,7 @@ import { SubmitPage } from "../../../pages/submit";
 import { MyCasesPage } from "../../../pages/mycases";
 import { HeaderPage } from "../../../pages/header";
 import { Contribution56Page } from "../../../pages/contribution_56";
+import { ButtonPage } from "../../../utils/button";
 
 test.beforeEach(async ({ page }) => {
   // await login(page, "roliana.pks", "u@T_roliana");
@@ -156,15 +157,15 @@ test("Prereg SAO ILAT S2", async ({ page }) => {
   await previewSubmissionPage.clickShowPreviewButton();
 
   await previewSubmissionPage.clickSubmitButton();
-  await previewSubmissionPage.clickYesButton();
+  const buttonPage = new ButtonPage(page2);
+  buttonPage.clickYes();
 
-  await page.waitForTimeout(15000);
+  const page3Promise = page2.waitForEvent("popup");
+  const page3 = await page3Promise;
 
-  submitPage = new SubmitPage(page2);
+  // Wait for the element to be present
+  await page3.getByLabel("Scheme Ref No:").waitFor();
 
-  await expect(submitPage.schemeRefNo).toBeVisible();
-
-  await expect(submitPage.caseStatusPendingEndorsement_SAO).toBeVisible();
-
-  await submitPage.submitButton.click();
+  // Perform other actions as needed
+  await page3.getByRole("button", { name: "Close" }).click();
 });

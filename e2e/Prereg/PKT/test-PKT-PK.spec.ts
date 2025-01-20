@@ -13,7 +13,11 @@ import { SupportingDocumentPage } from "../../../pages/support_doc";
 import { CalendarPage } from "../../../utils/calendar";
 import { SubmitPage } from "../../../pages/submit";
 import { CasesPage } from "../../../pages/cases";
+
 import { ButtonPage } from "../../../utils/button";
+// filepath: /c:/Users/aaror/Downloads/Playwright/e2e/Prereg/S2 - ILAT-BI2PI/test-ILAT-PK.spec.ts
+const fs = require("fs");
+const path = require("path");
 
 test.beforeEach(async ({ page }) => {
   await login(page, "afzan.pks", "u@T_afzan");
@@ -44,11 +48,14 @@ test("Prereg PK PKT", async ({ page }) => {
   const selectedIdentificationTypeText = await preregPage.getSelectedIdentificationTypeText();
   expect(selectedIdentificationTypeText).toBe("New IC");
 
+  await preregPage.noticeAndBenefitClaimFormSelect.waitFor();
+
   await preregPage.selectNoticeAndBenefitClaimFormOption("Others");
+  await expect(preregPage.noticeAndBenefitClaimFormSelect).toBeVisible();
   const NoticeAndBenefitClaimFormOptionText = await preregPage.getselectNoticeAndBenefitClaimFormText();
   expect(NoticeAndBenefitClaimFormOptionText).toBe("Others");
 
-  await preregPage.fillIdentificationNo("820325085473");
+  await preregPage.fillIdentificationNo("881104566133");
   const filledIdentificationNo = await preregPage.getIdentificationNo();
   //expect(filledIdentificationNo).toBe("910227016078");
 
@@ -62,7 +69,7 @@ test("Prereg PK PKT", async ({ page }) => {
   const pagePromise = page.waitForEvent("popup");
   await preregPage.clickNextButton();
   const page1 = await pagePromise;
-  await page1.waitForTimeout(30000);
+
   const draftPage = new DraftPage(page1);
 
   if (await draftPage.closeButton.isVisible()) {
@@ -71,17 +78,18 @@ test("Prereg PK PKT", async ({ page }) => {
   }
 
   const remarksPage = new RemarksPage(page1);
-  remarksPage.clickRemarksButton();
   await remarksPage.remarksButton.waitFor();
   await expect(remarksPage.remarksButton).toBeVisible();
   await expect(remarksPage.sectionTabs).toContainText("Remarks");
-  await remarksPage.remarksButton.waitFor();
+  remarksPage.clickRemarksButton();
+
   await remarksPage.addRemarksButton.click();
   await remarksPage.textbox.fill("test PK");
   await remarksPage.saveRemarksButton.click();
 
   const insuredPersonInfoPage = new InsuredPersonInfoPage(page1);
   const calendarPage = new CalendarPage(page1);
+  await insuredPersonInfoPage.insuredPersonInfoButton.waitFor();
   await insuredPersonInfoPage.clickInsuredPersonInfoButton();
   await insuredPersonInfoPage.noticeAndBenefitClaimFormReceivedDateInput.click();
 
@@ -145,51 +153,70 @@ test("Prereg PK PKT", async ({ page }) => {
   const button = new ButtonPage(page2);
   await button.clickSave();
 
-  await page1.locator("button").filter({ hasText: "Save" }).click();
-  await page1.getByRole("button", { name: "Close" }).click();
-
-  await page1.reload();
-  await page1.getByText("Death Notice App").click();
-
   //add fmp info
+  await page1.getByRole("button", { name: "FPM Info" }).waitFor();
   await page1.getByRole("button", { name: "FPM Info" }).click();
 
   await page1.getByRole("button", { name: "Pull Dependent" }).click();
   await page1.getByRole("button", { name: "Yes" }).click();
 
-  const wagesInfoPage = new WagesInfoPage(page1);
-  await wagesInfoPage.clickWagesInfoButton();
+  await page1.reload();
+  await page1.waitForLoadState("networkidle");
 
-  //await page2.getByRole('button', { name: 'Preferred SOCSO Office' }).click();
+  await page1.getByText("Death Notice App").waitFor();
+  await page1.getByText("Death Notice App").click();
+
+  // after refresh wages info not function ,need to manual click socso office
+  const wagesInfoPage = new WagesInfoPage(page1);
+  await wagesInfoPage.wagesInfoButton.waitFor({ state: "visible" });
+  //await wagesInfoPage.clickWagesInfoButton();
+
   const preferredSOCSOOfficePage = new PreferredSOCSOOfficePage(page1);
+  await preferredSOCSOOfficePage.preferredSOCSOOfficeButton.waitFor({ state: "visible" });
+
   await preferredSOCSOOfficePage.clickPreferredSOCSOOfficeButton();
+
   preferredSOCSOOfficePage.selectSOCSOState("200701");
   await preferredSOCSOOfficePage.selectSOCSOOffice("200419");
-
-  const button1 = new ButtonPage(page1);
-  await button1.clickSave();
 
   await page1.getByRole("button", { name: "Confirmation of Dependent/" }).click();
 
   const supportingDocumentPage = new SupportingDocumentPage(page1);
   await supportingDocumentPage.clickSupportingDocumentButton();
-  await page1.reload();
+
+  await page2.reload();
+
+  await page2.waitForTimeout(30000);
 
   const previewSubmissionPage = new PreviewSubmissionPage(page1);
   await previewSubmissionPage.clickPreviewSubmissionButton();
   await previewSubmissionPage.clickShowPreviewButton();
 
   await previewSubmissionPage.clickSubmitButton();
-  await previewSubmissionPage.clickYesButton();
 
-  submitPage = new SubmitPage(page1);
+  const buttonPage = new ButtonPage(page1);
+  //buttonPage.clickYes();
 
-  await expect(submitPage.schemeRefNo).toBeVisible();
+  buttonPage.clickYes();
 
-  // schemeRefValue = await submitPage.schemeRefNo.inputValue();
-  // console.log(" SRN " + schemeRefValue);
+  const page3Promise = page1.waitForEvent("popup");
+  const page3 = await page3Promise;
 
-  // await expect(submitPage.caseStatusPendingInvestigation_PK_SAO).toBeVisible();
+  // Wait for the element to be present
+  await page3.getByLabel("Scheme Ref No:").waitFor();
 
-  // await submitPage.submitButton.click();
+  const schemeRefValue = await page3.getByLabel("Scheme Ref No:").inputValue();
+  console.log("SRN from locator: " + schemeRefValue);
+  const filePath = path.resolve(__dirname, "schemeRefValue.json");
+  fs.writeFileSync(filePath, JSON.stringify({ schemeRefValue }));
+
+  // Check if the file exists
+  if (fs.existsSync(filePath)) {
+    console.log("File schemeRefValue.json exists at path: " + filePath);
+  } else {
+    console.log("File schemeRefValue.json does not exist at path: " + filePath);
+  }
+
+  // Perform other actions as needed
+  await page3.getByRole("button", { name: "Close" }).click();
 });

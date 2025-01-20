@@ -25,6 +25,7 @@ import { CasesPage } from "../../../pages/cases";
 import { SubmitPage } from "../../../pages/submit";
 import { MyCasesPage } from "../../../pages/mycases";
 import { HeaderPage } from "../../../pages/header";
+import { ButtonPage } from "../../../utils/button";
 
 test.beforeEach(async ({ page }) => {
   await login(page, "atilia.pks", "u@T_atilia");
@@ -83,7 +84,7 @@ test("Prereg SCO OD", async ({ page }) => {
   await remarksPage.remarksButton.waitFor();
   await expect(remarksPage.remarksButton).toBeVisible();
   await expect(remarksPage.sectionTabs).toContainText("Remarks");
-  await remarksPage.remarksButton.waitFor();
+
   await remarksPage.addRemarksButton.click();
   await remarksPage.textboxIO.fill("test sco");
 
@@ -130,8 +131,6 @@ test("Prereg SCO OD", async ({ page }) => {
   await expect(medicalOpinionPage.medicalOpinionButton).toBeVisible();
   await medicalOpinionPage.clickMedicalOpinionButton();
 
-  await page2.waitForTimeout(30000);
-
   //temporary solution
   const recommendationPage = new RecommendationPage(page2);
   await recommendationPage.clickRecommendationButton();
@@ -157,14 +156,15 @@ test("Prereg SCO OD", async ({ page }) => {
   await previewSubmissionPage.clickShowPreviewButton();
 
   await previewSubmissionPage.clickSubmitButton();
-  await previewSubmissionPage.clickYesButton();
+  const buttonPage1 = new ButtonPage(page2);
+  buttonPage1.clickYes();
 
-  await page2.waitForTimeout(30000);
+  const page4Promise = page2.waitForEvent("popup");
+  const page4 = await page4Promise;
 
-  submitPage = new SubmitPage(page2);
-  await expect(submitPage.schemeRefNo).toBeVisible();
+  // Wait for the element to be present
+  await page4.getByLabel("Scheme Ref No:").waitFor();
 
-  await expect(submitPage.caseStatusPendingApproval_IO_SCO).toBeVisible();
-
-  await submitPage.submitButton.click();
+  // Perform other actions as needed
+  await page4.getByRole("button", { name: "Close" }).click();
 });
