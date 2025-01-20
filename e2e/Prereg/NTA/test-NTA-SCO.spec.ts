@@ -53,7 +53,7 @@ test("Prereg SCO NTA", async ({ page }) => {
     // Click my cases left tab
     await leftTabPage.clickMyCases();
 
-    await casesPage.init();
+    await casesPage.init("NTA");
 
     // Check if the case exists for the current login user
     if (await myCasesPage.clickAccident("SCO")) {

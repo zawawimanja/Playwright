@@ -13,9 +13,18 @@ export class CasesPage {
     this.submitPage = submitPage;
   }
 
-  async init() {
+  async init(type: string) {
     // Use the absolute path to the JSON file
-    const filePath = "C:\\Users\\aaror\\Downloads\\Playwright\\e2e\\Prereg\\S2 - ILAT-BI2PI\\schemeRefValue.json";
+    let filePath: string = "";
+
+    switch (type) {
+      case "ILAT-BI2PI":
+        filePath = "C:\\Users\\aaror\\Downloads\\Playwright\\e2e\\Prereg\\S2 - ILAT-BI2PI\\schemeRefValue.json";
+        break;
+      case "NTA":
+        filePath = "C:\\Users\\aaror\\Downloads\\Playwright\\e2e\\Prereg\\NTA\\schemeRefValue.json";
+        break;
+    }
 
     // Check if the file exists before trying to read it
     if (fs.existsSync(filePath)) {
