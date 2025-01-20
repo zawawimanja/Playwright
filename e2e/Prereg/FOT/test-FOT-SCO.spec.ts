@@ -29,6 +29,7 @@ import { CasesPage } from "../../../pages/cases";
 import { SubmitPage } from "../../../pages/submit";
 import { MyCasesPage } from "../../../pages/mycases";
 import { HeaderPage } from "../../../pages/header";
+import { ButtonPage } from "../../../utils/button";
 
 test.beforeEach(async ({ page }) => {
   await login(page, "atilia.pks", "u@T_atilia");
@@ -140,18 +141,19 @@ test("Prereg SCO FOT", async ({ page }) => {
   await supportingDocumentPage.clickSupportingDocumentButton();
 
   const previewSubmissionPage = new PreviewSubmissionPage(page2);
-  // await previewSubmissionPage.clickPreviewSubmissionButton();
-  // await previewSubmissionPage.clickShowPreviewButton();
+  await previewSubmissionPage.clickPreviewSubmissionButton();
+  await previewSubmissionPage.clickShowPreviewButton();
 
-  // await previewSubmissionPage.clickSubmitButton();
-  // await previewSubmissionPage.clickYesButton();
+  await previewSubmissionPage.clickSubmitButton();
+  const buttonPage = new ButtonPage(page2);
+  buttonPage.clickYes();
 
-  await page2.waitForTimeout(30000);
+  const page3Promise = page2.waitForEvent("popup");
+  const page3 = await page3Promise;
 
-  submitPage = new SubmitPage(page2);
-  await expect(submitPage.schemeRefNo).toBeVisible();
+  // Wait for the element to be present
+  await page3.getByLabel("Scheme Ref No:").waitFor();
 
-  await expect(submitPage.caseStatusPendingApproval_IO_SCO).toBeVisible();
-
-  await submitPage.submitButton.click();
+  // Perform other actions as needed
+  await page3.getByRole("button", { name: "Close" }).click();
 });

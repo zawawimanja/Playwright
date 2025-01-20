@@ -184,10 +184,6 @@ test("Prereg PK PKT", async ({ page }) => {
   const supportingDocumentPage = new SupportingDocumentPage(page1);
   await supportingDocumentPage.clickSupportingDocumentButton();
 
-  await page2.reload();
-
-  await page2.waitForTimeout(30000);
-
   const previewSubmissionPage = new PreviewSubmissionPage(page1);
   await previewSubmissionPage.clickPreviewSubmissionButton();
   await previewSubmissionPage.clickShowPreviewButton();
