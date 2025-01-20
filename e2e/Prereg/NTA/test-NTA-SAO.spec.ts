@@ -37,7 +37,7 @@ test("Prereg SAO NTA", async ({ page }) => {
   let submitPage = new SubmitPage(page);
   const casesPage = new CasesPage(page, submitPage);
   const myCasesPage = new MyCasesPage(page, casesPage);
-  await casesPage.init();
+  await casesPage.init("NTA");
 
   let loginUser = "roliana.pks";
   let caseFound = false;
@@ -155,8 +155,6 @@ test("Prereg SAO NTA", async ({ page }) => {
   await previewSubmissionPage.clickShowPreviewButton();
 
   await previewSubmissionPage.clickSubmitButton();
-  const buttonPage = new ButtonPage(page2);
-  buttonPage.clickYes();
 
   const page3Promise = page2.waitForEvent("popup");
   const page3 = await page3Promise;
