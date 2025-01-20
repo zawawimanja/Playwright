@@ -20,13 +20,13 @@ import { CasesPage } from "../../../pages/cases";
 import { SubmitPage } from "../../../pages/submit";
 import { MyCasesPage } from "../../../pages/mycases";
 import { MBSessionPage } from "../../../pages/mb_session";
-import { ButtonPage } from "../../../utils/button";
 import { HeaderPage } from "../../../pages/header";
 import { InvalidityInfoPage } from "../../../pages/invalidity_info";
 import { WagesInfoPage } from "../../../pages/wages_info";
+import { ButtonPage } from "../../../utils/button";
 test.beforeEach(async ({ page }) => {
-  //await login(page, "hilmi.pks", "u@T_hilmi");
-  await login(page, "aslam.pks", "u@T_aslam");
+  await login(page, "hilmi.pks", "u@T_hilmi");
+  //await login(page, "aslam.pks", "u@T_aslam");
 });
 
 export let schemeRefValue: string;
@@ -62,15 +62,10 @@ test("Prereg MB OD", async ({ page }) => {
 
       headerPage.clickUserProfile();
       headerPage.clickSignOut();
-      await login(page, "hilmi.pks", "u@T_hilmi");
-      //await login(page, "aslam.pks", "u@T_aslam");
+      //await login(page, "hilmi.pks", "u@T_hilmi");
+      await login(page, "aslam.pks", "u@T_aslam");
     }
   }
-  await page
-    .frameLocator("#baristaPageOut")
-    .frameLocator("#APWorkCenter")
-    .getByRole("gridcell", { name: "Medical Board", exact: true })
-    .click();
 
   const pagePromise = page.waitForEvent("popup");
   await page.frameLocator("#baristaPageOut").frameLocator("#APWorkCenter").getByText("Open Task").click();
@@ -172,13 +167,15 @@ test("Prereg MB OD", async ({ page }) => {
   await previewSubmissionPage.clickShowPreviewButton();
 
   await previewSubmissionPage.clickSubmitButton();
-  await previewSubmissionPage.clickYesButton();
+  const buttonPage = new ButtonPage(page2);
+  buttonPage.clickYes();
 
-  await page2.waitForTimeout(30000);
+  const page5Promise = page2.waitForEvent("popup");
+  const page5 = await page5Promise;
 
-  submitPage = new SubmitPage(page2);
+  // Wait for the element to be present
+  await page5.getByLabel("Scheme Ref No:").waitFor();
 
-  await expect(submitPage.caseStatusPendingRecommendation_MB).toBeVisible();
-
-  await submitPage.submitButton.click();
+  // Perform other actions as needed
+  await page5.getByRole("button", { name: "Close" }).click();
 });

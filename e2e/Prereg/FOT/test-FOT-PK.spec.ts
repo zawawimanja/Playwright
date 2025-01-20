@@ -15,6 +15,11 @@ import { SubmitPage } from "../../../pages/submit";
 import { CasesPage } from "../../../pages/cases";
 import { ButtonPage } from "../../../utils/button";
 import { CertificationByEmployerPage } from "../../../pages/cert_employer";
+
+// filepath: /c:/Users/aaror/Downloads/Playwright/e2e/Prereg/S2 - ILAT-BI2PI/test-ILAT-PK.spec.ts
+const fs = require("fs");
+const path = require("path");
+
 test.beforeEach(async ({ page }) => {
   await login(page, "afzan.pks", "u@T_afzan");
 });
@@ -44,7 +49,7 @@ test("Prereg PK FOT", async ({ page }) => {
   const selectedIdentificationTypeText = await preregPage.getSelectedIdentificationTypeText();
   expect(selectedIdentificationTypeText).toBe("New IC");
 
-  await preregPage.fillIdentificationNo("810412145383");
+  await preregPage.fillIdentificationNo("930801145367");
   const filledIdentificationNo = await preregPage.getIdentificationNo();
   //expect(filledIdentificationNo).toBe("910227016078");
 
@@ -65,9 +70,8 @@ test("Prereg PK FOT", async ({ page }) => {
 
   const draftPage = new DraftPage(page1);
 
-  await draftPage.closeButton.waitFor();
-
   if (await draftPage.closeButton.isVisible()) {
+    await draftPage.closeButton.waitFor();
     await draftPage.clickCloseButton();
   }
 
@@ -195,18 +199,29 @@ test("Prereg PK FOT", async ({ page }) => {
   const previewSubmissionPage = new PreviewSubmissionPage(page1);
   await previewSubmissionPage.clickPreviewSubmissionButton();
   await previewSubmissionPage.clickShowPreviewButton();
-
   await previewSubmissionPage.clickSubmitButton();
-  await previewSubmissionPage.clickYesButton();
 
-  submitPage = new SubmitPage(page1);
+  const buttonPage = new ButtonPage(page1);
+  buttonPage.clickYes();
 
-  await expect(submitPage.schemeRefNo).toBeVisible();
+  const page3Promise = page1.waitForEvent("popup");
+  const page3 = await page3Promise;
 
-  // schemeRefValue = await submitPage.schemeRefNo.inputValue();
-  // console.log(" SRN " + schemeRefValue);
+  // Wait for the element to be present
+  await page3.getByLabel("Scheme Ref No:").waitFor();
 
-  // await expect(submitPage.caseStatusPendingInvestigation_PK_SAO).toBeVisible();
+  const schemeRefValue = await page3.getByLabel("Scheme Ref No:").inputValue();
+  console.log("SRN from locator: " + schemeRefValue);
+  const filePath = path.resolve(__dirname, "schemeRefValue.json");
+  fs.writeFileSync(filePath, JSON.stringify({ schemeRefValue }));
 
-  // await submitPage.submitButton.click();
+  // Check if the file exists
+  if (fs.existsSync(filePath)) {
+    console.log("File schemeRefValue.json exists at path: " + filePath);
+  } else {
+    console.log("File schemeRefValue.json does not exist at path: " + filePath);
+  }
+
+  // Perform other actions as needed
+  await page3.getByRole("button", { name: "Close" }).click();
 });

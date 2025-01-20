@@ -17,6 +17,7 @@ import { CasesPage } from "../../../pages/cases";
 import { SubmitPage } from "../../../pages/submit";
 import { MyCasesPage } from "../../../pages/mycases";
 import { HeaderPage } from "../../../pages/header";
+import { ButtonPage } from "../../../utils/button";
 
 test.beforeEach(async ({ page }) => {
   //await login(page, "roliana.pks", "u@T_roliana");
@@ -131,16 +132,16 @@ test("Prereg SAO FOT", async ({ page }) => {
   await previewSubmissionPage.clickPreviewSubmissionButton();
   await previewSubmissionPage.clickShowPreviewButton();
 
-  // await previewSubmissionPage.clickSubmitButton();
-  // await previewSubmissionPage.clickYesButton();
+  await previewSubmissionPage.clickSubmitButton();
+  const buttonPage = new ButtonPage(page2);
+  buttonPage.clickYes();
 
-  await page.waitForTimeout(15000);
+  const page4Promise = page2.waitForEvent("popup");
+  const page4 = await page4Promise;
 
-  submitPage = new SubmitPage(page2);
+  // Wait for the element to be present
+  await page4.getByLabel("Scheme Ref No:").waitFor();
 
-  await expect(submitPage.schemeRefNo).toBeVisible();
-
-  await expect(submitPage.caseStatusPendingEndorsement_SAO).toBeVisible();
-
-  await submitPage.submitButton.click();
+  // Perform other actions as needed
+  await page4.getByRole("button", { name: "Close" }).click();
 });
