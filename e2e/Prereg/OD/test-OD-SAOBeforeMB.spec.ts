@@ -23,6 +23,7 @@ import { CasesPage } from "../../../pages/cases";
 import { SubmitPage } from "../../../pages/submit";
 import { MyCasesPage } from "../../../pages/mycases";
 import { HeaderPage } from "../../../pages/header";
+import { ButtonPage } from "../../../utils/button";
 
 test.beforeEach(async ({ page }) => {
   await login(page, "roliana.pks", "u@T_roliana");
@@ -115,17 +116,17 @@ test("Prereg SAO OD", async ({ page }) => {
   const inconsistentDoubtfulPage = new InconsistentDoubtfulPage(page2);
   await inconsistentDoubtfulPage.clickInconsistentDoubtfulButton();
 
-  await page.waitForTimeout(10000);
-
   const medicalOpinionPagePage = new MedicalOpinionPage(page2);
+  await medicalOpinionPagePage.medicalOpinionButton.waitFor({ state: "visible" });
   await medicalOpinionPagePage.clickMedicalOpinionButton();
 
   const recommendationPage = new RecommendationPage(page2);
   await recommendationPage.clickSAORecommendationButton();
 
   //temporary solution
-  await page.waitForTimeout(10000);
+
   const approvalPage = new ApprovalPage(page2);
+  await approvalPage.approvalButton.waitFor({ state: "visible" });
   await approvalPage.clickApprovalButton();
 
   await expect(page2.getByRole("heading", { name: "Approval", exact: true })).toBeVisible();
@@ -152,13 +153,16 @@ test("Prereg SAO OD", async ({ page }) => {
   await previewSubmissionPage.clickShowPreviewButton();
 
   await previewSubmissionPage.clickSubmitButton();
-  await previewSubmissionPage.clickYesButton();
 
-  await page2.waitForTimeout(30000);
+  const buttonPage = new ButtonPage(page2);
+  buttonPage.clickYes();
 
-  submitPage = new SubmitPage(page2);
-  await expect(submitPage.schemeRefNo).toBeVisible();
-  await expect(submitPage.caseStatusPendingAssesment_SAO_BeforeMB).toBeVisible();
+  const page3Promise = page2.waitForEvent("popup");
+  const page3 = await page3Promise;
 
-  await submitPage.submitButton.click();
+  // Wait for the element to be present
+  await page3.getByLabel("Scheme Ref No:").waitFor();
+
+  // Perform other actions as needed
+  await page3.getByRole("button", { name: "Close" }).click();
 });

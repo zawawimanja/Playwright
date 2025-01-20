@@ -132,10 +132,6 @@ test("Prereg SAO NTA", async ({ page }) => {
   //add wages information page
   const wagesInfoPage = new WagesInfoPage(page2);
   await wagesInfoPage.clickWagesInfoButton();
-  //loop 6 times method below
-  // for (let i = 0; i < 6; i++) {
-  //   await wagesInfoPage.acceptwagesInfo.nth(i).selectOption("Yes");
-  // }
 
   //add  medical certificate page
   const medicalCertificatePage = new MedicalCertificatePage(page2);

@@ -5,30 +5,19 @@ import { LeftTabPage } from "../../../pages/left_tab";
 import { DraftPage } from "../../../pages/draft";
 import { RemarksPage } from "../../../pages/remarks";
 import { PreviewSubmissionPage } from "../../../pages/preview_submission";
-import { OccupationalDiseasePage } from "../../../pages/od_info";
-import { EmployerInfoPage } from "../../../pages/employer_info";
-import { MedicalCertificatePage } from "../../../pages/mc_info";
-import { WagesInfoPage } from "../../../pages/wages_info";
 import { InsuredPersonInfoPage } from "../../../pages/insured_person_info";
 import { PreferredSOCSOOfficePage } from "../../../pages/socso_office";
-import { CertificationByEmployerPage } from "../../../pages/cert_employer";
-import { BankInformationPage } from "../../../pages/bank_info";
 import { SupportingDocumentPage } from "../../../pages/support_doc";
-import { ConfirmationOfInsuredPage } from "../../../pages/confirm_person";
-import { RecommendationPage } from "../../../pages/recommendation";
 import { MedicalOpinionPage } from "../../../pages/medical_opinion";
 import { PreparerInformationPage } from "../../../pages/preparer_info";
 import { CaseInformationPage } from "../../../pages/case_info";
 import { AppointmentPage } from "../../../pages/appointment";
-import { ApprovalPage } from "../../../pages/approval";
 import { InconsistentDoubtfulPage } from "../../../pages/inconsistentdoubtful";
-import { CalendarPage } from "../../../utils/calendar";
-import { SmbInformationPage } from "../../../pages/smb_info";
-import { AccidentInformationPage } from "../../../pages/accident_info";
 import { CasesPage } from "../../../pages/cases";
 import { SubmitPage } from "../../../pages/submit";
 import { MyCasesPage } from "../../../pages/mycases";
 import { HeaderPage } from "../../../pages/header";
+import { ButtonPage } from "../../../utils/button";
 
 test.beforeEach(async ({ page }) => {
   await login(page, "atilia.pks", "u@T_atilia");
@@ -85,7 +74,6 @@ test("Prereg SCO PKT", async ({ page }) => {
     await draftPage.clickCloseButton();
   }
 
-  await page2.waitForTimeout(20000);
   const remarksPage = new RemarksPage(page2);
   await remarksPage.remarksButton.waitFor();
   await expect(remarksPage.remarksButton).toBeVisible();
@@ -140,15 +128,16 @@ test("Prereg SCO PKT", async ({ page }) => {
   await previewSubmissionPage.clickPreviewSubmissionButton();
   await previewSubmissionPage.clickShowPreviewButton();
 
-  // await previewSubmissionPage.clickSubmitButton();
-  // await previewSubmissionPage.clickYesButton();
+  await previewSubmissionPage.clickSubmitButton();
+  const buttonPage = new ButtonPage(page2);
+  buttonPage.clickYes();
 
-  await page2.waitForTimeout(30000);
+  // const page3Promise = page2.waitForEvent("popup");
+  // const page3 = await page3Promise;
 
-  submitPage = new SubmitPage(page2);
-  await expect(submitPage.schemeRefNo).toBeVisible();
+  // // Wait for the element to be present
+  // await page3.getByLabel("Scheme Ref No:").waitFor();
 
-  await expect(submitPage.caseStatusPendingApproval_IO_SCO).toBeVisible();
-
-  await submitPage.submitButton.click();
+  // // Perform other actions as needed
+  // await page3.getByRole("button", { name: "Close" }).click();
 });

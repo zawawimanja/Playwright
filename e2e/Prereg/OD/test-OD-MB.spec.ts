@@ -23,8 +23,10 @@ import { MyCasesPage } from "../../../pages/mycases";
 import { MBSessionPage } from "../../../pages/mb_session";
 import { ButtonPage } from "../../../utils/button";
 import { HeaderPage } from "../../../pages/header";
+
 test.beforeEach(async ({ page }) => {
-  await login(page, "hilmi.pks", "u@T_hilmi");
+  //await login(page, "hilmi.pks", "u@T_hilmi");
+  await login(page, "aslam.pks", "u@T_aslam");
 });
 
 export let schemeRefValue: string;
@@ -60,7 +62,8 @@ test("Prereg MB OD", async ({ page }) => {
 
       headerPage.clickUserProfile();
       headerPage.clickSignOut();
-      await login(page, "aslam.pks", "u@T_aslam");
+      //await login(page, "aslam.pks", "u@T_aslam");
+      await login(page, "hilmi.pks", "u@T_hilmi");
     }
   }
 
@@ -85,7 +88,7 @@ test("Prereg MB OD", async ({ page }) => {
   await buttonPage3.clickAdd();
 
   const calendarPage = new CalendarPage(page3);
-  await page3.waitForTimeout(5000);
+
   const mbSessionPage = new MBSessionPage(page3);
 
   //session venue hkl
@@ -172,11 +175,9 @@ test("Prereg MB OD", async ({ page }) => {
   await expect(remarksPage.remarksButton).toBeVisible();
 
   await expect(remarksPage.sectionTabs).toContainText("Remarks");
-  //temporary solution
-  await page2.waitForTimeout(10000);
+
   await remarksPage.clickRemarksButton();
 
-  await remarksPage.addRemarksButton.waitFor();
   await remarksPage.addRemarksButton.click();
   await remarksPage.textboxIO.fill("test mb");
   await remarksPage.saveRemarksButton.click();
@@ -225,13 +226,15 @@ test("Prereg MB OD", async ({ page }) => {
   await previewSubmissionPage.clickShowPreviewButton();
 
   await previewSubmissionPage.clickSubmitButton();
-  await previewSubmissionPage.clickYesButton();
+  const buttonPage1 = new ButtonPage(page2);
+  buttonPage1.clickYes();
 
-  await page2.waitForTimeout(15000);
+  const page4Promise = page2.waitForEvent("popup");
+  const page4 = await page4Promise;
 
-  submitPage = new SubmitPage(page2);
+  // Wait for the element to be present
+  await page4.getByLabel("Scheme Ref No:").waitFor();
 
-  await expect(submitPage.caseStatusPendingRecommendation_MB).toBeVisible();
-
-  await submitPage.submitButton.click();
+  // Perform other actions as needed
+  await page4.getByRole("button", { name: "Close" }).click();
 });

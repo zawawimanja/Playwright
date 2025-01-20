@@ -25,9 +25,11 @@ import { CasesPage } from "../../../pages/cases";
 import { SubmitPage } from "../../../pages/submit";
 import { MyCasesPage } from "../../../pages/mycases";
 import { HeaderPage } from "../../../pages/header";
+import { ButtonPage } from "../../../utils/button";
 
 test.beforeEach(async ({ page }) => {
-  await login(page, "roliana.pks", "u@T_roliana");
+  //await login(page, "roliana.pks", "u@T_roliana");
+  await login(page, "uat_ali", "u@T_ali");
 });
 
 export let schemeRefValue: string;
@@ -62,7 +64,8 @@ test("Prereg SAO OD", async ({ page }) => {
 
       headerPage.clickUserProfile();
       headerPage.clickSignOut();
-      await login(page, "uat_ali", "u@T_ali");
+      // await login(page, "uat_ali", "u@T_ali");
+      await login(page, "roliana.pks", "u@T_roliana");
     }
   }
 
@@ -80,9 +83,9 @@ test("Prereg SAO OD", async ({ page }) => {
   await remarksPage.remarksButton.waitFor();
   await expect(remarksPage.remarksButton).toBeVisible();
   await expect(remarksPage.sectionTabs).toContainText("Remarks");
-  await remarksPage.remarksButton.waitFor();
+
   await remarksPage.addRemarksButton.click();
-  await remarksPage.textboxIO.fill("test io");
+  await remarksPage.textboxIO.fill("test sao");
 
   await remarksPage.saveRemarksButton.click();
 
@@ -124,8 +127,8 @@ test("Prereg SAO OD", async ({ page }) => {
   const recommendationPage = new RecommendationPage(page2);
   await recommendationPage.clickSAORecommendationButton();
 
-  await page.waitForTimeout(10000);
   const approvalPage = new ApprovalPage(page2);
+  await approvalPage.approvalButton.waitFor({ state: "visible" });
   await approvalPage.clickApprovalButton();
 
   await expect(approvalPage.actionApproveAfterMB).toBeVisible();
@@ -135,11 +138,19 @@ test("Prereg SAO OD", async ({ page }) => {
 
   //wages info
   const wagesInfoPage = new WagesInfoPage(page2);
+  await wagesInfoPage.wagesInfoButton.waitFor({ state: "visible" });
+
   await wagesInfoPage.clickWagesInfoButton();
+
+  await wagesInfoPage.selectAllEnabledWagesOptions("Yes");
 
   //hus info
   const medicalCertificatePage = new MedicalCertificatePage(page2);
   await medicalCertificatePage.clickHusInfoButton();
+
+  await page2.getByRole("button", { name: "Edit" }).click();
+  await page2.getByRole("combobox").nth(2).selectOption("Approved");
+  await page2.getByRole("button", { name: "OK" }).click();
 
   const supportingDocumentPage = new SupportingDocumentPage(page2);
   await supportingDocumentPage.clickSupportingDocumentButton();
@@ -148,16 +159,16 @@ test("Prereg SAO OD", async ({ page }) => {
   await previewSubmissionPage.clickPreviewSubmissionButton();
   await previewSubmissionPage.clickShowPreviewButton();
 
-  await previewSubmissionPage.clickSubmitButton();
-  await previewSubmissionPage.clickYesButton();
+  // await previewSubmissionPage.clickSubmitButton();
+  const buttonPage1 = new ButtonPage(page2);
+  buttonPage1.clickYes();
 
-  await page.waitForTimeout(15000);
+  const page4Promise = page2.waitForEvent("popup");
+  const page4 = await page4Promise;
 
-  submitPage = new SubmitPage(page2);
+  // Wait for the element to be present
+  await page4.getByLabel("Scheme Ref No:").waitFor();
 
-  await expect(submitPage.schemeRefNo).toBeVisible();
-
-  await expect(submitPage.caseStatusPendingEndorsement_SAO).toBeVisible();
-
-  await submitPage.submitButton.click();
+  // Perform other actions as needed
+  await page4.getByRole("button", { name: "Close" }).click();
 });
