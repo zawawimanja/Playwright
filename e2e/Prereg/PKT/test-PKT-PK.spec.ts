@@ -55,7 +55,7 @@ test("Prereg PK PKT", async ({ page }) => {
   const NoticeAndBenefitClaimFormOptionText = await preregPage.getselectNoticeAndBenefitClaimFormText();
   expect(NoticeAndBenefitClaimFormOptionText).toBe("Others");
 
-  await preregPage.fillIdentificationNo("881104566133");
+  await preregPage.fillIdentificationNo("830330145273");
   const filledIdentificationNo = await preregPage.getIdentificationNo();
   //expect(filledIdentificationNo).toBe("910227016078");
 

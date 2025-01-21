@@ -56,11 +56,11 @@ test("Prereg PK OD", async ({ page }) => {
   const NoticeAndBenefitClaimFormOptionText = await preregPage.getselectNoticeAndBenefitClaimFormText();
   expect(NoticeAndBenefitClaimFormOptionText).toBe("Insured Person");
 
-  await preregPage.fillIdentificationNo("940902065189");
+  await preregPage.fillIdentificationNo("800714065187");
   const filledIdentificationNo = await preregPage.getIdentificationNo();
   //expect(filledIdentificationNo).toBe("910227016078");
 
-  await preregPage.fillEmployerCode("A3702087818V");
+  await preregPage.fillEmployerCode("E1100060589Z");
   const filledEmployerCode = await preregPage.getEmployerCode();
   //expect(filledEmployerCode).toBe("A3700059551B");
 
@@ -69,7 +69,7 @@ test("Prereg PK OD", async ({ page }) => {
   const pagePromise = page.waitForEvent("popup");
   await preregPage.clickNextButton();
   const page1 = await pagePromise;
-  await page1.waitForTimeout(30000);
+
   const draftPage = new DraftPage(page1);
 
   if (await draftPage.closeButton.isVisible()) {
@@ -82,7 +82,7 @@ test("Prereg PK OD", async ({ page }) => {
   await remarksPage.remarksButton.waitFor();
   await expect(remarksPage.remarksButton).toBeVisible();
   await expect(remarksPage.sectionTabs).toContainText("Remarks");
-  await remarksPage.remarksButton.waitFor();
+
   await remarksPage.addRemarksButton.click();
   await remarksPage.textbox.fill("test");
   await remarksPage.saveRemarksButton.click();
@@ -92,7 +92,7 @@ test("Prereg PK OD", async ({ page }) => {
   await insuredPersonInfoPage.clickInsuredPersonInfoButton();
   await insuredPersonInfoPage.noticeAndBenefitClaimFormReceivedDateInput.click();
 
-  await calendarPage.selectDateInsuredPersonPage("2007", "8", "11");
+  await calendarPage.selectDateInsuredPersonPage("2017", "9", "5");
   await insuredPersonInfoPage.fillOccupation("CS");
   await insuredPersonInfoPage.selectOccupation("1000002");
   await insuredPersonInfoPage.selectSubOccupation("1001132");
@@ -125,10 +125,10 @@ test("Prereg PK OD", async ({ page }) => {
   await medicalCertificatePage.enterClinicHospitalName("kl");
 
   await page1.getByRole("textbox").nth(1).click();
-  await calendarPage.selectDateInsuredPersonPage("2007", "10", "10");
+  await calendarPage.selectDateInsuredPersonPage("2017", "9", "6");
 
   await page1.getByRole("textbox").nth(2).click();
-  await calendarPage.selectDateMCEndDate("2007", "12", "27");
+  await calendarPage.selectDateMCEndDate("2017", "9", "18");
   await medicalCertificatePage.submitButton().click();
 
   //2nd mc

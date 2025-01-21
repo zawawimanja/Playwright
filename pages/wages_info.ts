@@ -40,6 +40,10 @@ export class WagesInfoPage {
     await this.acceptwagesInfo.nth(i).selectOption(text);
   }
 
+  async selectWagesInfoSectionNTO(text, i) {
+    await this.acceptwagesInfoOD.nth(i).selectOption(text);
+  }
+
   async selectAllEnabledWagesOptions(text) {
     const count = await this.acceptwagesInfo.count(); // Get the number of dropdowns
     console.log(`Dropdown count: ${count}`);
@@ -64,7 +68,7 @@ export class WagesInfoPage {
       const isDisabled = await dropdown.evaluate((element) => (element as HTMLSelectElement).disabled); // Check if the dropdown is disabled
 
       if (!isDisabled) {
-        await this.selectWagesInfoSection(text, i);
+        await this.selectWagesInfoSectionNTO(text, i);
         console.log(`Selected "${text}" for enabled dropdown at index ${i}`);
       } else {
         console.warn(`Dropdown at index ${i} is disabled. Skipping selection.`);

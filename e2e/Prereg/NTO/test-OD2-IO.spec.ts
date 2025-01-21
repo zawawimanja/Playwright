@@ -38,7 +38,7 @@ test("Prereg IO OD", async ({ page }) => {
   let submitPage = new SubmitPage(page);
   const casesPage = new CasesPage(page, submitPage);
   const myCasesPage = new MyCasesPage(page, casesPage);
-  await casesPage.init();
+  await casesPage.init("NTO");
 
   let loginUser = "uat_muthu";
   let caseFound = false;

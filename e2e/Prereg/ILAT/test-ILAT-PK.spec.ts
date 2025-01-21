@@ -26,7 +26,7 @@ test.beforeEach(async ({ page }) => {
 
 export let schemeRefValue: string;
 
-test("Prereg PK OD", async ({ page }) => {
+test("Prereg PK ILAT", async ({ page }) => {
   const preregPage = new PreregistrationPage(page);
   const leftTabPage = new LeftTabPage(page);
   let submitPage = new SubmitPage(page);
@@ -47,7 +47,7 @@ test("Prereg PK OD", async ({ page }) => {
   const selectedIdentificationTypeText = await preregPage.getSelectedIdentificationTypeText();
   expect(selectedIdentificationTypeText).toBe("New IC");
 
-  await preregPage.fillIdentificationNo("930801145367");
+  await preregPage.fillIdentificationNo("860510125138");
   const filledIdentificationNo = await preregPage.getIdentificationNo();
   // expect(filledIdentificationNo).toBe("960618145171");
 
@@ -60,7 +60,6 @@ test("Prereg PK OD", async ({ page }) => {
   const pagePromise = page.waitForEvent("popup");
   await preregPage.clickNextButton();
   const page1 = await pagePromise;
-  await page1.waitForTimeout(15000);
   const draftPage = new DraftPage(page1);
 
   if (await draftPage.closeButton.isVisible()) {
@@ -78,12 +77,15 @@ test("Prereg PK OD", async ({ page }) => {
   // await remarksPage.textbox.fill("test");
   // await remarksPage.saveRemarksButton.click();
 
+  //error message
+  await page1.getByRole("button", { name: "Close" }).click();
+
   const insuredPersonInfoPage = new InsuredPersonInfoPage(page1);
   const calendarPage = new CalendarPage(page1);
   await insuredPersonInfoPage.clickInsuredPersonInfoButton();
   await insuredPersonInfoPage.noticeAndBenefitClaimFormReceivedDateInput.click();
 
-  await calendarPage.selectDateInsuredPersonPage("2021", "8", "10");
+  await calendarPage.selectDateInsuredPersonPage("2024", "11", "1");
   await insuredPersonInfoPage.fillOccupationILAT("CS");
 
   await insuredPersonInfoPage.fillAddress1("Taman Abadi");
@@ -91,13 +93,14 @@ test("Prereg PK OD", async ({ page }) => {
   await insuredPersonInfoPage.selectState("200714");
   await insuredPersonInfoPage.selectCity("201460");
   await insuredPersonInfoPage.fillPostcode("51000");
+  await insuredPersonInfoPage.selectNationalityILAT();
 
   const invalidtyInformation = new InvalidityInfoPage(page1);
 
   await invalidtyInformation.clickInvalidityInformation();
   await invalidtyInformation.selectInsuredPersonEmployment("No");
   await page1.getByLabel("Date of Cessation of").click();
-  await calendarPage.selectDateInsuredPersonPage("2021", "8", "1");
+  await calendarPage.selectDateInsuredPersonPage("2024", "10", "31");
 
   const wagesInfoPage = new WagesInfoPage(page1);
   await wagesInfoPage.clickWagesInfoButton();
