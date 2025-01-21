@@ -14,7 +14,6 @@ import { RecommendationPage } from "../../../pages/recommendation";
 import { MedicalOpinionPage } from "../../../pages/medical_opinion";
 import { PreparerInformationPage } from "../../../pages/preparer_info";
 import { CaseInformationPage } from "../../../pages/case_info";
-import { ApprovalPage } from "../../../pages/approval";
 import { InconsistentDoubtfulPage } from "../../../pages/inconsistentdoubtful";
 import { CasesPage } from "../../../pages/cases";
 import { SubmitPage } from "../../../pages/submit";
@@ -24,8 +23,8 @@ import { InvalidityInfoPage } from "../../../pages/invalidity_info";
 import { ButtonPage } from "../../../utils/button";
 
 test.beforeEach(async ({ page }) => {
-  await login(page, "roliana.pks", "u@T_roliana");
-  //await login(page, "uat_ali", "u@T_ali");
+  //await login(page, "atilia.pks", "u@T_atilia");
+  await login(page, "nazira.pks", "u@T_nazira");
 });
 
 export let schemeRefValue: string;
@@ -35,7 +34,7 @@ test("Prereg SCO OD", async ({ page }) => {
   let submitPage = new SubmitPage(page);
   const casesPage = new CasesPage(page, submitPage);
   const myCasesPage = new MyCasesPage(page, casesPage);
-  await casesPage.init();
+  await casesPage.init("NTI");
 
   let loginUser = "atilia.pks";
   let caseFound = false;
@@ -51,7 +50,7 @@ test("Prereg SCO OD", async ({ page }) => {
     await leftTabPage.clickMyCases();
 
     // Check if the case exists for the current login user
-    if (await myCasesPage.clickILAT("SAOS1")) {
+    if (await myCasesPage.clickILAT("SCO")) {
       caseFound = true;
       console.log(`Case found for user ${loginUser}`);
       break;
@@ -63,8 +62,8 @@ test("Prereg SCO OD", async ({ page }) => {
 
       headerPage.clickUserProfile();
       headerPage.clickSignOut();
-      await login(page, "uat_ali", "u@T_ali");
-      //await login(page, "roliana.pks", "u@T_roliana");
+      //await login(page, "nazira.pks", "u@T_nazira");
+      await login(page, "atilia.pks", "u@T_atilia");
     }
   }
 
@@ -98,6 +97,7 @@ test("Prereg SCO OD", async ({ page }) => {
 
   //add reference notice information
   const invalidtyInformation = new InvalidityInfoPage(page2);
+
   await invalidtyInformation.clickInvalidityInformation();
 
   const preferredSOCSOOfficePage = new PreferredSOCSOOfficePage(page2);
@@ -124,13 +124,10 @@ test("Prereg SCO OD", async ({ page }) => {
 
   //temporary solution
   const recommendationPage = new RecommendationPage(page2);
+  recommendationPage.recommendationButton.waitFor({ state: "visible" });
+
   await recommendationPage.clickRecommendationButton();
-
-  const approvalPage = new ApprovalPage(page2);
-
-  await approvalPage.approvalButton.waitFor();
-  await approvalPage.clickApprovalButton();
-  await recommendationPage.selectActionRecommendNTAILAT("10203");
+  await page2.getByLabel("Action*").selectOption("10201");
 
   const supportingDocumentPage = new SupportingDocumentPage(page2);
   await supportingDocumentPage.clickSupportingDocumentButton();
