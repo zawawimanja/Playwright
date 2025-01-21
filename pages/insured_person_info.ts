@@ -57,6 +57,11 @@ export class InsuredPersonInfoPage {
     return this.page.getByLabel("Nationality*");
   }
 
+  async selectNationalityILAT() {
+    await this.page.locator("#ctrlField590").getByRole("combobox").click();
+    await this.page.getByRole("option", { name: "Malaysia" }).click();
+  }
+
   async waitForInsuredPersonInfoButton() {
     await this.insuredPersonInfoButton.waitFor({ timeout: 60000 });
   }

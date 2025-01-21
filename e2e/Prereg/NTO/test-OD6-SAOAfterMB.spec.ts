@@ -7,39 +7,41 @@ import { RemarksPage } from "../../../pages/remarks";
 import { PreviewSubmissionPage } from "../../../pages/preview_submission";
 import { OccupationalDiseasePage } from "../../../pages/od_info";
 import { EmployerInfoPage } from "../../../pages/employer_info";
+import { MedicalCertificatePage } from "../../../pages/mc_info";
+import { WagesInfoPage } from "../../../pages/wages_info";
 import { InsuredPersonInfoPage } from "../../../pages/insured_person_info";
 import { PreferredSOCSOOfficePage } from "../../../pages/socso_office";
 import { CertificationByEmployerPage } from "../../../pages/cert_employer";
 import { SupportingDocumentPage } from "../../../pages/support_doc";
 import { ConfirmationOfInsuredPage } from "../../../pages/confirm_person";
 import { RecommendationPage } from "../../../pages/recommendation";
+import { MedicalOpinionPage } from "../../../pages/medical_opinion";
 import { PreparerInformationPage } from "../../../pages/preparer_info";
 import { CaseInformationPage } from "../../../pages/case_info";
+import { ApprovalPage } from "../../../pages/approval";
 import { InconsistentDoubtfulPage } from "../../../pages/inconsistentdoubtful";
-import { CalendarPage } from "../../../utils/calendar";
+import { SmbInformationPage } from "../../../pages/smb_info";
 import { CasesPage } from "../../../pages/cases";
 import { SubmitPage } from "../../../pages/submit";
 import { MyCasesPage } from "../../../pages/mycases";
-import { MBSessionPage } from "../../../pages/mb_session";
-import { ButtonPage } from "../../../utils/button";
 import { HeaderPage } from "../../../pages/header";
+import { ButtonPage } from "../../../utils/button";
 
 test.beforeEach(async ({ page }) => {
-  //await login(page, "hilmi.pks", "u@T_hilmi");
-  await login(page, "aslam.pks", "u@T_aslam");
+  await login(page, "roliana.pks", "u@T_roliana");
+  // await login(page, "uat_ali", "u@T_ali");
 });
 
 export let schemeRefValue: string;
-test("Prereg MB OD", async ({ page }) => {
-  let value = "";
+test("Prereg SAO OD", async ({ page }) => {
   const preregPage = new PreregistrationPage(page);
   const leftTabPage = new LeftTabPage(page);
   let submitPage = new SubmitPage(page);
   const casesPage = new CasesPage(page, submitPage);
   const myCasesPage = new MyCasesPage(page, casesPage);
-  await casesPage.init();
+  await casesPage.init("NTO");
 
-  let loginUser = "hilmi.pks";
+  let loginUser = "roliana.pks";
   let caseFound = false;
 
   while (!caseFound) {
@@ -53,7 +55,7 @@ test("Prereg MB OD", async ({ page }) => {
     await leftTabPage.clickMyCases();
 
     // Check if the case exists for the current login user
-    if (await myCasesPage.clickOD("MB")) {
+    if (await myCasesPage.clickOD("SAO")) {
       caseFound = true;
       console.log(`Case found for user ${loginUser}`);
       break;
@@ -62,8 +64,8 @@ test("Prereg MB OD", async ({ page }) => {
 
       headerPage.clickUserProfile();
       headerPage.clickSignOut();
-      //await login(page, "aslam.pks", "u@T_aslam");
-      await login(page, "hilmi.pks", "u@T_hilmi");
+      await login(page, "uat_ali", "u@T_ali");
+      //await login(page, "roliana.pks", "u@T_roliana");
     }
   }
 
@@ -77,116 +79,21 @@ test("Prereg MB OD", async ({ page }) => {
     await draftPage.clickCloseButton();
   }
 
-  await page2.getByRole("button", { name: "SMB Information" }).click();
-
-  const page3Promise = page2.waitForEvent("popup");
-  const buttonPage = new ButtonPage(page2);
-  await buttonPage.clickNew();
-
-  const page3 = await page3Promise;
-  const buttonPage3 = new ButtonPage(page3);
-  await buttonPage3.clickAdd();
-
-  const calendarPage = new CalendarPage(page3);
-
-  const mbSessionPage = new MBSessionPage(page3);
-
-  //session venue hkl
-  await mbSessionPage.selectSessionVenue("OD");
-
-  //session date
-  calendarPage.clickDate("Session Date");
-  await calendarPage.selectDateInsuredPersonPage("2021", "8", "15");
-
-  //disease 5 blank default
-  await expect(page3.getByText("Disease is in Schedule")).toBeVisible();
-  await expect(mbSessionPage.diseaseSchedule5).toContainText("Disease is in Schedule 5");
-  await mbSessionPage.selectDiseaseSchedule5();
-
-  //disease work no default
-  await mbSessionPage.selectDiseaseWork();
-
-  //mmi yes default
-  await expect(page3.getByText("MMI Achieved")).toBeVisible();
-  await expect(mbSessionPage.mmiAchieved).toContainText("MMI Achieved");
-  await mbSessionPage.selectmmiAchieved();
-
-  //desc
-  await expect(page3.getByText("Description of Disease")).toBeVisible();
-  await expect(mbSessionPage.descDisease).toContainText("Description of Disease");
-  await mbSessionPage.setdescDis();
-
-  //ass type
-  await mbSessionPage.selectAssessmentType("Final");
-
-  //check additional assesment for session assesment
-  if (await mbSessionPage.additionalAssesment.isVisible()) {
-    await mbSessionPage.setsessionAssesmentAdditionalAssessment();
-  } else {
-    await mbSessionPage.setsessionAssesment();
-  }
-
-  //Get  assessment type value
-  const selectedValue = await page3.locator("#ctrlField1026 option:checked").textContent();
-  //const selectedValue = await mbSessionPage.assessmentType.textContent();
-
-  console.log(selectedValue + " type");
-
-  //if choose provisional have assessment date
-  if (selectedValue === "Provisional") {
-    calendarPage.clickDate("Provisional Date");
-    await calendarPage.selectDateInsuredPersonPage("2022", "8", "15");
-  }
-
-  // //jd result no default
-  mbSessionPage.selectJDResult();
-
-  if (await mbSessionPage.additionalAssesment.isVisible()) {
-    value = await mbSessionPage.sessionAssesmentAdditionalAssessment.getByRole("textbox").inputValue();
-  } else {
-    value = await mbSessionPage.sessionAssesment.getByRole("textbox").inputValue();
-  }
-
-  //els
-  if (value === "100") {
-    // Perform actions if the value is "100"
-    await mbSessionPage.selectELS;
-  } else {
-    // Perform actions if the value is not "100"
-  }
-
-  // //recommendation rehab no default
-  mbSessionPage.selectrecommendationRehab();
-
-  // //remark recommendation
-  await expect(mbSessionPage.remarkRecommendation).toContainText("Remarks for Recommendation for Rehab");
-  mbSessionPage.setremarkRecommendation();
-
-  // //remarks textbox
-  await expect(page3.locator("#previewPanel")).toContainText("Remarks");
-  await mbSessionPage.setremark();
-
-  buttonPage3.clickOK();
-  buttonPage3.clickSubmit();
-  buttonPage3.clickYes();
-
   const remarksPage = new RemarksPage(page2);
   await remarksPage.remarksButton.waitFor();
   await expect(remarksPage.remarksButton).toBeVisible();
-
   await expect(remarksPage.sectionTabs).toContainText("Remarks");
 
-  await remarksPage.clickRemarksButton();
-
   await remarksPage.addRemarksButton.click();
-  await remarksPage.textboxIO.fill("test mb");
+  await remarksPage.textboxIO.fill("test sao");
+
   await remarksPage.saveRemarksButton.click();
 
   const preparerInformationPage = new PreparerInformationPage(page2);
   await preparerInformationPage.clickpreparerInformationButton();
 
   const caseInformationPage = new CaseInformationPage(page2);
-  caseInformationPage.clickCaseInformationButton();
+  await caseInformationPage.clickCaseInformationButton();
 
   const insuredPersonInfoPage = new InsuredPersonInfoPage(page2);
   await insuredPersonInfoPage.clickInsuredPersonInfoButton();
@@ -199,6 +106,7 @@ test("Prereg MB OD", async ({ page }) => {
 
   const occupationalDiseasePage = new OccupationalDiseasePage(page2);
   await occupationalDiseasePage.clickOccupationalDiseaseButton();
+  occupationalDiseasePage.selectCausativeAgentOption();
 
   const preferredSOCSOOfficePage = new PreferredSOCSOOfficePage(page2);
   await preferredSOCSOOfficePage.clickPreferredSOCSOOfficeButton();
@@ -209,19 +117,45 @@ test("Prereg MB OD", async ({ page }) => {
   const inconsistentDoubtfulPage = new InconsistentDoubtfulPage(page2);
   await inconsistentDoubtfulPage.clickInconsistentDoubtfulButton();
 
+  //smb info
+  const SMBInformationPage = new SmbInformationPage(page2);
+  await SMBInformationPage.clickSMBInfoButton();
+
+  const medicalOpinionPagePage = new MedicalOpinionPage(page2);
+  await medicalOpinionPagePage.clickMedicalOpinionButton();
+
   const recommendationPage = new RecommendationPage(page2);
-  await recommendationPage.clickRecommendationButton();
+  await recommendationPage.clickSAORecommendationButton();
+
+  const approvalPage = new ApprovalPage(page2);
+  await approvalPage.approvalButton.waitFor({ state: "visible" });
+  await approvalPage.clickApprovalButton();
+
+  await expect(approvalPage.actionApproveAfterMB).toBeVisible();
+  await approvalPage.actionApproveAfterMB.waitFor();
+
+  await approvalPage.selectSAOActionOptionAfterMB();
+
+  //wages info
+  const wagesInfoPage = new WagesInfoPage(page2);
+  await wagesInfoPage.wagesInfoButton.waitFor({ state: "visible" });
+
+  await wagesInfoPage.clickWagesInfoButton();
+
+  await wagesInfoPage.selectAllEnabledWagesOptionsOD("Yes");
+
+  //hus info
+  const medicalCertificatePage = new MedicalCertificatePage(page2);
+  await medicalCertificatePage.clickHusInfoButton();
+
+  await page2.getByRole("button", { name: "Edit" }).click();
+  await page2.getByRole("combobox").nth(2).selectOption("Approved");
+  await page2.getByRole("button", { name: "OK" }).click();
 
   const supportingDocumentPage = new SupportingDocumentPage(page2);
   await supportingDocumentPage.clickSupportingDocumentButton();
 
-  await page2.reload();
-
-  await page2.waitForTimeout(30000);
-
   const previewSubmissionPage = new PreviewSubmissionPage(page2);
-  await previewSubmissionPage.previewSubmissionButton.waitFor();
-  await expect(previewSubmissionPage.previewSubmissionButton).toBeVisible();
   await previewSubmissionPage.clickPreviewSubmissionButton();
   await previewSubmissionPage.clickShowPreviewButton();
 

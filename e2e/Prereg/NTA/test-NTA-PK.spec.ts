@@ -67,11 +67,11 @@ test("Prereg PK NTA", async ({ page }) => {
   const selectedIdentificationTypeText = await preregPage.getSelectedIdentificationTypeText();
   expect(selectedIdentificationTypeText).toBe("New IC");
 
-  await preregPage.fillIdentificationNo("910304125711");
+  await preregPage.fillIdentificationNo("931129055041");
   const filledIdentificationNo = await preregPage.getIdentificationNo();
   //expect(filledIdentificationNo).toBe("910227016078");
 
-  await preregPage.fillEmployerCode("F9600000801F");
+  await preregPage.fillEmployerCode("B3200057363Y");
   const filledEmployerCode = await preregPage.getEmployerCode();
   //expect(filledEmployerCode).toBe("A3700059551B");
 
@@ -103,7 +103,7 @@ test("Prereg PK NTA", async ({ page }) => {
   await insuredPersonInfoPage.clickInsuredPersonInfoButton();
   await insuredPersonInfoPage.noticeAndBenefitClaimFormReceivedDateInput.click();
 
-  await calendarPage.selectDateInsuredPersonPage("2023", "1", "15");
+  await calendarPage.selectDateInsuredPersonPage("2023", "4", "1");
   //if done revision will auto pull field
   await insuredPersonInfoPage.fillOccupation("CS");
 
@@ -136,7 +136,7 @@ test("Prereg PK NTA", async ({ page }) => {
   await calendarPage.selectDateInsuredPersonPage("2023", "1", "1");
 
   await page1.getByRole("textbox").nth(2).click();
-  await calendarPage.selectDateMCEndDate("2023", "1", "20");
+  await calendarPage.selectDateMCEndDate("2023", "6", "30");
   await medicalCertificatePage.submitButton().click();
 
   const wagesInfoPage = new WagesInfoPage(page1);

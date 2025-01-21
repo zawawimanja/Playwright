@@ -24,6 +24,9 @@ export class CasesPage {
       case "NTA":
         filePath = "C:\\Users\\aaror\\Downloads\\Playwright\\e2e\\Prereg\\NTA\\schemeRefValue.json";
         break;
+      case "NTO":
+        filePath = "C:\\Users\\aaror\\Downloads\\Playwright\\e2e\\Prereg\\NTO\\schemeRefValue.json";
+        break;
     }
 
     // Check if the file exists before trying to read it
