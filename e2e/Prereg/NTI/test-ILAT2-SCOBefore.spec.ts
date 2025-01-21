@@ -23,7 +23,7 @@ import { InvalidityInfoPage } from "../../../pages/invalidity_info";
 import { ButtonPage } from "../../../utils/button";
 
 test.beforeEach(async ({ page }) => {
-  //await login(page, "atilia.pks", "u@T_atilia");
+  // await login(page, "atilia.pks", "u@T_atilia");
   await login(page, "nazira.pks", "u@T_nazira");
 });
 
@@ -34,7 +34,7 @@ test("Prereg SCO OD", async ({ page }) => {
   let submitPage = new SubmitPage(page);
   const casesPage = new CasesPage(page, submitPage);
   const myCasesPage = new MyCasesPage(page, casesPage);
-  await casesPage.init();
+  await casesPage.init("NTI");
 
   let loginUser = "atilia.pks";
   let caseFound = false;
@@ -125,7 +125,7 @@ test("Prereg SCO OD", async ({ page }) => {
   //temporary solution
   const recommendationPage = new RecommendationPage(page2);
   await recommendationPage.clickRecommendationButton();
-  await page2.getByLabel("Action*").selectOption("10201");
+  await recommendationPage.selectActionRecommendNTAILAT("10207");
 
   const supportingDocumentPage = new SupportingDocumentPage(page2);
   await supportingDocumentPage.clickSupportingDocumentButton();

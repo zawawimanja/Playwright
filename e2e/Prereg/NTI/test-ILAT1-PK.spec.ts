@@ -47,7 +47,7 @@ test("Prereg PK ILAT", async ({ page }) => {
   const selectedIdentificationTypeText = await preregPage.getSelectedIdentificationTypeText();
   expect(selectedIdentificationTypeText).toBe("New IC");
 
-  await preregPage.fillIdentificationNo("860510125138");
+  await preregPage.fillIdentificationNo("890114435211");
   const filledIdentificationNo = await preregPage.getIdentificationNo();
   // expect(filledIdentificationNo).toBe("960618145171");
 
@@ -78,14 +78,21 @@ test("Prereg PK ILAT", async ({ page }) => {
   // await remarksPage.saveRemarksButton.click();
 
   //error message
-  await page1.getByRole("button", { name: "Close" }).click();
+  //if exist check close button and if not continue
+
+  // Check if the "Close" button exists and is visible
+  const closeButton = page1.getByRole("button", { name: "Close" });
+
+  if (await closeButton.isVisible()) {
+    await closeButton.click(); // Click the button if it exists
+  }
 
   const insuredPersonInfoPage = new InsuredPersonInfoPage(page1);
   const calendarPage = new CalendarPage(page1);
   await insuredPersonInfoPage.clickInsuredPersonInfoButton();
   await insuredPersonInfoPage.noticeAndBenefitClaimFormReceivedDateInput.click();
 
-  await calendarPage.selectDateInsuredPersonPage("2024", "11", "1");
+  await calendarPage.selectDateInsuredPersonPage("2020", "5", "1");
   await insuredPersonInfoPage.fillOccupationILAT("CS");
 
   await insuredPersonInfoPage.fillAddress1("Taman Abadi");
@@ -100,7 +107,7 @@ test("Prereg PK ILAT", async ({ page }) => {
   await invalidtyInformation.clickInvalidityInformation();
   await invalidtyInformation.selectInsuredPersonEmployment("No");
   await page1.getByLabel("Date of Cessation of").click();
-  await calendarPage.selectDateInsuredPersonPage("2024", "10", "31");
+  await calendarPage.selectDateInsuredPersonPage("2020", "4", "30");
 
   const wagesInfoPage = new WagesInfoPage(page1);
   await wagesInfoPage.clickWagesInfoButton();
