@@ -62,10 +62,6 @@ export class InsuredPersonInfoPage {
     await this.page.getByRole("option", { name: "Malaysia" }).click();
   }
 
-  async waitForInsuredPersonInfoButton() {
-    await this.insuredPersonInfoButton.waitFor({ timeout: 60000 });
-  }
-
   async clickInsuredPersonInfoButton() {
     await this.insuredPersonInfoButton.click();
   }
@@ -90,6 +86,10 @@ export class InsuredPersonInfoPage {
     await this.occupationInputPKT.fill(occupation);
   }
 
+  async fillOccupationILAT(occupation) {
+    await this.occupationInputILAT.fill(occupation);
+  }
+
   getSubOccupation() {
     return this.page.getByLabel("SubOccupation");
   }
@@ -108,10 +108,6 @@ export class InsuredPersonInfoPage {
 
   async selectSubOccupationalList(state) {
     await this.getSubOccupationalList().selectOption(state);
-  }
-
-  async fillOccupationILAT(occupation) {
-    await this.occupationInputILAT.fill(occupation);
   }
 
   async fillAddress(fieldNumber, value) {

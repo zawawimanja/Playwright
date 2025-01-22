@@ -77,6 +77,9 @@ test("Prereg MB OD", async ({ page }) => {
     await draftPage.clickCloseButton();
   }
 
+  await page.waitForLoadState("networkidle");
+  await page.screenshot({ path: "debug_screenshot.png" });
+
   await page2.getByRole("button", { name: "SMB Information" }).click();
 
   const page3Promise = page2.waitForEvent("popup");
@@ -96,7 +99,7 @@ test("Prereg MB OD", async ({ page }) => {
 
   //session date
   calendarPage.clickDate("Session Date");
-  await calendarPage.selectDateInsuredPersonPage("2020", "3", "11");
+  await calendarPage.selectDateInsuredPersonPage("2022", "8", "26");
 
   //disease 5 blank default
   await expect(page3.getByText("Disease is in Schedule")).toBeVisible();
@@ -217,10 +220,12 @@ test("Prereg MB OD", async ({ page }) => {
 
   await page2.reload();
 
-  // await page2.waitForTimeout(30000);
+  await page2.waitForLoadState("networkidle");
+
+  await page2.screenshot({ path: "debug_screenshot.png" });
 
   const previewSubmissionPage = new PreviewSubmissionPage(page2);
-  await previewSubmissionPage.previewSubmissionButton.waitFor();
+  await previewSubmissionPage.previewSubmissionButton.waitFor({ state: "visible" });
   await expect(previewSubmissionPage.previewSubmissionButton).toBeVisible();
   await previewSubmissionPage.clickPreviewSubmissionButton();
   await previewSubmissionPage.clickShowPreviewButton();
