@@ -164,9 +164,9 @@ test("Prereg MB OD", async ({ page }) => {
 
   await page2.reload();
 
-  await page.waitForLoadState("networkidle");
+  await page2.waitForLoadState("networkidle");
 
-  await page.screenshot({ path: "debug_screenshot.png" });
+  await page2.screenshot({ path: "debug_screenshot.png" });
 
   const previewSubmissionPage = new PreviewSubmissionPage(page2);
   await previewSubmissionPage.clickPreviewSubmissionButton();

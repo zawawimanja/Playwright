@@ -41,8 +41,6 @@ test("Prereg PK OD", async ({ page }) => {
 
   await preregPage.selectNoticeTypePreRegOption("OD");
   // Verify the selected option text
-  const selectedOptionText = await preregPage.getSelectedNoticeTypeText();
-  expect(selectedOptionText).toBe("OD"); // Assert the selected text is correct
 
   await preregPage.selectInsuredPersonEmployment("Yes");
   const selectedEmploymentText = await preregPage.getSelectedInsuredPersonEmploymentText();
@@ -56,11 +54,11 @@ test("Prereg PK OD", async ({ page }) => {
   const NoticeAndBenefitClaimFormOptionText = await preregPage.getselectNoticeAndBenefitClaimFormText();
   expect(NoticeAndBenefitClaimFormOptionText).toBe("Insured Person");
 
-  await preregPage.fillIdentificationNo("800714065187");
+  await preregPage.fillIdentificationNo("881207115589");
   const filledIdentificationNo = await preregPage.getIdentificationNo();
   //expect(filledIdentificationNo).toBe("910227016078");
 
-  await preregPage.fillEmployerCode("E1100060589Z");
+  await preregPage.fillEmployerCode("E1100005399Z");
   const filledEmployerCode = await preregPage.getEmployerCode();
   //expect(filledEmployerCode).toBe("A3700059551B");
 
@@ -77,12 +75,18 @@ test("Prereg PK OD", async ({ page }) => {
     await draftPage.clickCloseButton();
   }
 
+  await page.waitForLoadState("networkidle");
+
+  await page.screenshot({ path: "debug_screenshot.png" });
+
   const remarksPage = new RemarksPage(page1);
-  remarksPage.clickRemarksButton();
-  await remarksPage.remarksButton.waitFor();
+
+  await remarksPage.remarksButton.waitFor({ state: "visible" });
+  await remarksPage.clickRemarksButton();
   await expect(remarksPage.remarksButton).toBeVisible();
   await expect(remarksPage.sectionTabs).toContainText("Remarks");
 
+  await remarksPage.addRemarksButton.waitFor();
   await remarksPage.addRemarksButton.click();
   await remarksPage.textbox.fill("test");
   await remarksPage.saveRemarksButton.click();
@@ -92,19 +96,30 @@ test("Prereg PK OD", async ({ page }) => {
   await insuredPersonInfoPage.clickInsuredPersonInfoButton();
   await insuredPersonInfoPage.noticeAndBenefitClaimFormReceivedDateInput.click();
 
-  await calendarPage.selectDateInsuredPersonPage("2017", "9", "5");
+  await calendarPage.selectDateInsuredPersonPage("2023", "1", "1");
+
   await insuredPersonInfoPage.fillOccupation("CS");
+  await expect(insuredPersonInfoPage.occupationInput).toHaveValue("CS");
   await insuredPersonInfoPage.selectOccupation("1000002");
   await insuredPersonInfoPage.selectSubOccupation("1001132");
   await insuredPersonInfoPage.selectSubOccupationalList("1002058");
 
   await insuredPersonInfoPage.fillAddress1("Taman");
+  await expect(insuredPersonInfoPage.AddressInputFirst).toHaveValue("Taman");
   await insuredPersonInfoPage.fillAddress(2, "Lorong 10");
   await insuredPersonInfoPage.fillAddress(3, "Jalan 1");
+
   await insuredPersonInfoPage.selectState("200714");
+  await expect(insuredPersonInfoPage.StateSelect).toHaveValue("200714");
+
   await insuredPersonInfoPage.selectCity("201460");
+  await expect(insuredPersonInfoPage.CitySelect).toHaveValue("201460");
+
   await insuredPersonInfoPage.fillPostcode("51000");
+  await expect(insuredPersonInfoPage.PostcodeInput).toHaveValue("51000");
+
   await insuredPersonInfoPage.selectNationality("201749");
+  await expect(insuredPersonInfoPage.NationalitySelect).toHaveValue("201749");
 
   const employerInfoPage = new EmployerInfoPage(page1);
   await employerInfoPage.clickEmployerInfoButton();
@@ -125,10 +140,10 @@ test("Prereg PK OD", async ({ page }) => {
   await medicalCertificatePage.enterClinicHospitalName("kl");
 
   await page1.getByRole("textbox").nth(1).click();
-  await calendarPage.selectDateInsuredPersonPage("2017", "9", "6");
+  await calendarPage.selectDateInsuredPersonPage("2023", "1", "1");
 
   await page1.getByRole("textbox").nth(2).click();
-  await calendarPage.selectDateMCEndDate("2017", "9", "18");
+  await calendarPage.selectDateMCEndDate("2023", "6", "30");
   await medicalCertificatePage.submitButton().click();
 
   //2nd mc

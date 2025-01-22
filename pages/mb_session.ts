@@ -58,8 +58,8 @@ export class MBSessionPage {
     return this.page.locator("#ctrlField1032");
   }
 
-  async selectELS() {
-    await this.ELS.getByRole("combobox").selectOption("Yes");
+  async selectELS(string) {
+    await this.ELS.getByRole("combobox").selectOption(string);
   }
 
   get diseaseWork() {
@@ -139,11 +139,11 @@ export class MBSessionPage {
   }
 
   async setsessionAssesment() {
-    await this.sessionAssesment.getByRole("textbox").fill("10");
+    await this.sessionAssesment.getByRole("textbox").fill("9");
   }
 
   async setsessionAssesmentAdditionalAssessment() {
-    await this.sessionAssesmentAdditionalAssessment.getByRole("textbox").fill("10");
+    await this.sessionAssesmentAdditionalAssessment.getByRole("textbox").fill("9");
   }
 
   get additionalAssesment() {
