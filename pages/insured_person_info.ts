@@ -38,22 +38,22 @@ export class InsuredPersonInfoPage {
     return this.page.locator(`#AddressInsuredPersonInfo${fieldNumber}`);
   }
 
-  getAddressInputFirst() {
+  get AddressInputFirst() {
     return this.page.getByLabel("Address*");
   }
 
-  getStateSelect() {
+  get StateSelect() {
     return this.page.getByLabel("State*");
   }
-  getCitySelect() {
+  get CitySelect() {
     return this.page.getByLabel("City*");
   }
 
-  getPostcodeInput() {
+  get PostcodeInput() {
     return this.page.getByLabel("Postcode*");
   }
 
-  getNationalitySelect() {
+  get NationalitySelect() {
     return this.page.getByLabel("Nationality*");
   }
 
@@ -115,22 +115,22 @@ export class InsuredPersonInfoPage {
   }
 
   async fillAddress1(value) {
-    await this.getAddressInputFirst().fill(value);
+    await this.AddressInputFirst.fill(value);
   }
 
   async selectState(state) {
-    await this.getStateSelect().selectOption(state);
+    await this.StateSelect.selectOption(state);
   }
 
   async selectCity(city) {
-    await this.getCitySelect().selectOption(city);
+    await this.CitySelect.selectOption(city);
   }
 
   async fillPostcode(postcode) {
-    await this.getPostcodeInput().fill(postcode);
+    await this.PostcodeInput.fill(postcode);
   }
 
   async selectNationality(nationality) {
-    await this.getNationalitySelect().selectOption(nationality);
+    await this.NationalitySelect.selectOption(nationality);
   }
 }

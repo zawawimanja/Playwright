@@ -107,12 +107,17 @@ test("Prereg PK OD", async ({ page }) => {
   await insuredPersonInfoPage.selectSubOccupationalList("1002058");
 
   await insuredPersonInfoPage.fillAddress1("Taman");
+  await expect(insuredPersonInfoPage.AddressInputFirst).toHaveValue("Taman");
   await insuredPersonInfoPage.fillAddress(2, "Lorong 10");
   await insuredPersonInfoPage.fillAddress(3, "Jalan 1");
   await insuredPersonInfoPage.selectState("200714");
+  await expect(insuredPersonInfoPage.occupationInput).toHaveValue("200714");
   await insuredPersonInfoPage.selectCity("201460");
+  await expect(insuredPersonInfoPage.occupationInput).toHaveValue("201460");
   await insuredPersonInfoPage.fillPostcode("51000");
+  await expect(insuredPersonInfoPage.occupationInput).toHaveValue("51000");
   await insuredPersonInfoPage.selectNationality("201749");
+  await expect(insuredPersonInfoPage.occupationInput).toHaveValue("201749");
 
   const employerInfoPage = new EmployerInfoPage(page1);
   await employerInfoPage.clickEmployerInfoButton();
