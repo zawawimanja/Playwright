@@ -86,8 +86,8 @@ export class PreregistrationPage {
   }
 
   // Public method to get the selected option text
-  public async getSelectedNoticeTypeText(): Promise<string> {
-    return await this.noticeTypePreRegSelect.locator("option:checked").innerText();
+  get SelectedNoticeTypeText(): Promise<string> {
+    return this.noticeTypePreRegSelect.locator("option:checked").innerText();
   }
 
   async selectNoticeAndBenefitClaimFormOption(option: string) {

@@ -25,8 +25,8 @@ import { ButtonPage } from "../../../utils/button";
 import { HeaderPage } from "../../../pages/header";
 
 test.beforeEach(async ({ page }) => {
-  //await login(page, "hilmi.pks", "u@T_hilmi");
-  await login(page, "aslam.pks", "u@T_aslam");
+  await login(page, "hilmi.pks", "u@T_hilmi");
+  // await login(page, "aslam.pks", "u@T_aslam");
 });
 
 export let schemeRefValue: string;
@@ -62,8 +62,8 @@ test("Prereg MB OD", async ({ page }) => {
 
       headerPage.clickUserProfile();
       headerPage.clickSignOut();
-      //await login(page, "aslam.pks", "u@T_aslam");
-      await login(page, "hilmi.pks", "u@T_hilmi");
+      await login(page, "aslam.pks", "u@T_aslam");
+      //await login(page, "hilmi.pks", "u@T_hilmi");
     }
   }
 
@@ -99,7 +99,7 @@ test("Prereg MB OD", async ({ page }) => {
 
   //session date
   calendarPage.clickDate("Session Date");
-  await calendarPage.selectDateInsuredPersonPage("2022", "8", "26");
+  await calendarPage.selectDateInsuredPersonPage("2023", "1", "30");
 
   //disease 5 blank default
   await expect(page3.getByText("Disease is in Schedule")).toBeVisible();
@@ -120,7 +120,7 @@ test("Prereg MB OD", async ({ page }) => {
   await mbSessionPage.setdescDis();
 
   //ass type
-  await mbSessionPage.selectAssessmentType("Final");
+  await mbSessionPage.selectAssessmentType("Provisional");
 
   //check additional assesment for session assesment
   if (await mbSessionPage.additionalAssesment.isVisible()) {
@@ -138,7 +138,7 @@ test("Prereg MB OD", async ({ page }) => {
   //if choose provisional have assessment date
   if (selectedValue === "Provisional") {
     calendarPage.clickDate("Provisional Date");
-    await calendarPage.selectDateInsuredPersonPage("2022", "8", "15");
+    await calendarPage.selectDateInsuredPersonPage("2023", "8", "15");
   }
 
   // //jd result no default
@@ -149,11 +149,12 @@ test("Prereg MB OD", async ({ page }) => {
   } else {
     value = await mbSessionPage.sessionAssesment.getByRole("textbox").inputValue();
   }
+  console.log(value + " value");
 
   //els
   if (value === "100") {
     // Perform actions if the value is "100"
-    await mbSessionPage.selectELS;
+    await mbSessionPage.selectELS("Yes");
   } else {
     // Perform actions if the value is not "100"
   }
@@ -219,10 +220,7 @@ test("Prereg MB OD", async ({ page }) => {
   await supportingDocumentPage.clickSupportingDocumentButton();
 
   await page2.reload();
-
-  await page2.waitForLoadState("networkidle");
-
-  await page2.screenshot({ path: "debug_screenshot.png" });
+  await page2.waitForTimeout(30000);
 
   const previewSubmissionPage = new PreviewSubmissionPage(page2);
   await previewSubmissionPage.previewSubmissionButton.waitFor({ state: "visible" });

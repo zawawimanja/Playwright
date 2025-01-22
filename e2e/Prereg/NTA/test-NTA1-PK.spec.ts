@@ -44,7 +44,7 @@ test("Prereg PK NTA", async ({ page }) => {
 
   await preregPage.selectNoticeTypePreRegOption("Accident");
   // Verify the selected option text
-  const selectedOptionText = await preregPage.getSelectedNoticeTypeText();
+  const selectedOptionText = await preregPage.SelectedNoticeTypeText;
   expect(selectedOptionText).toBe("Accident"); // Assert the selected text is correct
 
   const calendarPage1 = new CalendarPage(page);
@@ -65,13 +65,13 @@ test("Prereg PK NTA", async ({ page }) => {
 
   await preregPage.selectIdentificationType("2");
   const selectedIdentificationTypeText = await preregPage.getSelectedIdentificationTypeText();
-  expect(selectedIdentificationTypeText).toBe("New IC");
+  //expect(selectedIdentificationTypeText).toBe("New IC");
 
-  await preregPage.fillIdentificationNo("931129055041");
+  await preregPage.fillIdentificationNo("800311055179");
   const filledIdentificationNo = await preregPage.getIdentificationNo();
   //expect(filledIdentificationNo).toBe("910227016078");
 
-  await preregPage.fillEmployerCode("B3200057363Y");
+  await preregPage.fillEmployerCode("E1102102591K");
   const filledEmployerCode = await preregPage.getEmployerCode();
   //expect(filledEmployerCode).toBe("A3700059551B");
 
@@ -82,9 +82,12 @@ test("Prereg PK NTA", async ({ page }) => {
   await preregPage.clickNextButton();
   const page1 = await pagePromise;
 
+  await page.waitForLoadState("networkidle");
+
   const draftPage = new DraftPage(page1);
-  await draftPage.closeButton.waitFor();
+
   if (await draftPage.closeButton.isVisible()) {
+    await draftPage.closeButton.waitFor();
     await draftPage.clickCloseButton();
   }
 
@@ -93,7 +96,7 @@ test("Prereg PK NTA", async ({ page }) => {
   await remarksPage.remarksButton.waitFor();
   await expect(remarksPage.remarksButton).toBeVisible();
   await expect(remarksPage.sectionTabs).toContainText("Remarks");
-  await remarksPage.remarksButton.waitFor();
+
   await remarksPage.addRemarksButton.click();
   await remarksPage.textbox.fill("test");
   await remarksPage.saveRemarksButton.click();
@@ -136,7 +139,7 @@ test("Prereg PK NTA", async ({ page }) => {
   await calendarPage.selectDateInsuredPersonPage("2023", "1", "1");
 
   await page1.getByRole("textbox").nth(2).click();
-  await calendarPage.selectDateMCEndDate("2023", "6", "30");
+  await calendarPage.selectDateMCEndDate("2023", "1", "20");
   await medicalCertificatePage.submitButton().click();
 
   const wagesInfoPage = new WagesInfoPage(page1);

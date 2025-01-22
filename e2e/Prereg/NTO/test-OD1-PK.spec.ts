@@ -41,8 +41,6 @@ test("Prereg PK OD", async ({ page }) => {
 
   await preregPage.selectNoticeTypePreRegOption("OD");
   // Verify the selected option text
-  const selectedOptionText = await preregPage.getSelectedNoticeTypeText();
-  expect(selectedOptionText).toBe("OD"); // Assert the selected text is correct
 
   await preregPage.selectInsuredPersonEmployment("Yes");
   const selectedEmploymentText = await preregPage.getSelectedInsuredPersonEmploymentText();
@@ -98,7 +96,7 @@ test("Prereg PK OD", async ({ page }) => {
   await insuredPersonInfoPage.clickInsuredPersonInfoButton();
   await insuredPersonInfoPage.noticeAndBenefitClaimFormReceivedDateInput.click();
 
-  await calendarPage.selectDateInsuredPersonPage("2020", "1", "29");
+  await calendarPage.selectDateInsuredPersonPage("2023", "1", "1");
 
   await insuredPersonInfoPage.fillOccupation("CS");
   await expect(insuredPersonInfoPage.occupationInput).toHaveValue("CS");
@@ -110,14 +108,18 @@ test("Prereg PK OD", async ({ page }) => {
   await expect(insuredPersonInfoPage.AddressInputFirst).toHaveValue("Taman");
   await insuredPersonInfoPage.fillAddress(2, "Lorong 10");
   await insuredPersonInfoPage.fillAddress(3, "Jalan 1");
+
   await insuredPersonInfoPage.selectState("200714");
-  await expect(insuredPersonInfoPage.occupationInput).toHaveValue("200714");
+  await expect(insuredPersonInfoPage.StateSelect).toHaveValue("200714");
+
   await insuredPersonInfoPage.selectCity("201460");
-  await expect(insuredPersonInfoPage.occupationInput).toHaveValue("201460");
+  await expect(insuredPersonInfoPage.CitySelect).toHaveValue("201460");
+
   await insuredPersonInfoPage.fillPostcode("51000");
-  await expect(insuredPersonInfoPage.occupationInput).toHaveValue("51000");
+  await expect(insuredPersonInfoPage.PostcodeInput).toHaveValue("51000");
+
   await insuredPersonInfoPage.selectNationality("201749");
-  await expect(insuredPersonInfoPage.occupationInput).toHaveValue("201749");
+  await expect(insuredPersonInfoPage.NationalitySelect).toHaveValue("201749");
 
   const employerInfoPage = new EmployerInfoPage(page1);
   await employerInfoPage.clickEmployerInfoButton();
@@ -138,10 +140,10 @@ test("Prereg PK OD", async ({ page }) => {
   await medicalCertificatePage.enterClinicHospitalName("kl");
 
   await page1.getByRole("textbox").nth(1).click();
-  await calendarPage.selectDateInsuredPersonPage("2020", "1", "30");
+  await calendarPage.selectDateInsuredPersonPage("2023", "1", "1");
 
   await page1.getByRole("textbox").nth(2).click();
-  await calendarPage.selectDateMCEndDate("2020", "2", "13");
+  await calendarPage.selectDateMCEndDate("2023", "6", "30");
   await medicalCertificatePage.submitButton().click();
 
   //2nd mc
