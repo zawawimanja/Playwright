@@ -122,7 +122,7 @@ test("Prereg SCO OD", async ({ page }) => {
   await expect(medicalOpinionPage.medicalOpinionButton).toBeVisible();
   await medicalOpinionPage.clickMedicalOpinionButton();
 
-  //temporary solution
+  //not working not click
   const recommendationPage = new RecommendationPage(page2);
   recommendationPage.recommendationButton.waitFor({ state: "visible" });
 

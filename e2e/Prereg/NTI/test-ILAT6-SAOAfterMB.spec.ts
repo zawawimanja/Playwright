@@ -127,7 +127,7 @@ test("Prereg SCO OD", async ({ page }) => {
   await recommendationPage.clickRecommendationButton();
 
   const approvalPage = new ApprovalPage(page2);
-
+  //not working not click
   await approvalPage.approvalButton.waitFor();
   await approvalPage.clickApprovalButton();
   await recommendationPage.selectActionRecommendNTAILAT("10203");

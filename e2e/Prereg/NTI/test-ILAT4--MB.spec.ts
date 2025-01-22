@@ -108,7 +108,7 @@ test("Prereg MB OD", async ({ page }) => {
 
   await expect(remarksPage.sectionTabs).toContainText("Remarks");
   //temporary solution
-  await page2.waitForTimeout(30000);
+
   await remarksPage.clickRemarksButton();
 
   // await remarksPage.addRemarksButton.waitFor();
@@ -163,6 +163,10 @@ test("Prereg MB OD", async ({ page }) => {
   await supportingDocumentPage.clickSupportingDocumentButton();
 
   await page2.reload();
+
+  await page.waitForLoadState("networkidle");
+
+  await page.screenshot({ path: "debug_screenshot.png" });
 
   const previewSubmissionPage = new PreviewSubmissionPage(page2);
   await previewSubmissionPage.clickPreviewSubmissionButton();
