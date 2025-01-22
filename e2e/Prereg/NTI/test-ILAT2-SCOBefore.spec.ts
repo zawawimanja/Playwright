@@ -23,8 +23,8 @@ import { InvalidityInfoPage } from "../../../pages/invalidity_info";
 import { ButtonPage } from "../../../utils/button";
 
 test.beforeEach(async ({ page }) => {
-  // await login(page, "atilia.pks", "u@T_atilia");
-  await login(page, "nazira.pks", "u@T_nazira");
+  await login(page, "atilia.pks", "u@T_atilia");
+  //await login(page, "nazira.pks", "u@T_nazira");
 });
 
 export let schemeRefValue: string;
@@ -62,8 +62,8 @@ test("Prereg SCO OD", async ({ page }) => {
 
       headerPage.clickUserProfile();
       headerPage.clickSignOut();
-      //await login(page, "nazira.pks", "u@T_nazira");
-      await login(page, "atilia.pks", "u@T_atilia");
+      await login(page, "nazira.pks", "u@T_nazira");
+      //await login(page, "atilia.pks", "u@T_atilia");
     }
   }
 
@@ -117,13 +117,35 @@ test("Prereg SCO OD", async ({ page }) => {
   await wagesInfoPage.clickWagesInfoButton();
   //qc
 
+  await page2.getByRole("button", { name: "Scheme Qualifying" }).click();
+
   const medicalOpinionPage = new MedicalOpinionPage(page2);
   await medicalOpinionPage.medicalOpinionButton.waitFor();
   await expect(medicalOpinionPage.medicalOpinionButton).toBeVisible();
   await medicalOpinionPage.clickMedicalOpinionButton();
 
+  await page.waitForLoadState("networkidle");
+
+  await page.screenshot({ path: "debug_screenshot.png" });
+
+  const elementState = await page.evaluate(() => {
+    const element = document.querySelector('div[name="Recommendation"][role="button"]');
+    return {
+      exists: !!element,
+      visible: element && (element as HTMLElement).offsetParent !== null,
+      disabled: element && element.getAttribute("aria-disabled") === "true",
+    };
+  });
+  console.log("Element state:", elementState);
+
+  // await page.waitForTimeout(5000); // Wait for 500ms
+  // await page.waitForFunction(() => {
+  //   const element = document.querySelector('div[name="Recommendation"][role="button"]');
+  //   return element && element.getAttribute("aria-disabled") === "false" && element.offsetParent !== null;
+  // });
   //temporary solution
   const recommendationPage = new RecommendationPage(page2);
+
   await recommendationPage.clickRecommendationButton();
   await recommendationPage.selectActionRecommendNTAILAT("10207");
 
