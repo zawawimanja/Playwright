@@ -187,7 +187,7 @@ test("Prereg PK ILAT MC Bankcrupty", async ({ page }) => {
   const selectedIdentificationTypeText = await preregPage.getSelectedIdentificationTypeText();
   expect(selectedIdentificationTypeText).toBe("New IC");
 
-  await preregPage.fillIdentificationNo("890530025561");
+  await preregPage.fillIdentificationNo("890218265181");
   const filledIdentificationNo = await preregPage.getIdentificationNo();
   // expect(filledIdentificationNo).toBe("960618145171");
 

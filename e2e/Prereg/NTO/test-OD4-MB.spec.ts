@@ -163,11 +163,9 @@ test("Prereg MB OD", async ({ page }) => {
 
   // //remark recommendation
   await expect(mbSessionPage.remarkRecommendation).toContainText("Remarks for Recommendation for Rehab");
-  mbSessionPage.setremarkRecommendation();
 
   // //remarks textbox
   await expect(page3.locator("#previewPanel")).toContainText("Remarks");
-  await mbSessionPage.setremark("test");
 
   buttonPage3.clickOK();
   buttonPage3.clickSubmit();

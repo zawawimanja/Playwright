@@ -30,7 +30,7 @@ test.beforeEach(async ({ page }) => {
 });
 
 export let schemeRefValue: string;
-test("Prereg MB OD", async ({ page }) => {
+test("Prereg MB ILAT", async ({ page }) => {
   let value = "";
   const preregPage = new PreregistrationPage(page);
   const leftTabPage = new LeftTabPage(page);
