@@ -82,6 +82,9 @@ test("Prereg MB OD", async ({ page }) => {
 
   const page4 = await page3Promise;
   await page4.getByRole("button", { name: "Add" }).click();
+
+  await page.waitForLoadState("networkidle");
+
   //session venue
   const mbSessionPage = new MBSessionPage(page4);
   await mbSessionPage.selectSessionVenue("ILAT");
@@ -89,7 +92,7 @@ test("Prereg MB OD", async ({ page }) => {
 
   const calendarPage = new CalendarPage(page4);
   calendarPage.clickDate("Session DateILAT");
-  await calendarPage.selectDateInsuredPersonPage("2021", "8", "15");
+  await calendarPage.selectDateInsuredPersonPage("2023", "1", "20");
   //result
   await mbSessionPage.setResultILat("9608101");
   //els
@@ -167,6 +170,7 @@ test("Prereg MB OD", async ({ page }) => {
   await page2.waitForLoadState("networkidle");
 
   await page2.screenshot({ path: "debug_screenshot.png" });
+  await page2.waitForTimeout(5000);
 
   const previewSubmissionPage = new PreviewSubmissionPage(page2);
   await previewSubmissionPage.clickPreviewSubmissionButton();

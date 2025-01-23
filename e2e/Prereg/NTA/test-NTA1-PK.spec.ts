@@ -30,7 +30,7 @@ test.beforeEach(async ({ page }) => {
 
 export let schemeRefValue: string;
 
-test("Prereg PK NTA", async ({ page }) => {
+test("Prereg PK NTA EFT MC", async ({ page }) => {
   const preregPage = new PreregistrationPage(page);
   const leftTabPage = new LeftTabPage(page);
   let submitPage = new SubmitPage(page);
@@ -67,11 +67,11 @@ test("Prereg PK NTA", async ({ page }) => {
   const selectedIdentificationTypeText = await preregPage.getSelectedIdentificationTypeText();
   //expect(selectedIdentificationTypeText).toBe("New IC");
 
-  await preregPage.fillIdentificationNo("800311055179");
+  await preregPage.fillIdentificationNo("841026016171");
   const filledIdentificationNo = await preregPage.getIdentificationNo();
   //expect(filledIdentificationNo).toBe("910227016078");
 
-  await preregPage.fillEmployerCode("E1102102591K");
+  await preregPage.fillEmployerCode("B3201003856Z");
   const filledEmployerCode = await preregPage.getEmployerCode();
   //expect(filledEmployerCode).toBe("A3700059551B");
 
@@ -171,6 +171,185 @@ test("Prereg PK NTA", async ({ page }) => {
   await bankInformationPage.selectBankAccountType("204401");
   await bankInformationPage.fillBankBranch("KL");
   await bankInformationPage.fillBankAccountNo("12345678");
+
+  const confirmationOfInsuredPage = new ConfirmationOfInsuredPage(page1);
+  await confirmationOfInsuredPage.clickConfirmationOfInsuredButton();
+  await confirmationOfInsuredPage.checkCompletedCheckbox();
+
+  const supportingDocumentPage = new SupportingDocumentPage(page1);
+  await supportingDocumentPage.clickSupportingDocumentButton();
+
+  const previewSubmissionPage = new PreviewSubmissionPage(page1);
+  await previewSubmissionPage.clickPreviewSubmissionButton();
+  await previewSubmissionPage.clickShowPreviewButton();
+
+  await previewSubmissionPage.clickSubmitButton();
+
+  const buttonPage = new ButtonPage(page1);
+  buttonPage.clickYes();
+
+  const page2Promise = page1.waitForEvent("popup");
+  const page2 = await page2Promise;
+
+  // Wait for the element to be present
+  await page2.getByLabel("Scheme Ref No:").waitFor();
+
+  const schemeRefValue = await page2.getByLabel("Scheme Ref No:").inputValue();
+  console.log("SRN from locator: " + schemeRefValue);
+  const filePath = path.resolve(__dirname, "schemeRefValue.json");
+  fs.writeFileSync(filePath, JSON.stringify({ schemeRefValue }));
+
+  // Check if the file exists
+  if (fs.existsSync(filePath)) {
+    console.log("File schemeRefValue.json exists at path: " + filePath);
+  } else {
+    console.log("File schemeRefValue.json does not exist at path: " + filePath);
+  }
+
+  // Perform other actions as needed
+  await page2.getByRole("button", { name: "Close" }).click();
+});
+
+test("Prereg PK NTA BankRuptcy MC", async ({ page }) => {
+  const preregPage = new PreregistrationPage(page);
+  const leftTabPage = new LeftTabPage(page);
+  let submitPage = new SubmitPage(page);
+  const casesPage = new CasesPage(page, submitPage);
+
+  await leftTabPage.leftBar.waitFor();
+  await expect(leftTabPage.leftBar).toBeVisible();
+
+  await expect(leftTabPage.preregistrationLink).toBeVisible();
+  leftTabPage.clickPreregistration();
+
+  await preregPage.selectNoticeTypePreRegOption("Accident");
+  // Verify the selected option text
+  const selectedOptionText = await preregPage.SelectedNoticeTypeText;
+  expect(selectedOptionText).toBe("Accident"); // Assert the selected text is correct
+
+  const calendarPage1 = new CalendarPage(page);
+
+  //add accident date
+  await page.frameLocator("#baristaPageOut").getByLabel("Accident Date*").click();
+  await page.frameLocator("#baristaPageOut").getByRole("combobox").nth(3).selectOption("2023");
+  //month will be add 1 month
+  await page.frameLocator("#baristaPageOut").getByRole("combobox").nth(2).selectOption("0");
+  await page.frameLocator("#baristaPageOut").getByRole("link", { name: "1", exact: true }).click();
+
+  // calendarPage1.selectDateAccident("1999", "11", "15");
+
+  const time = new TimePage(page);
+  //add accident time
+  await page.frameLocator("#baristaPageOut").getByLabel("Accident Time*").click();
+  time.selectTimeOption("12", "00", "00");
+
+  await preregPage.selectIdentificationType("2");
+  const selectedIdentificationTypeText = await preregPage.getSelectedIdentificationTypeText();
+  //expect(selectedIdentificationTypeText).toBe("New IC");
+
+  await preregPage.fillIdentificationNo("950223115761");
+  const filledIdentificationNo = await preregPage.getIdentificationNo();
+  //expect(filledIdentificationNo).toBe("910227016078");
+
+  await preregPage.fillEmployerCode("B3500001361A");
+  const filledEmployerCode = await preregPage.getEmployerCode();
+  //expect(filledEmployerCode).toBe("A3700059551B");
+
+  await page.frameLocator("#baristaPageOut").locator("#row23column2").click();
+  await preregPage.clickSearchButton();
+
+  const pagePromise = page.waitForEvent("popup");
+  await preregPage.clickNextButton();
+  const page1 = await pagePromise;
+
+  await page.waitForLoadState("networkidle");
+
+  const draftPage = new DraftPage(page1);
+
+  if (await draftPage.closeButton.isVisible()) {
+    await draftPage.closeButton.waitFor();
+    await draftPage.clickCloseButton();
+  }
+
+  const remarksPage = new RemarksPage(page1);
+  remarksPage.clickRemarksButton();
+  await remarksPage.remarksButton.waitFor();
+  await expect(remarksPage.remarksButton).toBeVisible();
+  await expect(remarksPage.sectionTabs).toContainText("Remarks");
+
+  await remarksPage.addRemarksButton.click();
+  await remarksPage.textbox.fill("test");
+  await remarksPage.saveRemarksButton.click();
+
+  const insuredPersonInfoPage = new InsuredPersonInfoPage(page1);
+  const calendarPage = new CalendarPage(page1);
+  await insuredPersonInfoPage.clickInsuredPersonInfoButton();
+  await insuredPersonInfoPage.noticeAndBenefitClaimFormReceivedDateInput.click();
+
+  await calendarPage.selectDateInsuredPersonPage("2023", "4", "1");
+  //if done revision will auto pull field
+  await insuredPersonInfoPage.fillOccupation("CS");
+
+  await insuredPersonInfoPage.fillAddress1("Taman");
+  await insuredPersonInfoPage.fillAddress(2, "Lorong 10");
+  await insuredPersonInfoPage.fillAddress(3, "Jalan 1");
+  await insuredPersonInfoPage.selectState("200714");
+  await insuredPersonInfoPage.selectCity("201460");
+  await insuredPersonInfoPage.fillPostcode("51000");
+  await insuredPersonInfoPage.selectNationality("201749");
+
+  const employerInfoPage = new EmployerInfoPage(page1);
+  await employerInfoPage.clickEmployerInfoButton();
+
+  //add Reference Notice Information
+
+  const accidentInformationPage = new AccidentInformationPage(page1);
+  await accidentInformationPage.clickAccidentInformationButton();
+  await accidentInformationPage.fillAccidentHappened("test");
+  await accidentInformationPage.fillAccidentInjury("test");
+
+  const medicalCertificatePage = new MedicalCertificatePage(page1);
+  await medicalCertificatePage.clickMedicalCertificateButton();
+
+  //1st mc
+  await medicalCertificatePage.addRecord();
+  await medicalCertificatePage.enterClinicHospitalName("kl");
+
+  await page1.getByRole("textbox").nth(1).click();
+  await calendarPage.selectDateInsuredPersonPage("2023", "1", "1");
+
+  await page1.getByRole("textbox").nth(2).click();
+  await calendarPage.selectDateMCEndDate("2023", "1", "20");
+  await medicalCertificatePage.submitButton().click();
+
+  const wagesInfoPage = new WagesInfoPage(page1);
+  await wagesInfoPage.clickWagesInfoButton();
+
+  const preferredSOCSOOfficePage = new PreferredSOCSOOfficePage(page1);
+  await preferredSOCSOOfficePage.clickPreferredSOCSOOfficeButton();
+  preferredSOCSOOfficePage.selectSOCSOState("200701");
+  await preferredSOCSOOfficePage.selectSOCSOOffice("200419");
+
+  const certificationByEmployerPage = new CertificationByEmployerPage(page1);
+  await certificationByEmployerPage.clickCertificationByEmployerButton();
+  await certificationByEmployerPage.fillName("MAT");
+  await certificationByEmployerPage.fillDesignation("CEO");
+  await certificationByEmployerPage.calendar.click();
+  await calendarPage.selectDateInsuredPersonPage("2021", "8", "11");
+
+  const bankInformationPage = new BankInformationPage(page1);
+  await bankInformationPage.clickBankInformationButton();
+
+  await bankInformationPage.accountNoSelect.waitFor();
+  await expect(bankInformationPage.accountNoSelect).toBeVisible();
+  await bankInformationPage.accountNoSelect.click();
+
+  await page1.getByLabel("Account No.*", { exact: true }).selectOption("Yes");
+  await bankInformationPage.selectAccountNo("No");
+  await page1.getByLabel("Reason*").selectOption("207301");
+  await page1.getByLabel("Insolvency Search").selectOption("1");
+  await page1.getByLabel("Insolvency State").selectOption("200701");
+  await page1.getByLabel("Insolvency Branch").selectOption("806005");
 
   const confirmationOfInsuredPage = new ConfirmationOfInsuredPage(page1);
   await confirmationOfInsuredPage.clickConfirmationOfInsuredButton();

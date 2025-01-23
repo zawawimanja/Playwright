@@ -51,14 +51,14 @@ test("Prereg PK OD", async ({ page }) => {
   expect(selectedIdentificationTypeText).toBe("New IC");
 
   await preregPage.selectNoticeAndBenefitClaimFormOption("Insured Person");
-  const NoticeAndBenefitClaimFormOptionText = await preregPage.getselectNoticeAndBenefitClaimFormText();
-  expect(NoticeAndBenefitClaimFormOptionText).toBe("Insured Person");
+  await expect(preregPage.noticeAndBenefitClaimFormSelect).toHaveValue("Insured Person");
+  await expect(preregPage.noticeAndBenefitClaimFormSelect).toContainText("Insured Person");
 
-  await preregPage.fillIdentificationNo("881207115589");
+  await preregPage.fillIdentificationNo("870208015463");
   const filledIdentificationNo = await preregPage.getIdentificationNo();
   //expect(filledIdentificationNo).toBe("910227016078");
 
-  await preregPage.fillEmployerCode("E1100005399Z");
+  await preregPage.fillEmployerCode("E1100009054W");
   const filledEmployerCode = await preregPage.getEmployerCode();
   //expect(filledEmployerCode).toBe("A3700059551B");
 
@@ -98,14 +98,19 @@ test("Prereg PK OD", async ({ page }) => {
 
   await calendarPage.selectDateInsuredPersonPage("2023", "1", "1");
 
+  await page1.getByLabel("Gender*").selectOption("200601");
+  await expect(page1.getByLabel("Gender*")).toHaveValue("200601");
+
   await insuredPersonInfoPage.fillOccupation("CS");
   await expect(insuredPersonInfoPage.occupationInput).toHaveValue("CS");
+
   await insuredPersonInfoPage.selectOccupation("1000002");
   await insuredPersonInfoPage.selectSubOccupation("1001132");
   await insuredPersonInfoPage.selectSubOccupationalList("1002058");
 
   await insuredPersonInfoPage.fillAddress1("Taman");
   await expect(insuredPersonInfoPage.AddressInputFirst).toHaveValue("Taman");
+
   await insuredPersonInfoPage.fillAddress(2, "Lorong 10");
   await insuredPersonInfoPage.fillAddress(3, "Jalan 1");
 
@@ -143,7 +148,7 @@ test("Prereg PK OD", async ({ page }) => {
   await calendarPage.selectDateInsuredPersonPage("2023", "1", "1");
 
   await page1.getByRole("textbox").nth(2).click();
-  await calendarPage.selectDateMCEndDate("2023", "6", "30");
+  await calendarPage.selectDateMCEndDate("2023", "1", "20");
   await medicalCertificatePage.submitButton().click();
 
   //2nd mc

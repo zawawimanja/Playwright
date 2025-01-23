@@ -109,6 +109,7 @@ test("Prereg SCO OD", async ({ page }) => {
 
   const confirmationOfInsuredPage = new ConfirmationOfInsuredPage(page2);
   await confirmationOfInsuredPage.clickConfirmationOfInsuredButton();
+  await confirmationOfInsuredPage.checkCompletedCheckbox();
 
   const inconsistentDoubtfulPage = new InconsistentDoubtfulPage(page2);
   await inconsistentDoubtfulPage.clickInconsistentDoubtfulButton();

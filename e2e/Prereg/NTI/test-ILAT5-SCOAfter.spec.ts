@@ -71,6 +71,8 @@ test("Prereg SCO OD", async ({ page }) => {
   await page.frameLocator("#baristaPageOut").frameLocator("#APWorkCenter").getByText("Open Task").click();
   const page2 = await pagePromise;
 
+  await page2.waitForLoadState("networkidle");
+
   const draftPage = new DraftPage(page2);
   if ((await draftPage.closeButton.count()) > 0) {
     await draftPage.closeButton.waitFor();
@@ -122,6 +124,7 @@ test("Prereg SCO OD", async ({ page }) => {
   await expect(medicalOpinionPage.medicalOpinionButton).toBeVisible();
   await medicalOpinionPage.clickMedicalOpinionButton();
 
+  await page2.waitForLoadState("networkidle");
   //not working not click
   const recommendationPage = new RecommendationPage(page2);
   recommendationPage.recommendationButton.waitFor({ state: "visible" });

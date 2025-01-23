@@ -25,8 +25,8 @@ import { ButtonPage } from "../../../utils/button";
 import { HeaderPage } from "../../../pages/header";
 
 test.beforeEach(async ({ page }) => {
-  await login(page, "hilmi.pks", "u@T_hilmi");
-  // await login(page, "aslam.pks", "u@T_aslam");
+  // await login(page, "hilmi.pks", "u@T_hilmi");
+  await login(page, "aslam.pks", "u@T_aslam");
 });
 
 export let schemeRefValue: string;
@@ -62,8 +62,8 @@ test("Prereg MB OD", async ({ page }) => {
 
       headerPage.clickUserProfile();
       headerPage.clickSignOut();
-      await login(page, "aslam.pks", "u@T_aslam");
-      //await login(page, "hilmi.pks", "u@T_hilmi");
+      // await login(page, "aslam.pks", "u@T_aslam");
+      await login(page, "hilmi.pks", "u@T_hilmi");
     }
   }
 
@@ -93,6 +93,7 @@ test("Prereg MB OD", async ({ page }) => {
   const calendarPage = new CalendarPage(page3);
 
   const mbSessionPage = new MBSessionPage(page3);
+  await page3.waitForLoadState("networkidle");
 
   //session venue hkl
   await mbSessionPage.selectSessionVenue("OD");
@@ -120,14 +121,11 @@ test("Prereg MB OD", async ({ page }) => {
   await mbSessionPage.setdescDis();
 
   //ass type
-  await mbSessionPage.selectAssessmentType("Provisional");
+  await mbSessionPage.selectAssessmentType("Final");
 
   //check additional assesment for session assesment
-  if (await mbSessionPage.additionalAssesment.isVisible()) {
-    await mbSessionPage.setsessionAssesmentAdditionalAssessment();
-  } else {
-    await mbSessionPage.setsessionAssesment();
-  }
+  await mbSessionPage.setsessionAssesment("25");
+  //await expect(mbSessionPage.sessionAssesmentAdditionalAssessment.getByRole("textbox")).toHaveValue("25");
 
   //Get  assessment type value
   const selectedValue = await page3.locator("#ctrlField1026 option:checked").textContent();
@@ -142,7 +140,7 @@ test("Prereg MB OD", async ({ page }) => {
   }
 
   // //jd result no default
-  mbSessionPage.selectJDResult();
+  mbSessionPage.selectJDResult("No");
 
   if (await mbSessionPage.additionalAssesment.isVisible()) {
     value = await mbSessionPage.sessionAssesmentAdditionalAssessment.getByRole("textbox").inputValue();
@@ -154,6 +152,7 @@ test("Prereg MB OD", async ({ page }) => {
   //els
   if (value === "100") {
     // Perform actions if the value is "100"
+
     await mbSessionPage.selectELS("Yes");
   } else {
     // Perform actions if the value is not "100"
@@ -168,7 +167,7 @@ test("Prereg MB OD", async ({ page }) => {
 
   // //remarks textbox
   await expect(page3.locator("#previewPanel")).toContainText("Remarks");
-  await mbSessionPage.setremark();
+  await mbSessionPage.setremark("test");
 
   buttonPage3.clickOK();
   buttonPage3.clickSubmit();
@@ -220,7 +219,8 @@ test("Prereg MB OD", async ({ page }) => {
   await supportingDocumentPage.clickSupportingDocumentButton();
 
   await page2.reload();
-  await page2.waitForTimeout(30000);
+  await page2.waitForLoadState("networkidle");
+  await page2.waitForTimeout(5000);
 
   const previewSubmissionPage = new PreviewSubmissionPage(page2);
   await previewSubmissionPage.previewSubmissionButton.waitFor({ state: "visible" });
