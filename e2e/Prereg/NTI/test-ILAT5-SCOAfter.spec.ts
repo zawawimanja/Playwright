@@ -28,7 +28,7 @@ test.beforeEach(async ({ page }) => {
 });
 
 export let schemeRefValue: string;
-test("Prereg SCO OD", async ({ page }) => {
+test("Prereg SCO ILAT", async ({ page }) => {
   const preregPage = new PreregistrationPage(page);
   const leftTabPage = new LeftTabPage(page);
   let submitPage = new SubmitPage(page);
@@ -70,6 +70,8 @@ test("Prereg SCO OD", async ({ page }) => {
   const pagePromise = page.waitForEvent("popup");
   await page.frameLocator("#baristaPageOut").frameLocator("#APWorkCenter").getByText("Open Task").click();
   const page2 = await pagePromise;
+
+  await page2.waitForLoadState("networkidle");
 
   const draftPage = new DraftPage(page2);
   if ((await draftPage.closeButton.count()) > 0) {
@@ -122,6 +124,7 @@ test("Prereg SCO OD", async ({ page }) => {
   await expect(medicalOpinionPage.medicalOpinionButton).toBeVisible();
   await medicalOpinionPage.clickMedicalOpinionButton();
 
+  await page2.waitForLoadState("networkidle");
   //not working not click
   const recommendationPage = new RecommendationPage(page2);
   recommendationPage.recommendationButton.waitFor({ state: "visible" });

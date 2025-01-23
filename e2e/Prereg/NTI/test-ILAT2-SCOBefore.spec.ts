@@ -28,7 +28,7 @@ test.beforeEach(async ({ page }) => {
 });
 
 export let schemeRefValue: string;
-test("Prereg SCO OD", async ({ page }) => {
+test("Prereg SCO ILAT", async ({ page }) => {
   const preregPage = new PreregistrationPage(page);
   const leftTabPage = new LeftTabPage(page);
   let submitPage = new SubmitPage(page);
@@ -71,6 +71,7 @@ test("Prereg SCO OD", async ({ page }) => {
   await page.frameLocator("#baristaPageOut").frameLocator("#APWorkCenter").getByText("Open Task").click();
   const page2 = await pagePromise;
 
+  await page.waitForLoadState("networkidle");
   const draftPage = new DraftPage(page2);
   if ((await draftPage.closeButton.count()) > 0) {
     await draftPage.closeButton.waitFor();
@@ -128,15 +129,15 @@ test("Prereg SCO OD", async ({ page }) => {
 
   await page.screenshot({ path: "debug_screenshot.png" });
 
-  const elementState = await page.evaluate(() => {
-    const element = document.querySelector('div[name="Recommendation"][role="button"]');
-    return {
-      exists: !!element,
-      visible: element && (element as HTMLElement).offsetParent !== null,
-      disabled: element && element.getAttribute("aria-disabled") === "true",
-    };
-  });
-  console.log("Element state:", elementState);
+  // const elementState = await page.evaluate(() => {
+  //   const element = document.querySelector('div[name="Recommendation"][role="button"]');
+  //   return {
+  //     exists: !!element,
+  //     visible: element && (element as HTMLElement).offsetParent !== null,
+  //     disabled: element && element.getAttribute("aria-disabled") === "true",
+  //   };
+  // });
+  // console.log("Element state:", elementState);
 
   // await page.waitForTimeout(5000); // Wait for 500ms
   // await page.waitForFunction(() => {

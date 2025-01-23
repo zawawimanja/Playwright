@@ -1,12 +1,9 @@
-
-import { Page } from '@playwright/test';
+import { Page } from "@playwright/test";
 
 export class ConfirmationOfInsuredPage {
+  private page: Page;
 
-           private page: Page;
-
-
-    constructor(page: Page) {
+  constructor(page: Page) {
     this.page = page;
   }
   /**
@@ -15,21 +12,21 @@ export class ConfirmationOfInsuredPage {
    
    */
   get confirmationOfInsuredButton() {
-    return this.page.getByRole('button', { name: 'Confirmation of Insured' });
+    return this.page.getByRole("button", { name: "Confirmation of Insured" });
   }
 
   /**
    * Section tabs element
    */
   get sectionTabs() {
-    return this.page.locator('#sectionTabs');
+    return this.page.locator("#sectionTabs");
   }
 
   /**
    * Completed checkbox
    */
   get completedCheckbox() {
-    return this.page.getByLabel('Completed');
+    return this.page.getByLabel("Completed");
   }
 
   /**
@@ -43,7 +40,6 @@ export class ConfirmationOfInsuredPage {
    * Check if the Confirmation of Insured button is visible
    */
 
-
   /**
    * Check if the section tabs element contains the text 'Confirmation of Insured Person/Dependants/Claimant'
    */
@@ -52,7 +48,10 @@ export class ConfirmationOfInsuredPage {
    * Check the Completed checkbox
    */
   async checkCompletedCheckbox() {
-    await this.completedCheckbox.check();
+    await this.completedCheckbox.check(); // Check the checkbox
+  }
+
+  async isCompletedCheckboxChecked(): Promise<boolean> {
+    return await this.completedCheckbox.isChecked(); // Return the checkbox state
   }
 }
-

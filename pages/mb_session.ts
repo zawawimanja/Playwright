@@ -106,8 +106,8 @@ export class MBSessionPage {
     return this.page.locator("#ctrlField1049");
   }
 
-  async setremark() {
-    await this.remark.getByRole("textbox").fill("test");
+  async setremark(string) {
+    await this.remark.getByRole("textbox").fill(string);
   }
 
   get recommendationRehab() {
@@ -138,12 +138,8 @@ export class MBSessionPage {
     return this.page.locator("#ctrlField1027");
   }
 
-  async setsessionAssesment() {
-    await this.sessionAssesment.getByRole("textbox").fill("9");
-  }
-
-  async setsessionAssesmentAdditionalAssessment() {
-    await this.sessionAssesmentAdditionalAssessment.getByRole("textbox").fill("9");
+  async setsessionAssesment(value) {
+    await this.sessionAssesmentAdditionalAssessment.getByRole("textbox").fill(value);
   }
 
   get additionalAssesment() {
@@ -154,7 +150,7 @@ export class MBSessionPage {
     return this.page.locator("#ctrlField1031");
   }
 
-  async selectJDResult() {
-    await this.jdResult.getByRole("combobox").selectOption("Yes");
+  async selectJDResult(string) {
+    await this.jdResult.getByRole("combobox").selectOption(string);
   }
 }

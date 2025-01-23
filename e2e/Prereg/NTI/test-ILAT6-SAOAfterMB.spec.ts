@@ -29,7 +29,7 @@ test.beforeEach(async ({ page }) => {
 });
 
 export let schemeRefValue: string;
-test("Prereg SCO OD", async ({ page }) => {
+test("Prereg SCO ILAT", async ({ page }) => {
   const preregPage = new PreregistrationPage(page);
   const leftTabPage = new LeftTabPage(page);
   let submitPage = new SubmitPage(page);
@@ -37,7 +37,7 @@ test("Prereg SCO OD", async ({ page }) => {
   const myCasesPage = new MyCasesPage(page, casesPage);
   await casesPage.init("NTI");
 
-  let loginUser = "atilia.pks";
+  let loginUser = "roliana.pks";
   let caseFound = false;
 
   while (!caseFound) {
@@ -109,6 +109,9 @@ test("Prereg SCO OD", async ({ page }) => {
 
   const confirmationOfInsuredPage = new ConfirmationOfInsuredPage(page2);
   await confirmationOfInsuredPage.clickConfirmationOfInsuredButton();
+  await confirmationOfInsuredPage.checkCompletedCheckbox();
+
+  await expect(confirmationOfInsuredPage.completedCheckbox).not.toBeChecked();
 
   const inconsistentDoubtfulPage = new InconsistentDoubtfulPage(page2);
   await inconsistentDoubtfulPage.clickInconsistentDoubtfulButton();

@@ -29,7 +29,7 @@ test.beforeEach(async ({ page }) => {
 });
 
 export let schemeRefValue: string;
-test("Prereg SCO OD", async ({ page }) => {
+test("Prereg SAO ILAT", async ({ page }) => {
   const preregPage = new PreregistrationPage(page);
   const leftTabPage = new LeftTabPage(page);
   let submitPage = new SubmitPage(page);
@@ -37,7 +37,7 @@ test("Prereg SCO OD", async ({ page }) => {
   const myCasesPage = new MyCasesPage(page, casesPage);
   await casesPage.init("NTI");
 
-  let loginUser = "atilia.pks";
+  let loginUser = "roliana.pks";
   let caseFound = false;
 
   while (!caseFound) {
@@ -71,6 +71,8 @@ test("Prereg SCO OD", async ({ page }) => {
   const pagePromise = page.waitForEvent("popup");
   await page.frameLocator("#baristaPageOut").frameLocator("#APWorkCenter").getByText("Open Task").click();
   const page2 = await pagePromise;
+
+  await page2.waitForLoadState("networkidle");
 
   const draftPage = new DraftPage(page2);
   if ((await draftPage.closeButton.count()) > 0) {
