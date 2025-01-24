@@ -33,6 +33,26 @@ export class MyCasesPage {
         console.log(`Locator: ${locator}`);
         break;
 
+      case "HUK SCO":
+        locator = this.page
+          .frameLocator("#baristaPageOut")
+          .frameLocator("#APWorkCenter")
+          .locator(
+            `//td[a[contains(text(), '${this.casespage.casesCreated}')]]/following-sibling::td[contains(@title, 'HUK SCO')]`
+          );
+        console.log(`Locator: ${locator}`);
+        break;
+
+      case "HUK SAO":
+        locator = this.page
+          .frameLocator("#baristaPageOut")
+          .frameLocator("#APWorkCenter")
+          .locator(
+            `//td[a[contains(text(), '${this.casespage.casesCreated}')]]/following-sibling::td[contains(@title, 'HUK SAO')]`
+          );
+        console.log(`Locator: ${locator}`);
+        break;
+
       case "SAO":
         locator = this.page
           .frameLocator("#baristaPageOut")
@@ -49,6 +69,17 @@ export class MyCasesPage {
           .frameLocator("#APWorkCenter")
           .locator(
             `//td[a[contains(text(), '${this.casespage.casesCreated}')]]/following-sibling::td[contains(@title, 'Medical Board Info')]`
+          );
+
+        console.log(`Locator: ${locator}`);
+        break;
+
+      case "HUK MB":
+        locator = this.page
+          .frameLocator("#baristaPageOut")
+          .frameLocator("#APWorkCenter")
+          .locator(
+            `//td[a[contains(text(), '${this.casespage.casesCreated}')]]/following-sibling::td[contains(@title, 'HUK MB')]`
           );
 
         console.log(`Locator: ${locator}`);

@@ -20,6 +20,7 @@ import { TimePage } from "../../../utils/time";
 import { SubmitPage } from "../../../pages/submit";
 import { CasesPage } from "../../../pages/cases";
 import { ButtonPage } from "../../../utils/button";
+import { readCSV } from "../../../helper/csvHelper"; // Import the CSV helper
 // filepath: /c:/Users/aaror/Downloads/Playwright/e2e/Prereg/S2 - ILAT-BI2PI/test-ILAT-PK.spec.ts
 const fs = require("fs");
 const path = require("path");
@@ -30,51 +31,51 @@ test.beforeEach(async ({ page }) => {
 
 export let schemeRefValue: string;
 
-test("Prereg PK NTA EFT MC", async ({ page }) => {
+test.only("Prereg PK NTA EFT MC", async ({ page }) => {
   const preregPage = new PreregistrationPage(page);
   const leftTabPage = new LeftTabPage(page);
-  let submitPage = new SubmitPage(page);
-  const casesPage = new CasesPage(page, submitPage);
+  const timePage = new TimePage(page);
+
+  // Read data from CSV
+  const csvFilePath = path.resolve(__dirname, "../../../testData/testData.csv"); // Path to CSV file
+  const testData = await readCSV(csvFilePath);
+  const data = testData[0]; // Use the first row of data
 
   await leftTabPage.leftBar.waitFor();
   await expect(leftTabPage.leftBar).toBeVisible();
 
   await expect(leftTabPage.preregistrationLink).toBeVisible();
   leftTabPage.clickPreregistration();
-
-  await preregPage.selectNoticeTypePreRegOption("Accident");
-  // Verify the selected option text
+  // Fill in data from CSV
+  await preregPage.selectNoticeTypePreRegOption(data.noticeType);
   const selectedOptionText = await preregPage.SelectedNoticeTypeText;
-  expect(selectedOptionText).toBe("Accident"); // Assert the selected text is correct
+  expect(selectedOptionText).toBe(data.noticeType);
 
-  const calendarPage1 = new CalendarPage(page);
-
-  //add accident date
+  // Add accident date
   await page.frameLocator("#baristaPageOut").getByLabel("Accident Date*").click();
-  await page.frameLocator("#baristaPageOut").getByRole("combobox").nth(3).selectOption("2023");
-  //month will be add 1 month
-  await page.frameLocator("#baristaPageOut").getByRole("combobox").nth(2).selectOption("0");
-  await page.frameLocator("#baristaPageOut").getByRole("link", { name: "1", exact: true }).click();
+  await page.frameLocator("#baristaPageOut").getByRole("combobox").nth(3).selectOption(data.accidentYear);
+  await page.frameLocator("#baristaPageOut").getByRole("combobox").nth(2).selectOption(data.accidentMonth);
+  await page.frameLocator("#baristaPageOut").getByRole("link", { name: data.accidentDay, exact: true }).click();
 
-  // calendarPage1.selectDateAccident("1999", "11", "15");
-
-  const time = new TimePage(page);
-  //add accident time
+  // Add accident time
   await page.frameLocator("#baristaPageOut").getByLabel("Accident Time*").click();
-  time.selectTimeOption("12", "00", "00");
+  await timePage.selectTimeOption(data.accidentHour, data.accidentMinute, data.accidentSecond);
 
-  await preregPage.selectIdentificationType("2");
+  // Fill in identification type and number
+  await preregPage.selectIdentificationType(data.identificationType);
   const selectedIdentificationTypeText = await preregPage.getSelectedIdentificationTypeText();
-  //expect(selectedIdentificationTypeText).toBe("New IC");
+  expect(selectedIdentificationTypeText).toBe(data.identificationType);
 
-  await preregPage.fillIdentificationNo("841026016171");
+  await preregPage.fillIdentificationNo(data.identificationNo);
   const filledIdentificationNo = await preregPage.getIdentificationNo();
-  //expect(filledIdentificationNo).toBe("910227016078");
+  expect(filledIdentificationNo).toBe(data.identificationNo);
 
-  await preregPage.fillEmployerCode("B3201003856Z");
+  // Fill in employer code
+  await preregPage.fillEmployerCode(data.employerCode);
   const filledEmployerCode = await preregPage.getEmployerCode();
-  //expect(filledEmployerCode).toBe("A3700059551B");
+  expect(filledEmployerCode).toBe(data.employerCode);
 
+  // Click search button
   await page.frameLocator("#baristaPageOut").locator("#row23column2").click();
   await preregPage.clickSearchButton();
 
@@ -206,11 +207,11 @@ test("Prereg PK NTA EFT MC", async ({ page }) => {
     console.log("File schemeRefValue.json does not exist at path: " + filePath);
   }
 
-  // Perform other actions as needed
-  await page2.getByRole("button", { name: "Close" }).click();
+  const buttonPage3 = new ButtonPage(page2);
+  buttonPage.clickClose();
 });
 
-test("Prereg PK NTA BankRuptcy MC", async ({ page }) => {
+test.only("Prereg PK NTA BankRuptcy MC", async ({ page }) => {
   const preregPage = new PreregistrationPage(page);
   const leftTabPage = new LeftTabPage(page);
   let submitPage = new SubmitPage(page);

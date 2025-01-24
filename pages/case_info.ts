@@ -37,4 +37,8 @@ export class CaseInformationPage {
   async clickCaseInformationButton() {
     await this.caseInformationButton.click();
   }
+
+  async clickCaseInformationHUKButton() {
+    await this.caseInformationButton.nth(0).click();
+  }
 }

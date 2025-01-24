@@ -1,37 +1,37 @@
 import { Page } from "@playwright/test";
 
 export class ButtonPage {
-  private page: Page;
+  constructor(private page: Page) {}
 
-  constructor(page: Page) {
-    this.page = page;
+  async clickButtonByName(name: string) {
+    await this.page.getByRole("button", { name }).click();
   }
 
   async clickOK() {
-    await this.page.getByRole("button", { name: "OK" }).click();
+    await this.clickButtonByName("OK");
   }
 
   async clickSubmit() {
-    await this.page.getByRole("button", { name: "Submit" }).click();
+    await this.clickButtonByName("Submit");
   }
 
   async clickYes() {
-    await this.page.getByRole("button", { name: "Yes" }).click();
+    await this.clickButtonByName("Yes");
   }
 
   async clickNew() {
-    await this.page.getByRole("button", { name: "New" }).click();
+    await this.clickButtonByName("New");
   }
 
   async clickAdd() {
-    await this.page.getByRole("button", { name: "Add" }).click();
+    await this.clickButtonByName("Add");
   }
 
   async clickSave() {
-    await this.page.getByRole("button", { name: "Save" }).click();
+    await this.clickButtonByName("Save");
   }
 
   async clickClose() {
-    await this.page.getByRole("button", { name: "Close" }).click();
+    await this.clickButtonByName("Close");
   }
 }

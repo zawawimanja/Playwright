@@ -38,11 +38,17 @@ export class MBSessionPage {
     return this.page.locator("#ctrlField1040");
   }
 
+  get sessionVenueHUK() {
+    return this.page.locator("#ctrlField1053");
+  }
+
   async selectSessionVenue(type) {
     if (type === "OD") {
       await this.sessionVenue.getByRole("combobox").selectOption("708056");
     } else if (type === "ILAT") {
       await this.sessionVenueILAT.getByRole("combobox").selectOption("708056");
+    } else if (type === "HUK") {
+      await this.sessionVenueHUK.getByRole("combobox").selectOption("708056");
     }
   }
 
@@ -74,8 +80,16 @@ export class MBSessionPage {
     return this.page.locator("#ctrlField1024");
   }
 
+  get mmiAchievedHUK() {
+    return this.page.locator('[id^="HUKSF1MMIAchieved-"]');
+  }
+
   async selectmmiAchieved() {
     await this.mmiAchieved.getByRole("combobox").selectOption("Yes");
+  }
+
+  async selectmmiAchievedHUK() {
+    await this.mmiAchievedHUK.selectOption("Yes");
   }
 
   get descDisease() {
@@ -114,6 +128,10 @@ export class MBSessionPage {
     return this.page.locator("#ctrlField1033");
   }
 
+  get recommendationRehabHUK() {
+    return this.page.locator('[id^="HUKSF1RecommendationForRehab"]');
+  }
+
   async selectrecommendationRehab() {
     await this.recommendationRehab.getByRole("combobox").selectOption("Yes");
   }
@@ -122,11 +140,23 @@ export class MBSessionPage {
     return this.page.locator("#ctrlField1026");
   }
 
+  get assessmentTypeHUK() {
+    return this.page.locator('[id^="HUKSF1AssessmentType-"]');
+  }
+
   async selectAssessmentType(type) {
     if (type === "Provisional") {
       await this.assessmentType.getByRole("combobox").selectOption("Provisional");
     } else {
       await this.assessmentType.getByRole("combobox").selectOption("Final");
+    }
+  }
+
+  async selectAssessmentTypeHUK(type) {
+    if (type === "Provisional") {
+      await this.assessmentTypeHUK.selectOption("Provisional");
+    } else {
+      await this.assessmentTypeHUK.selectOption("Final");
     }
   }
 
@@ -138,8 +168,16 @@ export class MBSessionPage {
     return this.page.locator("#ctrlField1027");
   }
 
+  get sessionAssesmentAdditionalAssessmentHUK() {
+    return this.page.locator('[id^="HUKSF1SessionAssessment-"]');
+  }
+
   async setsessionAssesment(value) {
     await this.sessionAssesmentAdditionalAssessment.getByRole("textbox").fill(value);
+  }
+
+  async setsessionAssesmentHUK(value) {
+    await this.sessionAssesmentAdditionalAssessmentHUK.fill(value);
   }
 
   get additionalAssesment() {

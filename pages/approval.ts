@@ -46,6 +46,10 @@ export class ApprovalPage {
     return this.page.locator("#ActionApprove");
   }
 
+  async selectSAOActionOptionBeforeMB() {
+    await this.actionApprove.selectOption("10207");
+  }
+
   get actionApproveSAONTA() {
     return this.page.getByLabel("Action");
   }
