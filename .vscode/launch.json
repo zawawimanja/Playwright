@@ -1,0 +1,10 @@
+{
+  "configurations": [
+    {
+      "type": "chrome",
+      "name": "http://barista-sandbox.perkeso.gov.my:13491/",
+      "request": "launch",
+      "url": "http://barista-sandbox.perkeso.gov.my:13491/"
+    }
+  ]
+}
