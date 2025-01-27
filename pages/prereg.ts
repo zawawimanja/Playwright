@@ -41,6 +41,10 @@ export class PreregistrationPage {
     return this.baristaPageOut.getByLabel("Identification No.*");
   }
 
+  private get identificationNoHUKInput() {
+    return this.baristaPageOut.getByLabel("Identification No.");
+  }
+
   private get employerCodeInput() {
     return this.baristaPageOut.getByLabel("Employer Code*");
   }
@@ -102,6 +106,10 @@ export class PreregistrationPage {
     await this.identificationNoInput.fill(input);
   }
 
+  async fillIdentificationNoHUK(input: string) {
+    await this.identificationNoHUKInput.fill(input);
+  }
+
   async fillEmployerCode(input: string) {
     await this.employerCodeInput.fill(input);
   }
@@ -146,6 +154,10 @@ export class PreregistrationPage {
     return this.baristaPageOut.getByLabel("Identification Type*");
   }
 
+  get identificationTypeLabelHUK() {
+    return this.baristaPageOut.getByLabel("Identification Type");
+  }
+
   get insuredPersonEmployment() {
     return this.accidentDateFrame.getByLabel("Does Insured Person Still in");
   }
@@ -172,6 +184,10 @@ export class PreregistrationPage {
 
   async selectIdentificationType(type) {
     await this.identificationTypeLabel.selectOption(type);
+  }
+
+  async selectIdentificationTypeHUK(type) {
+    await this.identificationTypeLabelHUK.selectOption(type);
   }
 
   async selectInsuredPersonEmployment(type) {

@@ -36,9 +36,8 @@ test.only("Prereg PK NTA HUK EFT MC", async ({ page }) => {
   const leftTabPage = new LeftTabPage(page);
   const timePage = new TimePage(page);
 
-  const csvFilePath = path.resolve(__dirname, "../../../testData/testData.csv");
-  console.log("Resolved CSV file path:", csvFilePath);
-
+  // Read data from CSV
+  const csvFilePath = path.resolve(__dirname, "../../../testData/testData.csv"); // Path to CSV file
   const testData = await readCSV(csvFilePath);
   const data = testData[0]; // Use the first row of data
 
@@ -47,31 +46,71 @@ test.only("Prereg PK NTA HUK EFT MC", async ({ page }) => {
 
   await expect(leftTabPage.preregistrationLink).toBeVisible();
 
-  await page
-    .locator("div")
-    .filter({ hasText: /^HUK Pre-Registration$/ })
-    .nth(1)
-    .click();
-  await page.frameLocator("#baristaPageOut").getByLabel("Identification Type").selectOption("205516");
-  await page.frameLocator("#baristaPageOut").getByLabel("Identification No.").fill("830330145273");
+  // await page
+  //   .locator("div")
+  //   .filter({ hasText: /^HUK Pre-Registration$/ })
+  //   .nth(1)
+  //   .click();
 
-  await page.frameLocator("#baristaPageOut").getByRole("button", { name: "Search" }).click();
+  leftTabPage.clickHUKPreregistration();
+  await preregPage.selectIdentificationTypeHUK(data.identificationType);
+
+  //await page.frameLocator("#baristaPageOut").getByLabel("Identification Type").selectOption("205516");
+  //await page.frameLocator("#baristaPageOut").getByLabel("Identification No.").fill(data.identificationNo);
+
+  await preregPage.fillIdentificationNoHUK(data.identificationNo);
+
+  // Click search button
+  await page
+    .frameLocator("#baristaPageOut")
+    .locator("#previewRow4 div")
+    .filter({ hasText: "Response Status" })
+    .first()
+    .click();
+  await preregPage.clickSearchButton();
 
   const page13Promise = page.waitForEvent("popup");
   await page.frameLocator("#baristaPageOut").getByRole("button", { name: "Open" }).click();
-  const page13 = await page13Promise;
+  const page1 = await page13Promise;
 
-  await page13.getByRole("button", { name: "Case Information", exact: true }).click();
-  await page13.getByRole("button", { name: "Application Information" }).click();
-  await page13.getByRole("button", { name: "Insured Person Information" }).click();
-  await page13.getByRole("button", { name: "FHUS Case Information" }).click();
-  await page13.getByRole("button", { name: "Preferred SOCSO Office" }).click();
-  await page13.getByRole("button", { name: "Supporting Document" }).click();
-  await page13.getByRole("button", { name: "Preview & Submission" }).click();
-  await page13.getByRole("button", { name: "Show Preview" }).click();
-  await page13.getByRole("button", { name: "Submit" }).click();
-  const page14Promise = page13.waitForEvent("popup");
-  await page13.getByRole("button", { name: "Yes" }).click();
-  const page14 = await page14Promise;
-  await page14.getByRole("button", { name: "Close" }).click();
+  await page.waitForLoadState("networkidle");
+
+  await page1.getByRole("button", { name: "Case Information", exact: true }).click();
+  await page1.getByRole("button", { name: "Application Information" }).click();
+  const insuredPersonInfoPage = new InsuredPersonInfoPage(page1);
+
+  await insuredPersonInfoPage.clickInsuredPersonInfoButton();
+  await page1.getByRole("button", { name: "FHUS Case Information" }).click();
+  const preferredSOCSOOfficePage = new PreferredSOCSOOfficePage(page1);
+  await preferredSOCSOOfficePage.clickPreferredSOCSOOfficeButton();
+  const supportingDocumentPage = new SupportingDocumentPage(page1);
+  await supportingDocumentPage.clickSupportingDocumentButton();
+
+  const previewSubmissionPage = new PreviewSubmissionPage(page1);
+  await previewSubmissionPage.clickPreviewSubmissionButton();
+  await previewSubmissionPage.clickShowPreviewButton();
+
+  await previewSubmissionPage.clickSubmitButton();
+  const buttonPage = new ButtonPage(page1);
+  buttonPage.clickYes();
+
+  const page2Promise = page1.waitForEvent("popup");
+  const page2 = await page2Promise;
+
+  // Wait for the element to be present
+  await page2.getByLabel("Scheme Ref No:").waitFor();
+
+  const schemeRefValue = await page2.getByLabel("Scheme Ref No:").inputValue();
+  console.log("SRN from locator: " + schemeRefValue);
+  const filePath = path.resolve(__dirname, "schemeRefValue.json");
+  fs.writeFileSync(filePath, JSON.stringify({ schemeRefValue }));
+
+  // Check if the file exists
+  if (fs.existsSync(filePath)) {
+    console.log("File schemeRefValue.json exists at path: " + filePath);
+  } else {
+    console.log("File schemeRefValue.json does not exist at path: " + filePath);
+  }
+
+  await page2.getByRole("button", { name: "Close" }).click();
 });

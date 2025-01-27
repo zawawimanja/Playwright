@@ -26,7 +26,11 @@ export class LeftTabPage {
   }
 
   async clickHUKPreregistration() {
-    await this.page.getByRole("link", { name: "HUK Pre-Registration" }).click();
+    await this.page
+      .locator("div")
+      .filter({ hasText: /^HUK Pre-Registration$/ })
+      .nth(1)
+      .click();
   }
 
   async clickCreateRevision() {
