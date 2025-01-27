@@ -25,8 +25,8 @@ import { ButtonPage } from "../../../utils/button";
 import { HeaderPage } from "../../../pages/header";
 
 test.beforeEach(async ({ page }) => {
-  await login(page, "hilmi.pks", "u@T_hilmi");
-  // await login(page, "aslam.pks", "u@T_aslam");
+  //await login(page, "hilmi.pks", "u@T_hilmi");
+  await login(page, "aslam.pks", "u@T_aslam");
 });
 
 export let schemeRefValue: string;
@@ -62,8 +62,8 @@ test("Prereg MB OD", async ({ page }) => {
 
       headerPage.clickUserProfile();
       headerPage.clickSignOut();
-      await login(page, "aslam.pks", "u@T_aslam");
-      //  await login(page, "hilmi.pks", "u@T_hilmi");
+      //  await login(page, "aslam.pks", "u@T_aslam");
+      await login(page, "hilmi.pks", "u@T_hilmi");
     }
   }
 
@@ -108,23 +108,21 @@ test("Prereg MB OD", async ({ page }) => {
   await mbSessionPage.selectmmiAchievedHUK();
 
   //ass type
-  await mbSessionPage.selectAssessmentTypeHUK("Final");
+  await mbSessionPage.selectAssessmentTypeHUK("Provisional");
 
   //check additional assesment for session assesment
   await mbSessionPage.setsessionAssesmentHUK("25");
-  //await expect(mbSessionPage.sessionAssesmentAdditionalAssessment.getByRole("textbox")).toHaveValue("25");
 
   //Get  assessment type value
-  // const selectedValue = await page3.locator("#ctrlField1026 option:checked").textContent();
-  //const selectedValue = await mbSessionPage.assessmentType.textContent();
+  const selectedValue = await page3.locator('[id^="HUKSF1AssessmentType-"] option:checked').textContent();
 
-  // console.log(selectedValue + " type");
+  console.log(selectedValue + " type");
 
-  // //if choose provisional have assessment date
-  // if (selectedValue === "Provisional") {
-  //   calendarPage.clickDate("Provisional Date");
-  //   await calendarPage.selectDateInsuredPersonPage("2023", "8", "15");
-  // }
+  //if choose provisional have assessment date
+  if (selectedValue === "Provisional") {
+    calendarPage.clickDate("Provisional DateHUK");
+    await calendarPage.selectDateInsuredPersonPage("2023", "8", "15");
+  }
 
   // //remark recommendation
   // await expect(mbSessionPage.remarkRecommendation).toContainText("Remarks for Recommendation for Rehab");

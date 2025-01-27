@@ -31,6 +31,8 @@ export class CalendarPage {
       await this.page.locator("#ctrlField1041").getByRole("textbox").click();
     } else if (type === "Session DateHUK") {
       await this.page.locator("#ctrlField1054").getByRole("textbox").click();
+    } else if (type === "Provisional DateHUK") {
+      await this.page.locator('[id^="HUKSF1ProvisionalAssessmentDate-"]').click();
     }
   }
 
