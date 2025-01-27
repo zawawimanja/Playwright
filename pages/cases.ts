@@ -33,6 +33,9 @@ export class CasesPage {
       case "NTI":
         filePath = "C:\\Users\\aaror\\Downloads\\Playwright\\e2e\\Prereg\\NTI\\schemeRefValue.json";
         break;
+      case "PKT":
+        filePath = "C:\\Users\\aaror\\Downloads\\Playwright\\e2e\\Prereg\\PKT\\schemeRefValue.json";
+        break;
     }
 
     // Check if the file exists before trying to read it

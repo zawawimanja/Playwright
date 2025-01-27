@@ -18,7 +18,10 @@ import { SubmitPage } from "../../../pages/submit";
 import { MyCasesPage } from "../../../pages/mycases";
 import { HeaderPage } from "../../../pages/header";
 import { ButtonPage } from "../../../utils/button";
-
+import { readCSV } from "../../../helper/csvHelper"; // Import the CSV helper
+// filepath: /c:/Users/aaror/Downloads/Playwright/e2e/Prereg/S2 - ILAT-BI2PI/test-ILAT-PK.spec.ts
+const fs = require("fs");
+const path = require("path");
 test.beforeEach(async ({ page }) => {
   //await login(page, "roliana.pks", "u@T_roliana");
   await login(page, "uat_ali", "u@T_ali");
@@ -31,7 +34,7 @@ test("Prereg SAO NTA", async ({ page }) => {
   let submitPage = new SubmitPage(page);
   const casesPage = new CasesPage(page, submitPage);
   const myCasesPage = new MyCasesPage(page, casesPage);
-  await casesPage.init();
+  await casesPage.init("PKT");
 
   let loginUser = "roliana.pks";
   let caseFound = false;
@@ -64,6 +67,8 @@ test("Prereg SAO NTA", async ({ page }) => {
   const pagePromise = page.waitForEvent("popup");
   await page.frameLocator("#baristaPageOut").frameLocator("#APWorkCenter").getByText("Open Task").click();
   const page2 = await pagePromise;
+
+  await page2.waitForLoadState("networkidle");
 
   const draftPage = new DraftPage(page2);
   if ((await draftPage.closeButton.count()) > 0) {
@@ -112,10 +117,38 @@ test("Prereg SAO NTA", async ({ page }) => {
   const page3Promise = page2.waitForEvent("popup");
   await page2.getByRole("button", { name: "Update" }).click();
   const page3 = await page3Promise;
+  await page3.waitForLoadState("networkidle");
   await page3.getByLabel("Eligible as Dependent*").selectOption("90102");
   await page3.getByRole("button", { name: "Save" }).click();
 
   await page2.getByRole("button", { name: "FPM Info" }).click();
+  const page5Promise = page3.waitForEvent("popup");
+  await page3.getByRole("button", { name: "CREATE" }).click();
+  const page5 = await page5Promise;
+  await page5.getByRole("button", { name: "Yes" }).click();
+
+  // Wait for the element to be present
+  await page5.getByLabel("Scheme Ref No:").waitFor();
+
+  const schemeRefValue = await page5.getByLabel("Scheme Ref No:").inputValue();
+  console.log("SRN from locator: " + schemeRefValue);
+  const filePath = path.resolve(__dirname, "schemeRefValueFPM.json");
+  fs.writeFileSync(filePath, JSON.stringify({ schemeRefValue }));
+
+  // Check if the file exists
+  if (fs.existsSync(filePath)) {
+    console.log("File schemeRefValue.json exists at path: " + filePath);
+  } else {
+    console.log("File schemeRefValue.json does not exist at path: " + filePath);
+  }
+
+  await page5.getByRole("button", { name: "Proceed" }).click();
+
+  await page2.reload();
+  await page2.waitForLoadState("networkidle");
+  // after refresh wages info not function ,need to manual click
+  //add fmp info
+  await page2.waitForTimeout(15000);
 
   const recommendationPage1 = new RecommendationPage(page2);
   await recommendationPage1.clickSAORecommendationButton();
@@ -136,12 +169,12 @@ test("Prereg SAO NTA", async ({ page }) => {
   const buttonPage = new ButtonPage(page2);
   buttonPage.clickYes();
 
-  const page4Promise = page2.waitForEvent("popup");
-  const page4 = await page4Promise;
+  // const page4Promise = page2.waitForEvent("popup");
+  // const page4 = await page4Promise;
 
   // Wait for the element to be present
-  await page4.getByLabel("Scheme Ref No:").waitFor();
+  await page2.getByLabel("Scheme Ref No:").waitFor();
 
   // Perform other actions as needed
-  await page4.getByRole("button", { name: "Close" }).click();
+  await page2.getByRole("button", { name: "Close" }).click();
 });
