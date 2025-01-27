@@ -19,6 +19,8 @@ import { CalendarPage } from "../../../utils/calendar";
 import { SubmitPage } from "../../../pages/submit";
 import { CasesPage } from "../../../pages/cases";
 import { ButtonPage } from "../../../utils/button";
+import { readCSV } from "../../../helper/csvHelper"; // Import the CSV helper
+// filepath: /c:/Users/aaror/Downloads/Playwright/e2e/Prereg/S2 - ILAT-BI2PI/test-ILAT-PK.spec.ts
 const fs = require("fs");
 const path = require("path");
 test.beforeEach(async ({ page }) => {
@@ -33,6 +35,11 @@ test("Prereg PK OD MC EFT", async ({ page }) => {
   let submitPage = new SubmitPage(page);
   const casesPage = new CasesPage(page, submitPage);
 
+  // Read data from CSV
+  const csvFilePath = path.resolve(__dirname, "../../../testData/testData.csv"); // Path to CSV file
+  const testData = await readCSV(csvFilePath);
+  const data = testData[0]; // Use the first row of data
+
   await leftTabPage.leftBar.waitFor();
   await expect(leftTabPage.leftBar).toBeVisible();
 
@@ -46,19 +53,20 @@ test("Prereg PK OD MC EFT", async ({ page }) => {
   const selectedEmploymentText = await preregPage.getSelectedInsuredPersonEmploymentText();
   expect(selectedEmploymentText).toBe("Yes");
 
-  await preregPage.selectIdentificationType("2");
+  // Fill in identification type and number
+  await preregPage.selectIdentificationType(data.identificationType);
   const selectedIdentificationTypeText = await preregPage.getSelectedIdentificationTypeText();
-  expect(selectedIdentificationTypeText).toBe("New IC");
+  expect(selectedIdentificationTypeText).toBe(data.identificationType);
 
   await preregPage.selectNoticeAndBenefitClaimFormOption("Insured Person");
   await expect(preregPage.noticeAndBenefitClaimFormSelect).toHaveValue("Insured Person");
   await expect(preregPage.noticeAndBenefitClaimFormSelect).toContainText("Insured Person");
 
-  await preregPage.fillIdentificationNo("870208015463");
+  await preregPage.fillIdentificationNo(data.identificationNo);
   const filledIdentificationNo = await preregPage.getIdentificationNo();
-  //expect(filledIdentificationNo).toBe("910227016078");
+  expect(filledIdentificationNo).toBe(data.identificationNo);
 
-  await preregPage.fillEmployerCode("E1100009054W");
+  await preregPage.fillEmployerCode(data.employerCode);
   const filledEmployerCode = await preregPage.getEmployerCode();
   //expect(filledEmployerCode).toBe("A3700059551B");
 

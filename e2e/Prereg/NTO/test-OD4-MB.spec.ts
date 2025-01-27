@@ -213,12 +213,11 @@ test("Prereg MB OD", async ({ page }) => {
   const recommendationPage = new RecommendationPage(page2);
   await recommendationPage.clickRecommendationButton();
 
-  const supportingDocumentPage = new SupportingDocumentPage(page2);
-  await supportingDocumentPage.clickSupportingDocumentButton();
-
   await page2.reload();
   await page2.waitForLoadState("networkidle");
-  await page2.waitForTimeout(5000);
+
+  const supportingDocumentPage = new SupportingDocumentPage(page2);
+  await supportingDocumentPage.clickSupportingDocumentButton();
 
   const previewSubmissionPage = new PreviewSubmissionPage(page2);
   await previewSubmissionPage.previewSubmissionButton.waitFor({ state: "visible" });

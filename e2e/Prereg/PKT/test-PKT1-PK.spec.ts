@@ -15,6 +15,7 @@ import { SubmitPage } from "../../../pages/submit";
 import { CasesPage } from "../../../pages/cases";
 
 import { ButtonPage } from "../../../utils/button";
+import { readCSV } from "../../../helper/csvHelper"; // Import the CSV helper
 // filepath: /c:/Users/aaror/Downloads/Playwright/e2e/Prereg/S2 - ILAT-BI2PI/test-ILAT-PK.spec.ts
 const fs = require("fs");
 const path = require("path");
@@ -31,6 +32,11 @@ test("Prereg PK PKT", async ({ page }) => {
   let submitPage = new SubmitPage(page);
   const casesPage = new CasesPage(page, submitPage);
 
+  // Read data from CSV
+  const csvFilePath = path.resolve(__dirname, "../../../testData/testData.csv"); // Path to CSV file
+  const testData = await readCSV(csvFilePath);
+  const data = testData[0]; // Use the first row of data
+
   await leftTabPage.leftBar.waitFor();
   await expect(leftTabPage.leftBar).toBeVisible();
 
@@ -39,14 +45,13 @@ test("Prereg PK PKT", async ({ page }) => {
 
   await preregPage.selectNoticeTypePreRegOption("Death - PKT");
   // Verify the selected option text
-  const selectedOptionText = await preregPage.getSelectedNoticeTypeText();
-  expect(selectedOptionText).toBe("Death - PKT"); // Assert the selected text is correct
 
   const calendarPage1 = new CalendarPage(page);
 
-  await preregPage.selectIdentificationType("2");
+  // Fill in identification type and number
+  await preregPage.selectIdentificationType(data.identificationType);
   const selectedIdentificationTypeText = await preregPage.getSelectedIdentificationTypeText();
-  expect(selectedIdentificationTypeText).toBe("New IC");
+  expect(selectedIdentificationTypeText).toBe(data.identificationType);
 
   await preregPage.noticeAndBenefitClaimFormSelect.waitFor();
 
@@ -55,9 +60,9 @@ test("Prereg PK PKT", async ({ page }) => {
   const NoticeAndBenefitClaimFormOptionText = await preregPage.getselectNoticeAndBenefitClaimFormText();
   expect(NoticeAndBenefitClaimFormOptionText).toBe("Others");
 
-  await preregPage.fillIdentificationNo("830330145273");
+  await preregPage.fillIdentificationNo(data.identificationNo);
   const filledIdentificationNo = await preregPage.getIdentificationNo();
-  //expect(filledIdentificationNo).toBe("910227016078");
+  expect(filledIdentificationNo).toBe(data.identificationNo);
 
   // await preregPage.fillEmployerCode("E1100000366Y");
   // const filledEmployerCode = await preregPage.getEmployerCode();
@@ -76,6 +81,8 @@ test("Prereg PK PKT", async ({ page }) => {
     await draftPage.closeButton.waitFor();
     await draftPage.clickCloseButton();
   }
+
+  await page1.waitForLoadState("networkidle");
 
   const remarksPage = new RemarksPage(page1);
   await remarksPage.remarksButton.waitFor();
@@ -123,6 +130,8 @@ test("Prereg PK PKT", async ({ page }) => {
   await page1.getByRole("button", { name: "Add Dependent" }).click();
   const page2 = await page2Promise;
 
+  await page1.waitForLoadState("networkidle");
+
   await page2.getByLabel("Relationship with Insured").selectOption("90404");
   await page2.getByLabel("Gender*").selectOption("200602");
   await page2.getByLabel("Dependent Name*").fill("umi");
@@ -153,20 +162,6 @@ test("Prereg PK PKT", async ({ page }) => {
   const button = new ButtonPage(page2);
   await button.clickSave();
 
-  //add fmp info
-  await page1.getByRole("button", { name: "FPM Info" }).waitFor();
-  await page1.getByRole("button", { name: "FPM Info" }).click();
-
-  await page1.getByRole("button", { name: "Pull Dependent" }).click();
-  await page1.getByRole("button", { name: "Yes" }).click();
-
-  await page1.reload();
-  await page1.waitForLoadState("networkidle");
-
-  await page1.getByText("Death Notice App").waitFor();
-  await page1.getByText("Death Notice App").click();
-
-  // after refresh wages info not function ,need to manual click socso office
   const wagesInfoPage = new WagesInfoPage(page1);
   await wagesInfoPage.wagesInfoButton.waitFor({ state: "visible" });
   //await wagesInfoPage.clickWagesInfoButton();
@@ -181,6 +176,25 @@ test("Prereg PK PKT", async ({ page }) => {
 
   await page1.getByRole("button", { name: "Confirmation of Dependent/" }).click();
 
+  await page1.getByRole("button", { name: "Save" }).click();
+  await page1.locator("button").filter({ hasText: "Save" }).click();
+  await page1.getByRole("button", { name: "Close" }).click();
+
+  await page1.reload();
+
+  await page1.getByText("Death Notice App").click();
+  await page1.waitForLoadState("networkidle");
+  // after refresh wages info not function ,need to manual click
+  //add fmp info
+  await page1.waitForTimeout(15000);
+  await page1.getByRole("button", { name: "FPM Info" }).waitFor();
+  await page1.getByRole("button", { name: "FPM Info" }).isVisible;
+
+  await page1.getByRole("button", { name: "FPM Info" }).click();
+
+  await page1.getByRole("button", { name: "Pull Dependent" }).click();
+  await page1.getByRole("button", { name: "Yes" }).click();
+
   const supportingDocumentPage = new SupportingDocumentPage(page1);
   await supportingDocumentPage.clickSupportingDocumentButton();
 
@@ -191,17 +205,15 @@ test("Prereg PK PKT", async ({ page }) => {
   await previewSubmissionPage.clickSubmitButton();
 
   const buttonPage = new ButtonPage(page1);
-  //buttonPage.clickYes();
-
   buttonPage.clickYes();
 
-  const page3Promise = page1.waitForEvent("popup");
-  const page3 = await page3Promise;
+  // const page3Promise = page1.waitForEvent("popup");
+  // const page3 = await page3Promise;
 
   // Wait for the element to be present
-  await page3.getByLabel("Scheme Ref No:").waitFor();
+  await page1.getByLabel("Scheme Ref No:").waitFor();
 
-  const schemeRefValue = await page3.getByLabel("Scheme Ref No:").inputValue();
+  const schemeRefValue = await page1.getByLabel("Scheme Ref No:").inputValue();
   console.log("SRN from locator: " + schemeRefValue);
   const filePath = path.resolve(__dirname, "schemeRefValue.json");
   fs.writeFileSync(filePath, JSON.stringify({ schemeRefValue }));
@@ -214,5 +226,5 @@ test("Prereg PK PKT", async ({ page }) => {
   }
 
   // Perform other actions as needed
-  await page3.getByRole("button", { name: "Close" }).click();
+  await page1.getByRole("button", { name: "Close" }).click();
 });

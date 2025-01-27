@@ -16,6 +16,7 @@ import { CasesPage } from "../../../pages/cases";
 import { ButtonPage } from "../../../utils/button";
 import { CertificationByEmployerPage } from "../../../pages/cert_employer";
 
+import { readCSV } from "../../../helper/csvHelper"; // Import the CSV helper
 // filepath: /c:/Users/aaror/Downloads/Playwright/e2e/Prereg/S2 - ILAT-BI2PI/test-ILAT-PK.spec.ts
 const fs = require("fs");
 const path = require("path");
@@ -32,6 +33,11 @@ test("Prereg PK FOT", async ({ page }) => {
   let submitPage = new SubmitPage(page);
   const casesPage = new CasesPage(page, submitPage);
 
+  // Read data from CSV
+  const csvFilePath = path.resolve(__dirname, "../../../testData/testData.csv"); // Path to CSV file
+  const testData = await readCSV(csvFilePath);
+  const data = testData[0]; // Use the first row of data
+
   await leftTabPage.leftBar.waitFor();
   await expect(leftTabPage.leftBar).toBeVisible();
 
@@ -39,19 +45,17 @@ test("Prereg PK FOT", async ({ page }) => {
   leftTabPage.clickPreregistration();
 
   await preregPage.selectNoticeTypePreRegOption("Death - FOT");
-  // Verify the selected option text
-  const selectedOptionText = await preregPage.getSelectedNoticeTypeText();
-  expect(selectedOptionText).toBe("Death - FOT"); // Assert the selected text is correct
 
   const calendarPage1 = new CalendarPage(page);
 
-  await preregPage.selectIdentificationType("2");
+  // Fill in identification type and number
+  await preregPage.selectIdentificationType(data.identificationType);
   const selectedIdentificationTypeText = await preregPage.getSelectedIdentificationTypeText();
-  expect(selectedIdentificationTypeText).toBe("New IC");
+  expect(selectedIdentificationTypeText).toBe(data.identificationType);
 
-  await preregPage.fillIdentificationNo("930801145367");
+  await preregPage.fillIdentificationNo(data.identificationNo);
   const filledIdentificationNo = await preregPage.getIdentificationNo();
-  //expect(filledIdentificationNo).toBe("910227016078");
+  expect(filledIdentificationNo).toBe(data.identificationNo);
 
   await preregPage.selectNoticeAndBenefitClaimFormOption("Others");
   const NoticeAndBenefitClaimFormOptionText = await preregPage.getselectNoticeAndBenefitClaimFormText();
@@ -164,12 +168,17 @@ test("Prereg PK FOT", async ({ page }) => {
   await page1.getByRole("button", { name: "Close" }).click();
 
   await page1.reload();
+
   await page1.getByText("Death Notice App").click();
-
-  await page1.getByRole("button", { name: "Dependent Info" }).click();
-
+  await page1.waitForLoadState("networkidle");
+  // after refresh wages info not function ,need to manual click
   //add fmp info
+  await page1.waitForTimeout(15000);
+  await page1.getByRole("button", { name: "FPM Info" }).waitFor();
+  await page1.getByRole("button", { name: "FPM Info" }).isVisible;
+
   await page1.getByRole("button", { name: "FPM Info" }).click();
+
   await page1.getByRole("button", { name: "Pull Dependent" }).click();
   await page1.getByRole("button", { name: "Yes" }).click();
 

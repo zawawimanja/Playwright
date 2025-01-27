@@ -31,7 +31,7 @@ test("Prereg SCO PKT", async ({ page }) => {
   let submitPage = new SubmitPage(page);
   const casesPage = new CasesPage(page, submitPage);
   const myCasesPage = new MyCasesPage(page, casesPage);
-  await casesPage.init();
+  await casesPage.init("PKT");
 
   let loginUser = "atilia.pks";
   let caseFound = false;
@@ -67,6 +67,8 @@ test("Prereg SCO PKT", async ({ page }) => {
   const pagePromise = page.waitForEvent("popup");
   await page.frameLocator("#baristaPageOut").frameLocator("#APWorkCenter").getByText("Open Task").click();
   const page2 = await pagePromise;
+
+  await page2.waitForLoadState("networkidle");
 
   const draftPage = new DraftPage(page2);
   if ((await draftPage.closeButton.count()) > 0) {
@@ -118,6 +120,10 @@ test("Prereg SCO PKT", async ({ page }) => {
 
   await page2.getByRole("button", { name: "FPM Info" }).click();
 
+  await page2.getByRole("button", { name: "Edit Record" }).click();
+  await page2.locator(' [id^="EligibleasClaimantFPMInfo-"]').nth(1).selectOption("90301");
+  await page2.getByRole("button", { name: "OK" }).click();
+
   await page2.getByRole("button", { name: "SCO Recommendation NTD" }).click();
   await page2.getByLabel("Action*").selectOption("10209");
 
@@ -135,9 +141,9 @@ test("Prereg SCO PKT", async ({ page }) => {
   // const page3Promise = page2.waitForEvent("popup");
   // const page3 = await page3Promise;
 
-  // // Wait for the element to be present
-  // await page3.getByLabel("Scheme Ref No:").waitFor();
+  // Wait for the element to be present
+  await page2.getByLabel("Scheme Ref No:").waitFor();
 
-  // // Perform other actions as needed
-  // await page3.getByRole("button", { name: "Close" }).click();
+  // Perform other actions as needed
+  await page2.getByRole("button", { name: "Close" }).click();
 });
