@@ -43,7 +43,7 @@ test("Prereg SCO FOT", async ({ page }) => {
   let submitPage = new SubmitPage(page);
   const casesPage = new CasesPage(page, submitPage);
   const myCasesPage = new MyCasesPage(page, casesPage);
-  await casesPage.init();
+  await casesPage.init("FOT");
 
   let loginUser = "atilia.pks";
   let caseFound = false;
@@ -59,7 +59,7 @@ test("Prereg SCO FOT", async ({ page }) => {
     await leftTabPage.clickMyCases();
 
     // Check if the case exists for the current login user
-    if (await myCasesPage.clickPKT("SCO")) {
+    if (await myCasesPage.clickDeath("SCO")) {
       caseFound = true;
       console.log(`Case found for user ${loginUser}`);
       break;
@@ -86,7 +86,7 @@ test("Prereg SCO FOT", async ({ page }) => {
     await draftPage.clickCloseButton();
   }
 
-  await page2.waitForTimeout(20000);
+  await page2.waitForLoadState("networkidle");
   const remarksPage = new RemarksPage(page2);
   await remarksPage.remarksButton.waitFor();
   await expect(remarksPage.remarksButton).toBeVisible();
@@ -133,9 +133,22 @@ test("Prereg SCO FOT", async ({ page }) => {
   await page2.getByRole("button", { name: "Dependent Info" }).click();
 
   await page2.getByRole("button", { name: "FPM Info" }).click();
+  await page2.getByRole("button", { name: "Edit Record" }).click();
+  await page2.locator('[id^="EligibleasClaimantFPMInfo-"]').nth(1).selectOption("90301");
+  await page2.getByRole("button", { name: "OK" }).click();
 
   await page2.getByRole("button", { name: "SCO Recommendation NTD" }).click();
-  await page2.getByLabel("Action*").selectOption("10209");
+  await page2.getByLabel("Action*").waitFor();
+  await page2.getByLabel("Action*").isVisible();
+  await page2.getByLabel("Action*").selectOption("10210");
+
+  //click fpm info to enable wages
+  await page2.getByRole("button", { name: "FPM Info" }).click();
+
+  await page2.getByRole("button", { name: "Wages Information (SBK)" }).click();
+  const wages = new WagesInfoPage(page2);
+  await page2.getByLabel("Is Wages Paid on the Day of").selectOption("Yes");
+  await wages.selectAllEnabledWagesOptions("Yes");
 
   const supportingDocumentPage = new SupportingDocumentPage(page2);
   await supportingDocumentPage.clickSupportingDocumentButton();
@@ -148,12 +161,12 @@ test("Prereg SCO FOT", async ({ page }) => {
   const buttonPage = new ButtonPage(page2);
   buttonPage.clickYes();
 
-  const page3Promise = page2.waitForEvent("popup");
-  const page3 = await page3Promise;
+  // const page3Promise = page2.waitForEvent("popup");
+  // const page3 = await page3Promise;
 
   // Wait for the element to be present
-  await page3.getByLabel("Scheme Ref No:").waitFor();
+  await page.getByLabel("Scheme Ref No.").waitFor();
 
   // Perform other actions as needed
-  await page3.getByRole("button", { name: "Close" }).click();
+  await page.getByRole("button", { name: "Proceed" }).click();
 });

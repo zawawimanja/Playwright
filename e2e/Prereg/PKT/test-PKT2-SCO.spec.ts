@@ -47,7 +47,7 @@ test("Prereg SCO PKT", async ({ page }) => {
     await leftTabPage.clickMyCases();
 
     // Check if the case exists for the current login user
-    if (await myCasesPage.clickPKT("SCO")) {
+    if (await myCasesPage.clickDeath("SCO")) {
       caseFound = true;
       console.log(`Case found for user ${loginUser}`);
       break;
@@ -141,9 +141,8 @@ test("Prereg SCO PKT", async ({ page }) => {
   // const page3Promise = page2.waitForEvent("popup");
   // const page3 = await page3Promise;
 
-  // Wait for the element to be present
-  await page2.getByLabel("Scheme Ref No:").waitFor();
+  await page.getByLabel("Scheme Ref No.").waitFor();
 
   // Perform other actions as needed
-  await page2.getByRole("button", { name: "Close" }).click();
+  await page.getByRole("button", { name: "Proceed" }).click();
 });

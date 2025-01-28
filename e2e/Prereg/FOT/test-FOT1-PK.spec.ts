@@ -79,6 +79,8 @@ test("Prereg PK FOT", async ({ page }) => {
     await draftPage.clickCloseButton();
   }
 
+  await page1.waitForLoadState("networkidle");
+
   const remarksPage = new RemarksPage(page1);
   remarksPage.clickRemarksButton();
   await remarksPage.remarksButton.waitFor();
@@ -213,13 +215,13 @@ test("Prereg PK FOT", async ({ page }) => {
   const buttonPage = new ButtonPage(page1);
   buttonPage.clickYes();
 
-  const page3Promise = page1.waitForEvent("popup");
-  const page3 = await page3Promise;
+  // const page3Promise = page1.waitForEvent("popup");
+  // const page3 = await page3Promise;
 
   // Wait for the element to be present
-  await page3.getByLabel("Scheme Ref No:").waitFor();
+  await page1.getByLabel("Scheme Ref No:").waitFor();
 
-  const schemeRefValue = await page3.getByLabel("Scheme Ref No:").inputValue();
+  const schemeRefValue = await page1.getByLabel("Scheme Ref No:").inputValue();
   console.log("SRN from locator: " + schemeRefValue);
   const filePath = path.resolve(__dirname, "schemeRefValue.json");
   fs.writeFileSync(filePath, JSON.stringify({ schemeRefValue }));
@@ -232,5 +234,5 @@ test("Prereg PK FOT", async ({ page }) => {
   }
 
   // Perform other actions as needed
-  await page3.getByRole("button", { name: "Close" }).click();
+  await page1.getByRole("button", { name: "Close" }).click();
 });
