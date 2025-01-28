@@ -50,7 +50,7 @@ test("Prereg SAO NTA", async ({ page }) => {
     await leftTabPage.clickMyCases();
 
     // Check if the case exists for the current login user
-    if (await myCasesPage.clickPKT("SAO")) {
+    if (await myCasesPage.clickDeath("SAO")) {
       caseFound = true;
       console.log(`Case found for user ${loginUser}`);
       break;
@@ -132,6 +132,7 @@ test("Prereg SAO NTA", async ({ page }) => {
 
   const schemeRefValue = await page5.getByLabel("Scheme Ref No:").inputValue();
   console.log("SRN from locator: " + schemeRefValue);
+  //create srn fpm
   const filePath = path.resolve(__dirname, "schemeRefValueFPM.json");
   fs.writeFileSync(filePath, JSON.stringify({ schemeRefValue }));
 
@@ -173,8 +174,8 @@ test("Prereg SAO NTA", async ({ page }) => {
   // const page4 = await page4Promise;
 
   // Wait for the element to be present
-  await page2.getByLabel("Scheme Ref No:").waitFor();
+  await page.getByLabel("Scheme Ref No.").waitFor();
 
   // Perform other actions as needed
-  await page2.getByRole("button", { name: "Close" }).click();
+  await page.getByRole("button", { name: "Proceed" }).click();
 });

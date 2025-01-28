@@ -39,6 +39,9 @@ export class CasesPage {
       case "RPO":
         filePath = "C:\\Users\\aaror\\Downloads\\Playwright\\e2e\\Prereg\\RPO\\schemeRefValue.json";
         break;
+      case "FOT":
+        filePath = "C:\\Users\\aaror\\Downloads\\Playwright\\e2e\\Prereg\\FOT\\schemeRefValue.json";
+        break;
     }
 
     // Check if the file exists before trying to read it

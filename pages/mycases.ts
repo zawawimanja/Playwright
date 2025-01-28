@@ -101,7 +101,7 @@ export class MyCasesPage {
     }
   }
 
-  async clickPKT(type: string): Promise<boolean> {
+  async clickDeath(type: string): Promise<boolean> {
     let locator;
 
     // Choose the locator based on the type
