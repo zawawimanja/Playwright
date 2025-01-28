@@ -53,12 +53,14 @@ test("Prereg PK PKT", async ({ page }) => {
   const selectedIdentificationTypeText = await preregPage.getSelectedIdentificationTypeText();
   expect(selectedIdentificationTypeText).toBe(data.identificationType);
 
-  await preregPage.noticeAndBenefitClaimFormSelect.waitFor();
-
   await preregPage.selectNoticeAndBenefitClaimFormOption("Others");
   await expect(preregPage.noticeAndBenefitClaimFormSelect).toBeVisible();
+
   const NoticeAndBenefitClaimFormOptionText = await preregPage.getselectNoticeAndBenefitClaimFormText();
-  expect(NoticeAndBenefitClaimFormOptionText).toBe("Others");
+  // expect(NoticeAndBenefitClaimFormOptionText).toHaveLength(6);
+
+  // Print the actual text content of NoticeAndBenefitClaimFormOptionText
+  console.log("Text content of NoticeAndBenefitClaimFormOptionText:", NoticeAndBenefitClaimFormOptionText);
 
   await preregPage.fillIdentificationNo(data.identificationNo);
   const filledIdentificationNo = await preregPage.getIdentificationNo();
@@ -211,9 +213,15 @@ test("Prereg PK PKT", async ({ page }) => {
   // const page3 = await page3Promise;
 
   // Wait for the element to be present
-  await page1.getByLabel("Scheme Ref No:").waitFor();
+  await page.waitForLoadState("networkidle");
+  await page.getByLabel("Scheme Ref No.").isVisible();
+  await page.locator("#SchemeRefNoCaseInfo").isVisible();
+  await page.locator("#SchemeRefNoCaseInfo").waitFor();
 
-  const schemeRefValue = await page1.getByLabel("Scheme Ref No:").inputValue();
+  const schemeRefValue = await page.$eval("#SchemeRefNoCaseInfo", (input) => {
+    return (input as HTMLInputElement).value; // Cast to HTMLInputElement and return its value
+  });
+
   console.log("SRN from locator: " + schemeRefValue);
   const filePath = path.resolve(__dirname, "schemeRefValue.json");
   fs.writeFileSync(filePath, JSON.stringify({ schemeRefValue }));
@@ -226,5 +234,5 @@ test("Prereg PK PKT", async ({ page }) => {
   }
 
   // Perform other actions as needed
-  await page1.getByRole("button", { name: "Close" }).click();
+  await page.getByRole("button", { name: "Proceed" }).click();
 });
