@@ -49,8 +49,16 @@ export class PreregistrationPage {
     return this.baristaPageOut.getByLabel("Employer Code*");
   }
 
+  get helper() {
+    return this.page.frameLocator("#baristaPageOut").locator("#row23column2");
+  }
+
+  async helperClick() {
+    await this.helper.click();
+  }
+
   private get accidentDate() {
-    return this.baristaPageOut.getByLabel("Accident Date*").click();
+    return this.baristaPageOut.getByLabel("Accident Date*");
   }
 
   private get claimFormSubmissionByListButton() {
@@ -143,7 +151,11 @@ export class PreregistrationPage {
   }
 
   get accidentTimeLabel() {
-    return this.accidentDateFrame.getByLabel("Accident Time*");
+    return this.baristaPageOut.getByLabel("Accident Time*");
+  }
+
+  async clickAccidentTime() {
+    await this.accidentTimeLabel.click();
   }
 
   get accidentTimeComboBox() {
@@ -184,6 +196,10 @@ export class PreregistrationPage {
 
   async selectIdentificationType(type) {
     await this.identificationTypeLabel.selectOption(type);
+  }
+
+  async clickAccidentDatePrereg() {
+    await this.accidentDate.click();
   }
 
   async selectIdentificationTypeHUK(type) {

@@ -1,2 +1,2 @@
-noticeType,accidentYear,accidentMonth,accidentDay,accidentHour,accidentMinute,accidentSecond,identificationType,identificationNo,employerCode
-Accident,2023,0,1,12,00,00,New IC,840704146174,A3702087818V
+noticeType,noticeAndBenefitClaimForm,accidentYear,accidentMonth,accidentDay,accidentHour,accidentMinute,accidentSecond,identificationType,identificationNo,employerCode
+Accident,Others,2023,0,1,12,00,00,New IC,890309145951,A3702087818V,Others

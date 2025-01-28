@@ -52,10 +52,6 @@ export class CalendarPage {
     await this.baristaPageOut.getByRole("combobox").nth(2).selectOption(month);
 
     await this.baristaPageOut.getByRole("link", { name: day, exact: true }).click();
-
-    // await this.page.frameLocator("#baristaPageOut").getByRole("combobox").nth(3).selectOption("1999");
-    // await this.page.frameLocator("#baristaPageOut").getByRole("combobox").nth(2).selectOption("11");
-    // await this.page.frameLocator("#baristaPageOut").getByRole("link", { name: "15" }).click();
   }
 
   async selectDateMCEndDate(year: string, month: string, day: string) {

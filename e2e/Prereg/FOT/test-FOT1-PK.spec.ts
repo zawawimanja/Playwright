@@ -219,9 +219,11 @@ test("Prereg PK FOT", async ({ page }) => {
   // const page3 = await page3Promise;
 
   // Wait for the element to be present
-  await page1.getByLabel("Scheme Ref No:").waitFor();
+  await page.waitForLoadState("networkidle");
+  await page.getByLabel("Scheme Ref No.").isVisible();
+  await page.getByLabel("Scheme Ref No.").waitFor();
 
-  const schemeRefValue = await page1.getByLabel("Scheme Ref No:").inputValue();
+  const schemeRefValue = await page.getByLabel("Scheme Ref No.").inputValue();
   console.log("SRN from locator: " + schemeRefValue);
   const filePath = path.resolve(__dirname, "schemeRefValue.json");
   fs.writeFileSync(filePath, JSON.stringify({ schemeRefValue }));
@@ -234,5 +236,5 @@ test("Prereg PK FOT", async ({ page }) => {
   }
 
   // Perform other actions as needed
-  await page1.getByRole("button", { name: "Close" }).click();
+  await page.getByRole("button", { name: "Proceed" }).click();
 });

@@ -266,11 +266,11 @@ test.only("Prereg PK OD MC Bankcruptcy", async ({ page }) => {
   await expect(preregPage.noticeAndBenefitClaimFormSelect).toHaveValue("Insured Person");
   await expect(preregPage.noticeAndBenefitClaimFormSelect).toContainText("Insured Person");
 
-  await preregPage.fillIdentificationNo("900721015741");
+  await preregPage.fillIdentificationNo("890309145951");
   const filledIdentificationNo = await preregPage.getIdentificationNo();
   //expect(filledIdentificationNo).toBe("910227016078");
 
-  await preregPage.fillEmployerCode("E1100029441B");
+  await preregPage.fillEmployerCode("A3702087818V");
   const filledEmployerCode = await preregPage.getEmployerCode();
   //expect(filledEmployerCode).toBe("A3700059551B");
 

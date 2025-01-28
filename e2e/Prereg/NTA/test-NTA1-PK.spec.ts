@@ -46,19 +46,23 @@ test.only("Prereg PK NTA EFT MC", async ({ page }) => {
 
   await expect(leftTabPage.preregistrationLink).toBeVisible();
   leftTabPage.clickPreregistration();
+
   // Fill in data from CSV
   await preregPage.selectNoticeTypePreRegOption(data.noticeType);
   const selectedOptionText = await preregPage.SelectedNoticeTypeText;
   expect(selectedOptionText).toBe(data.noticeType);
 
-  // Add accident date
-  await page.frameLocator("#baristaPageOut").getByLabel("Accident Date*").click();
+  // click accident date
+  await preregPage.clickAccidentDatePrereg();
+
+  const calendar = new CalendarPage(page);
   await page.frameLocator("#baristaPageOut").getByRole("combobox").nth(3).selectOption(data.accidentYear);
   await page.frameLocator("#baristaPageOut").getByRole("combobox").nth(2).selectOption(data.accidentMonth);
   await page.frameLocator("#baristaPageOut").getByRole("link", { name: data.accidentDay, exact: true }).click();
 
   // Add accident time
-  await page.frameLocator("#baristaPageOut").getByLabel("Accident Time*").click();
+
+  await preregPage.clickAccidentTime();
   await timePage.selectTimeOption(data.accidentHour, data.accidentMinute, data.accidentSecond);
 
   // Fill in identification type and number
@@ -76,7 +80,8 @@ test.only("Prereg PK NTA EFT MC", async ({ page }) => {
   expect(filledEmployerCode).toBe(data.employerCode);
 
   // Click search button
-  await page.frameLocator("#baristaPageOut").locator("#row23column2").click();
+
+  await preregPage.helperClick();
   await preregPage.clickSearchButton();
 
   const pagePromise = page.waitForEvent("popup");
@@ -107,7 +112,7 @@ test.only("Prereg PK NTA EFT MC", async ({ page }) => {
   await insuredPersonInfoPage.clickInsuredPersonInfoButton();
   await insuredPersonInfoPage.noticeAndBenefitClaimFormReceivedDateInput.click();
 
-  await calendarPage.selectDateInsuredPersonPage("2023", "4", "1");
+  await calendarPage.selectDateInsuredPersonPage("2023", "10", "1");
   //if done revision will auto pull field
   await insuredPersonInfoPage.fillOccupation("CS");
 
@@ -165,7 +170,6 @@ test.only("Prereg PK NTA EFT MC", async ({ page }) => {
   await expect(bankInformationPage.accountNoSelect).toBeVisible();
   await bankInformationPage.accountNoSelect.click();
 
-  await page1.getByLabel("Account No.*", { exact: true }).selectOption("Yes");
   await bankInformationPage.selectAccountNo("Yes");
   await bankInformationPage.selectBankLocation("204101");
   await bankInformationPage.selectBankNameAccident("802121");
@@ -207,7 +211,6 @@ test.only("Prereg PK NTA EFT MC", async ({ page }) => {
     console.log("File schemeRefValue.json does not exist at path: " + filePath);
   }
 
-  const buttonPage3 = new ButtonPage(page2);
   buttonPage.clickClose();
 });
 
@@ -215,6 +218,13 @@ test.only("Prereg PK NTA BankRuptcy MC", async ({ page }) => {
   const preregPage = new PreregistrationPage(page);
   const leftTabPage = new LeftTabPage(page);
   let submitPage = new SubmitPage(page);
+  const timePage = new TimePage(page);
+
+  // Read data from CSV
+  const csvFilePath = path.resolve(__dirname, "../../../testData/testData.csv"); // Path to CSV file
+  const testData = await readCSV(csvFilePath);
+  const data = testData[0]; // Use the first row of data
+
   const casesPage = new CasesPage(page, submitPage);
 
   await leftTabPage.leftBar.waitFor();
@@ -236,7 +246,6 @@ test.only("Prereg PK NTA BankRuptcy MC", async ({ page }) => {
   //month will be add 1 month
   await page.frameLocator("#baristaPageOut").getByRole("combobox").nth(2).selectOption("0");
   await page.frameLocator("#baristaPageOut").getByRole("link", { name: "1", exact: true }).click();
-
   // calendarPage1.selectDateAccident("1999", "11", "15");
 
   const time = new TimePage(page);
