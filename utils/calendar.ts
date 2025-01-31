@@ -15,9 +15,10 @@ export class CalendarPage {
     return this.page.locator("#ui-datepicker-div");
   }
 
-  private mcDate() {
+  mcDate() {
     return this.page.getByRole("textbox");
   }
+
   private yearmonthMcDate() {
     return this.page.getByRole("combobox");
   }
@@ -46,12 +47,13 @@ export class CalendarPage {
     await this.page.getByRole("link", { name: day, exact: true }).click();
   }
 
-  async selectDateAccident(year: string, month: string, day: string) {
-    await this.baristaPageOut.getByRole("combobox").nth(3).selectOption(year);
-    //+1
-    await this.baristaPageOut.getByRole("combobox").nth(2).selectOption(month);
+  async selectAccidentDate(accidentYear: string, accidentMonth: string, accidentDay: string) {
+    let monthNumber = parseInt(accidentMonth, 10) - 1;
+    const formattedMonth = monthNumber.toString();
 
-    await this.baristaPageOut.getByRole("link", { name: day, exact: true }).click();
+    await this.page.frameLocator("#baristaPageOut").getByRole("combobox").nth(3).selectOption(accidentYear);
+    await this.page.frameLocator("#baristaPageOut").getByRole("combobox").nth(2).selectOption(formattedMonth);
+    await this.page.frameLocator("#baristaPageOut").getByRole("link", { name: accidentDay, exact: true }).click();
   }
 
   async selectDateMCEndDate(year: string, month: string, day: string) {
