@@ -30,7 +30,7 @@ export class SubmitPage {
   //   return this.page.getByLabel("Scheme Ref No:");
   // }
 
-  schemeRefNo() {
+  get schemeRefNo() {
     return this.page.getByLabel("Scheme Ref No:");
   }
 

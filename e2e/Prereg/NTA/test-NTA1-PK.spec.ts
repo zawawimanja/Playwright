@@ -21,6 +21,7 @@ import { SubmitPage } from "../../../pages/submit";
 import { CasesPage } from "../../../pages/cases";
 import { ButtonPage } from "../../../utils/button";
 import { readCSV } from "../../../helper/csvHelper"; // Import the CSV helper
+import { SRNPage } from "../../../pages/srn";
 // filepath: /c:/Users/aaror/Downloads/Playwright/e2e/Prereg/S2 - ILAT-BI2PI/test-ILAT-PK.spec.ts
 const fs = require("fs");
 const path = require("path");
@@ -56,10 +57,7 @@ test.only("Prereg PK NTA EFT MC", async ({ page }) => {
   await preregPage.clickAccidentDatePrereg();
 
   const calendar = new CalendarPage(page);
-  await page.frameLocator("#baristaPageOut").getByRole("combobox").nth(3).selectOption(data.accidentYear);
-  await page.frameLocator("#baristaPageOut").getByRole("combobox").nth(2).selectOption(data.accidentMonth);
-  await page.frameLocator("#baristaPageOut").getByRole("link", { name: data.accidentDay, exact: true }).click();
-
+  await calendar.selectAccidentDate(data.accidentYear, data.accidentMonth, data.accidentDay);
   // Add accident time
 
   await preregPage.clickAccidentTime();
@@ -98,10 +96,10 @@ test.only("Prereg PK NTA EFT MC", async ({ page }) => {
   }
 
   const remarksPage = new RemarksPage(page1);
-  remarksPage.clickRemarksButton();
   await remarksPage.remarksButton.waitFor();
   await expect(remarksPage.remarksButton).toBeVisible();
   await expect(remarksPage.sectionTabs).toContainText("Remarks");
+  remarksPage.clickRemarksButton();
 
   await remarksPage.addRemarksButton.click();
   await remarksPage.textbox.fill("test");
@@ -109,10 +107,12 @@ test.only("Prereg PK NTA EFT MC", async ({ page }) => {
 
   const insuredPersonInfoPage = new InsuredPersonInfoPage(page1);
   const calendarPage = new CalendarPage(page1);
+
   await insuredPersonInfoPage.clickInsuredPersonInfoButton();
   await insuredPersonInfoPage.noticeAndBenefitClaimFormReceivedDateInput.click();
 
-  await calendarPage.selectDateInsuredPersonPage("2023", "10", "1");
+  await calendarPage.selectDateInsuredPersonPage(data.accidentYear, data.accidentMonth, data.accidentDay);
+  //await calendarPage.selectDateInsuredPersonPage(data.accidentYear, data.accidentMonth, data.accidentDay);
   //if done revision will auto pull field
   await insuredPersonInfoPage.fillOccupation("CS");
 
@@ -141,10 +141,12 @@ test.only("Prereg PK NTA EFT MC", async ({ page }) => {
   await medicalCertificatePage.addRecord();
   await medicalCertificatePage.enterClinicHospitalName("kl");
 
-  await page1.getByRole("textbox").nth(1).click();
-  await calendarPage.selectDateInsuredPersonPage("2023", "1", "1");
+  //await page1.getByRole("textbox").nth(1).click();
+  await calendarPage.mcDate().nth(1).click();
+  await calendarPage.selectDateInsuredPersonPage(data.accidentYear, data.accidentMonth, data.accidentDay);
 
-  await page1.getByRole("textbox").nth(2).click();
+  //await page1.getByRole("textbox").nth(2).click();
+  await calendarPage.mcDate().nth(2).click();
   await calendarPage.selectDateMCEndDate("2023", "1", "20");
   await medicalCertificatePage.submitButton().click();
 
@@ -196,20 +198,8 @@ test.only("Prereg PK NTA EFT MC", async ({ page }) => {
   const page2Promise = page1.waitForEvent("popup");
   const page2 = await page2Promise;
 
-  // Wait for the element to be present
-  await page2.getByLabel("Scheme Ref No:").waitFor();
-
-  const schemeRefValue = await page2.getByLabel("Scheme Ref No:").inputValue();
-  console.log("SRN from locator: " + schemeRefValue);
-  const filePath = path.resolve(__dirname, "schemeRefValue.json");
-  fs.writeFileSync(filePath, JSON.stringify({ schemeRefValue }));
-
-  // Check if the file exists
-  if (fs.existsSync(filePath)) {
-    console.log("File schemeRefValue.json exists at path: " + filePath);
-  } else {
-    console.log("File schemeRefValue.json does not exist at path: " + filePath);
-  }
+  const srnPage = new SRNPage(page2);
+  await srnPage.saveSchemeRefValue();
 
   buttonPage.clickClose();
 });
@@ -238,32 +228,28 @@ test.only("Prereg PK NTA BankRuptcy MC", async ({ page }) => {
   const selectedOptionText = await preregPage.SelectedNoticeTypeText;
   expect(selectedOptionText).toBe("Accident"); // Assert the selected text is correct
 
-  const calendarPage1 = new CalendarPage(page);
+  // click accident date
+  await preregPage.clickAccidentDatePrereg();
 
-  //add accident date
-  await page.frameLocator("#baristaPageOut").getByLabel("Accident Date*").click();
-  await page.frameLocator("#baristaPageOut").getByRole("combobox").nth(3).selectOption("2023");
-  //month will be add 1 month
-  await page.frameLocator("#baristaPageOut").getByRole("combobox").nth(2).selectOption("0");
-  await page.frameLocator("#baristaPageOut").getByRole("link", { name: "1", exact: true }).click();
-  // calendarPage1.selectDateAccident("1999", "11", "15");
+  const calendar = new CalendarPage(page);
+  await calendar.selectAccidentDate(data.accidentYear, data.accidentMonth, data.accidentDay);
 
-  const time = new TimePage(page);
-  //add accident time
-  await page.frameLocator("#baristaPageOut").getByLabel("Accident Time*").click();
-  time.selectTimeOption("12", "00", "00");
+  await preregPage.clickAccidentTime();
+  await timePage.selectTimeOption(data.accidentHour, data.accidentMinute, data.accidentSecond);
 
-  await preregPage.selectIdentificationType("2");
+  // Fill in identification type and number
+  await preregPage.selectIdentificationType(data.identificationType);
   const selectedIdentificationTypeText = await preregPage.getSelectedIdentificationTypeText();
-  //expect(selectedIdentificationTypeText).toBe("New IC");
+  expect(selectedIdentificationTypeText).toBe(data.identificationType);
 
-  await preregPage.fillIdentificationNo("950223115761");
+  await preregPage.fillIdentificationNo(data.identificationNo);
   const filledIdentificationNo = await preregPage.getIdentificationNo();
-  //expect(filledIdentificationNo).toBe("910227016078");
+  expect(filledIdentificationNo).toBe(data.identificationNo);
 
-  await preregPage.fillEmployerCode("B3500001361A");
+  // Fill in employer code
+  await preregPage.fillEmployerCode(data.employerCode);
   const filledEmployerCode = await preregPage.getEmployerCode();
-  //expect(filledEmployerCode).toBe("A3700059551B");
+  expect(filledEmployerCode).toBe(data.employerCode);
 
   await page.frameLocator("#baristaPageOut").locator("#row23column2").click();
   await preregPage.clickSearchButton();
@@ -380,20 +366,8 @@ test.only("Prereg PK NTA BankRuptcy MC", async ({ page }) => {
   const page2Promise = page1.waitForEvent("popup");
   const page2 = await page2Promise;
 
-  // Wait for the element to be present
-  await page2.getByLabel("Scheme Ref No:").waitFor();
-
-  const schemeRefValue = await page2.getByLabel("Scheme Ref No:").inputValue();
-  console.log("SRN from locator: " + schemeRefValue);
-  const filePath = path.resolve(__dirname, "schemeRefValue.json");
-  fs.writeFileSync(filePath, JSON.stringify({ schemeRefValue }));
-
-  // Check if the file exists
-  if (fs.existsSync(filePath)) {
-    console.log("File schemeRefValue.json exists at path: " + filePath);
-  } else {
-    console.log("File schemeRefValue.json does not exist at path: " + filePath);
-  }
+  const srnPage = new SRNPage(page2);
+  await srnPage.saveSchemeRefValue();
 
   // Perform other actions as needed
   await page2.getByRole("button", { name: "Close" }).click();
