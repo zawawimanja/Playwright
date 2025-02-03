@@ -83,6 +83,16 @@ test.only("Prereg PK NTA EFT MC", async ({ page }) => {
   await preregPage.helperClick();
   await preregPage.clickSearchButton();
 
+  // Mock the search API endpoint
+  await page.route("http://barista-sandbox.perkeso.gov.my:8090/barista/preregistration/search", async (route) => {
+    // Fulfill the request with a 200 status only
+    await route.fulfill({
+      status: 200,
+      contentType: "application/json",
+      body: JSON.stringify({}), // You can return an empty object if no data is needed
+    });
+  });
+
   const pagePromise = page.waitForEvent("popup");
   await preregPage.clickNextButton();
   const page1 = await pagePromise;
