@@ -46,6 +46,7 @@ test.only("Prereg PK NTA EFT MC", async ({ page }) => {
   await expect(leftTabPage.leftBar).toBeVisible();
 
   await expect(leftTabPage.preregistrationLink).toBeVisible();
+  //When I click on the Preregistration link
   leftTabPage.clickPreregistration();
 
   // Fill in data from CSV
