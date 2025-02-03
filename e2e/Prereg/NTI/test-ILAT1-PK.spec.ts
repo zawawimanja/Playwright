@@ -23,7 +23,7 @@ const path = require("path");
 test.beforeEach(async ({ page }) => {
   await login(page, "afzan.pks", "u@T_afzan");
 });
-
+//test
 export let schemeRefValue: string;
 
 test("Prereg PK ILAT MC EFT", async ({ page }) => {
