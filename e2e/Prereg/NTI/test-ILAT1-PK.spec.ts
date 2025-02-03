@@ -23,7 +23,7 @@ const path = require("path");
 test.beforeEach(async ({ page }) => {
   await login(page, "afzan.pks", "u@T_afzan");
 });
-
+//test
 export let schemeRefValue: string;
 
 test("Prereg PK ILAT MC EFT", async ({ page }) => {
@@ -35,20 +35,23 @@ test("Prereg PK ILAT MC EFT", async ({ page }) => {
   await leftTabPage.leftBar.waitFor();
   await expect(leftTabPage.leftBar).toBeVisible();
 
+  // User Click Pre-Registration
   await expect(leftTabPage.preregistrationLink).toBeVisible();
   leftTabPage.clickPreregistration();
-
+  // User Choose Notice Type 
   await preregPage.selectNoticeTypePreRegOption("ILAT");
   // Verify the selected option text
 
+  // User Select Identification Type = New IC
   await preregPage.selectIdentificationType("2");
   const selectedIdentificationTypeText = await preregPage.getSelectedIdentificationTypeText();
   expect(selectedIdentificationTypeText).toBe("New IC");
-
+  // User fill in Identification Number
   await preregPage.fillIdentificationNo("890218265181");
   const filledIdentificationNo = await preregPage.getIdentificationNo();
   // expect(filledIdentificationNo).toBe("960618145171");
 
+  // User select Notice and Benefit Claim Form Submission by = Insured Person
   await preregPage.selectNoticeAndBenefitClaimFormOption("Insured Person");
   const NoticeAndBenefitClaimFormOptionText = await preregPage.getselectNoticeAndBenefitClaimFormText();
   expect(NoticeAndBenefitClaimFormOptionText).toBe("Insured Person");
