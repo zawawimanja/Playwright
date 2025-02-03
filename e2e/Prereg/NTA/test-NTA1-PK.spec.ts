@@ -1,5 +1,5 @@
 import { test, expect } from "@playwright/test";
-import { login } from "../../../utils/base"; // Import from base.ts
+import { login } from "../../../utils/base";
 import { PreregistrationPage } from "../../../pages/prereg";
 import { LeftTabPage } from "../../../pages/left_tab";
 import { DraftPage } from "../../../pages/draft";
@@ -20,9 +20,11 @@ import { TimePage } from "../../../utils/time";
 import { SubmitPage } from "../../../pages/submit";
 import { CasesPage } from "../../../pages/cases";
 import { ButtonPage } from "../../../utils/button";
-import { readCSV } from "../../../helper/csvHelper"; // Import the CSV helper
+import { readCSV } from "../../../helper/csvHelper";
 import { SRNPage } from "../../../pages/srn";
-// filepath: /c:/Users/aaror/Downloads/Playwright/e2e/Prereg/S2 - ILAT-BI2PI/test-ILAT-PK.spec.ts
+import { expectedResponse } from "../../../mockData/mockData"; // Adjust the path as necessary
+import { API_ENDPOINTS } from "../../../endpoint/endpoints"; // Adjust the path as necessary
+
 const fs = require("fs");
 const path = require("path");
 
@@ -83,16 +85,6 @@ test.only("Prereg PK NTA EFT MC", async ({ page }) => {
   await preregPage.helperClick();
   await preregPage.clickSearchButton();
 
-  // Mock the search API endpoint
-  await page.route("http://barista-sandbox.perkeso.gov.my:8090/barista/preregistration/search", async (route) => {
-    // Fulfill the request with a 200 status only
-    await route.fulfill({
-      status: 200,
-      contentType: "application/json",
-      body: JSON.stringify({}), // You can return an empty object if no data is needed
-    });
-  });
-
   const pagePromise = page.waitForEvent("popup");
   await preregPage.clickNextButton();
   const page1 = await pagePromise;
@@ -105,6 +97,31 @@ test.only("Prereg PK NTA EFT MC", async ({ page }) => {
     await draftPage.closeButton.waitFor();
     await draftPage.clickCloseButton();
   }
+
+  // Mock the API call using the expected response
+  await page.route(API_ENDPOINTS.GET_SYSTEM_PARAMETERS, async (route) => {
+    await route.fulfill({
+      status: 200, // Set the status code
+      contentType: "application/json", // Set the content type
+      body: JSON.stringify(expectedResponse), // Use the imported expected response
+    });
+  });
+
+  // Trigger the API call directly from the page context and return the response
+  const apiResponse = await page.evaluate(async (endpoint) => {
+    const response = await fetch(endpoint); // Use passed endpoint
+
+    // Ensure we wait for the response to be parsed as JSON
+    const data = await response.json(); // Parse JSON response
+
+    return { status: response.status, data }; // Return status and data
+  }, API_ENDPOINTS.GET_SYSTEM_PARAMETERS); // Pass endpoint as an argument
+
+  // Assert that we received a response
+  expect(apiResponse.status).toBe(200); // Assert that the status code is 200
+
+  // Assert that the body matches expected mock data structure
+  expect(apiResponse.data).toEqual(expectedResponse); // Use the imported expected response for assertion
 
   const remarksPage = new RemarksPage(page1);
   await remarksPage.remarksButton.waitFor();
@@ -119,6 +136,7 @@ test.only("Prereg PK NTA EFT MC", async ({ page }) => {
   const insuredPersonInfoPage = new InsuredPersonInfoPage(page1);
   const calendarPage = new CalendarPage(page1);
 
+  await insuredPersonInfoPage.insuredPersonInfoButton.waitFor();
   await insuredPersonInfoPage.clickInsuredPersonInfoButton();
   await insuredPersonInfoPage.noticeAndBenefitClaimFormReceivedDateInput.click();
 
