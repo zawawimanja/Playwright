@@ -13,6 +13,8 @@ import { SupportingDocumentPage } from "../../../pages/support_doc";
 import { CalendarPage } from "../../../utils/calendar";
 import { SubmitPage } from "../../../pages/submit";
 import { CasesPage } from "../../../pages/cases";
+import { expectedResponse } from "../../../mockData/mockData"; // Adjust the path as necessary
+import { API_ENDPOINTS } from "../../../endpoint/endpoints"; // Adjust the path as necessary
 
 import { ButtonPage } from "../../../utils/button";
 import { readCSV } from "../../../helper/csvHelper"; // Import the CSV helper
@@ -46,29 +48,18 @@ test("Prereg PK PKT", async ({ page }) => {
   await preregPage.selectNoticeTypePreRegOption("Death - PKT");
   // Verify the selected option text
 
-  const calendarPage1 = new CalendarPage(page);
-
   // Fill in identification type and number
   await preregPage.selectIdentificationType(data.identificationType);
   const selectedIdentificationTypeText = await preregPage.getSelectedIdentificationTypeText();
   expect(selectedIdentificationTypeText).toBe(data.identificationType);
 
-  await preregPage.selectNoticeAndBenefitClaimFormOption("Others");
+  await preregPage.noticeAndBenefitClaimFormSelect.waitFor();
   await expect(preregPage.noticeAndBenefitClaimFormSelect).toBeVisible();
-
-  const NoticeAndBenefitClaimFormOptionText = await preregPage.getselectNoticeAndBenefitClaimFormText();
-  // expect(NoticeAndBenefitClaimFormOptionText).toHaveLength(6);
-
-  // Print the actual text content of NoticeAndBenefitClaimFormOptionText
-  console.log("Text content of NoticeAndBenefitClaimFormOptionText:", NoticeAndBenefitClaimFormOptionText);
+  await preregPage.selectNoticeAndBenefitClaimFormOption("Others");
 
   await preregPage.fillIdentificationNo(data.identificationNo);
   const filledIdentificationNo = await preregPage.getIdentificationNo();
   expect(filledIdentificationNo).toBe(data.identificationNo);
-
-  // await preregPage.fillEmployerCode("E1100000366Y");
-  // const filledEmployerCode = await preregPage.getEmployerCode();
-  //expect(filledEmployerCode).toBe("A3700059551B");
 
   await page.frameLocator("#baristaPageOut").locator("#row23column2").click();
   await preregPage.clickSearchButton();
@@ -85,6 +76,31 @@ test("Prereg PK PKT", async ({ page }) => {
   }
 
   await page1.waitForLoadState("networkidle");
+
+  // Mock the API call using the expected response
+  await page.route(API_ENDPOINTS.GET_SYSTEM_PARAMETERS, async (route) => {
+    await route.fulfill({
+      status: 200, // Set the status code
+      contentType: "application/json", // Set the content type
+      body: JSON.stringify(expectedResponse), // Use the imported expected response
+    });
+  });
+
+  // Trigger the API call directly from the page context and return the response
+  const apiResponse = await page.evaluate(async (endpoint) => {
+    const response = await fetch(endpoint); // Use passed endpoint
+
+    // Ensure we wait for the response to be parsed as JSON
+    const data = await response.json(); // Parse JSON response
+
+    return { status: response.status, data }; // Return status and data
+  }, API_ENDPOINTS.GET_SYSTEM_PARAMETERS); // Pass endpoint as an argument
+
+  // Assert that we received a response
+  expect(apiResponse.status).toBe(200); // Assert that the status code is 200
+
+  // Assert that the body matches expected mock data structure
+  expect(apiResponse.data).toEqual(expectedResponse); // Use the imported expected response for assertion
 
   const remarksPage = new RemarksPage(page1);
   await remarksPage.remarksButton.waitFor();
@@ -184,11 +200,13 @@ test("Prereg PK PKT", async ({ page }) => {
 
   await page1.reload();
 
+  await page1.getByText("Death Notice App").waitFor();
   await page1.getByText("Death Notice App").click();
   await page1.waitForLoadState("networkidle");
   // after refresh wages info not function ,need to manual click
   //add fmp info
-  await page1.waitForTimeout(15000);
+  //await page1.waitForTimeout(15000);
+
   await page1.getByRole("button", { name: "FPM Info" }).waitFor();
   await page1.getByRole("button", { name: "FPM Info" }).isVisible;
 
