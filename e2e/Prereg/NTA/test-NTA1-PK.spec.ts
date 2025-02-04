@@ -68,6 +68,8 @@ test.only("Prereg PK NTA EFT MC", async ({ page }) => {
 
   // Fill in identification type and number
   await preregPage.selectIdentificationType(data.identificationType);
+  await preregPage.identificationTypeLabel.waitFor();
+  await preregPage.identificationTypeLabel.isVisible();
   const selectedIdentificationTypeText = await preregPage.getSelectedIdentificationTypeText();
   expect(selectedIdentificationTypeText).toBe(data.identificationType);
 
@@ -176,7 +178,7 @@ test.only("Prereg PK NTA EFT MC", async ({ page }) => {
 
   //await page1.getByRole("textbox").nth(2).click();
   await calendarPage.mcDate().nth(2).click();
-  await calendarPage.selectDateMCEndDate("2023", "1", "20");
+  await calendarPage.selectDateMCEndDate(data.MCEndYear, data.MCEndMonth, data.MCEndDay);
   await medicalCertificatePage.submitButton().click();
 
   const wagesInfoPage = new WagesInfoPage(page1);
@@ -230,10 +232,11 @@ test.only("Prereg PK NTA EFT MC", async ({ page }) => {
   const srnPage = new SRNPage(page2);
   await srnPage.saveSchemeRefValue();
 
-  buttonPage.clickClose();
+  // Perform other actions as needed
+  await page2.getByRole("button", { name: "Close" }).click();
 });
 
-test.only("Prereg PK NTA BankRuptcy MC", async ({ page }) => {
+test("Prereg PK NTA BankRuptcy MC", async ({ page }) => {
   const preregPage = new PreregistrationPage(page);
   const leftTabPage = new LeftTabPage(page);
   let submitPage = new SubmitPage(page);
