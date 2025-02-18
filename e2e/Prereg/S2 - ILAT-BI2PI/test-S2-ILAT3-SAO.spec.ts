@@ -29,7 +29,7 @@ test("Prereg SAO ILAT S2", async ({ page }) => {
   let submitPage = new SubmitPage(page);
   const casesPage = new CasesPage(page, submitPage);
   const myCasesPage = new MyCasesPage(page, casesPage);
-  await casesPage.init();
+  await casesPage.init("ILAT-BI2PI");
 
   let loginUser = "roliana.pks";
   let caseFound = false;
@@ -100,7 +100,7 @@ test("Prereg SAO ILAT S2", async ({ page }) => {
 
   // await page2.locator("#Contribution56").getByRole("textbox").first().fill("E1300001143K");
 
-  await page2.locator('[id^="Contribution56_EmployerCode-"]').nth(0).fill("E1100024537Z");
+  await page2.locator('[id^="Contribution56_EmployerCode-"]').nth(0).fill("B3400033128Y");
   //await page2.locator('[id^="Contribution56_EmployerCode-"]').nth(1).fill("E1100022162V");
 
   await page2.getByRole("button", { name: "Search" }).click();
@@ -158,7 +158,7 @@ test("Prereg SAO ILAT S2", async ({ page }) => {
 
   await previewSubmissionPage.clickSubmitButton();
   const buttonPage = new ButtonPage(page2);
-  buttonPage.clickYes();
+  //buttonPage.clickYes();
 
   const page3Promise = page2.waitForEvent("popup");
   const page3 = await page3Promise;

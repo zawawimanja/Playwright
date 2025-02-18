@@ -111,7 +111,7 @@ test("Prereg SCO ILAT", async ({ page }) => {
   await confirmationOfInsuredPage.clickConfirmationOfInsuredButton();
   await confirmationOfInsuredPage.checkCompletedCheckbox();
 
-  await expect(confirmationOfInsuredPage.completedCheckbox).not.toBeChecked();
+  await expect(confirmationOfInsuredPage.completedCheckbox).toBeChecked();
 
   const inconsistentDoubtfulPage = new InconsistentDoubtfulPage(page2);
   await inconsistentDoubtfulPage.clickInconsistentDoubtfulButton();

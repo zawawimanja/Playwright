@@ -16,6 +16,7 @@ import { SubmitPage } from "../../../pages/submit";
 import { CasesPage } from "../../../pages/cases";
 import { InvalidityInfoPage } from "../../../pages/invalidity_info";
 import { ButtonPage } from "../../../utils/button";
+import { readCSV } from "../../../helper/csvHelper";
 
 const fs = require("fs");
 const path = require("path");
@@ -26,11 +27,16 @@ test.beforeEach(async ({ page }) => {
 
 export let schemeRefValue: string;
 
-test("Prereg PK ILAT MC EFT", async ({ page }) => {
+test.only("Prereg PK ILAT MC EFT", async ({ page }) => {
   const preregPage = new PreregistrationPage(page);
   const leftTabPage = new LeftTabPage(page);
   let submitPage = new SubmitPage(page);
   const casesPage = new CasesPage(page, submitPage);
+
+  // Read data from CSV
+  const csvFilePath = path.resolve(__dirname, "../../../testData/testData.csv"); // Path to CSV file
+  const testData = await readCSV(csvFilePath);
+  const data = testData[0]; // Use the first row of data
 
   await leftTabPage.leftBar.waitFor();
   await expect(leftTabPage.leftBar).toBeVisible();
@@ -43,15 +49,16 @@ test("Prereg PK ILAT MC EFT", async ({ page }) => {
 
   await preregPage.selectIdentificationType("2");
   const selectedIdentificationTypeText = await preregPage.getSelectedIdentificationTypeText();
-  expect(selectedIdentificationTypeText).toBe("New IC");
+  expect(selectedIdentificationTypeText).toBe(data.identificationType);
 
-  await preregPage.fillIdentificationNo("890218265181");
+  await preregPage.fillIdentificationNo(data.identificationNo);
   const filledIdentificationNo = await preregPage.getIdentificationNo();
-  // expect(filledIdentificationNo).toBe("960618145171");
+  expect(filledIdentificationNo).toBe(data.identificationNo);
 
-  await preregPage.selectNoticeAndBenefitClaimFormOption("Insured Person");
+  await preregPage.noticeAndBenefitClaimFormSelect.waitFor({ state: "visible" });
+  await preregPage.selectNoticeAndBenefitClaimFormOption(data.noticeAndBenefitClaimForm);
   const NoticeAndBenefitClaimFormOptionText = await preregPage.getselectNoticeAndBenefitClaimFormText();
-  expect(NoticeAndBenefitClaimFormOptionText).toBe("Insured Person");
+  expect(NoticeAndBenefitClaimFormOptionText).toBe(data.noticeAndBenefitClaimForm);
 
   await preregPage.clickClaimFormSubmissionByListButton();
   await preregPage.clickSearchButton();
