@@ -174,11 +174,11 @@ test.only("Prereg PK NTA EFT MC", async ({ page }) => {
 
   //await page1.getByRole("textbox").nth(1).click();
   await calendarPage.mcDate().nth(1).click();
-  await calendarPage.selectDateInsuredPersonPage(data.accidentYear, data.accidentMonth, data.accidentDay);
+  await calendarPage.selectDateInsuredPersonPage("2023", "2", "1");
 
   //await page1.getByRole("textbox").nth(2).click();
   await calendarPage.mcDate().nth(2).click();
-  await calendarPage.selectDateMCEndDate(data.MCEndYear, data.MCEndMonth, data.MCEndDay);
+  await calendarPage.selectDateMCEndDate("2023", "2", "20");
   await medicalCertificatePage.submitButton().click();
 
   const wagesInfoPage = new WagesInfoPage(page1);
@@ -314,7 +314,8 @@ test("Prereg PK NTA BankRuptcy MC", async ({ page }) => {
   await insuredPersonInfoPage.clickInsuredPersonInfoButton();
   await insuredPersonInfoPage.noticeAndBenefitClaimFormReceivedDateInput.click();
 
-  await calendarPage.selectDateInsuredPersonPage("2023", "4", "1");
+  await calendarPage.selectDateInsuredPersonPage(data.accidentYear, data.accidentMonth, data.accidentDay);
+
   //if done revision will auto pull field
   await insuredPersonInfoPage.fillOccupation("CS");
 
@@ -344,10 +345,10 @@ test("Prereg PK NTA BankRuptcy MC", async ({ page }) => {
   await medicalCertificatePage.enterClinicHospitalName("kl");
 
   await page1.getByRole("textbox").nth(1).click();
-  await calendarPage.selectDateInsuredPersonPage("2023", "1", "1");
+  await calendarPage.selectDateInsuredPersonPage("2023", "2", "1");
 
   await page1.getByRole("textbox").nth(2).click();
-  await calendarPage.selectDateMCEndDate("2023", "1", "20");
+  await calendarPage.selectDateMCEndDate("2023", "2", "20");
   await medicalCertificatePage.submitButton().click();
 
   const wagesInfoPage = new WagesInfoPage(page1);
@@ -398,8 +399,20 @@ test("Prereg PK NTA BankRuptcy MC", async ({ page }) => {
   const page2Promise = page1.waitForEvent("popup");
   const page2 = await page2Promise;
 
-  const srnPage = new SRNPage(page2);
-  await srnPage.saveSchemeRefValue();
+  // Wait for the element to be present
+  await page2.getByLabel("Scheme Ref No:").waitFor();
+
+  const schemeRefValue = await page2.getByLabel("Scheme Ref No:").inputValue();
+  console.log("SRN from locator: " + schemeRefValue);
+  const filePath = path.resolve(__dirname, "schemeRefValue.json");
+  fs.writeFileSync(filePath, JSON.stringify({ schemeRefValue }));
+
+  // Check if the file exists
+  if (fs.existsSync(filePath)) {
+    console.log("File schemeRefValue.json exists at path: " + filePath);
+  } else {
+    console.log("File schemeRefValue.json does not exist at path: " + filePath);
+  }
 
   // Perform other actions as needed
   await page2.getByRole("button", { name: "Close" }).click();
