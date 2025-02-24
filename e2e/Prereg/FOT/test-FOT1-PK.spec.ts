@@ -44,9 +44,11 @@ test("Prereg PK FOT", async ({ page }) => {
   await expect(leftTabPage.preregistrationLink).toBeVisible();
   leftTabPage.clickPreregistration();
 
+  await page.waitForLoadState("networkidle");
+  await preregPage.noticeTypePreRegSelect.waitFor({ state: "visible" });
   await preregPage.selectNoticeTypePreRegOption("Death - FOT");
-
-  const calendarPage1 = new CalendarPage(page);
+  const noticeTypeText = await preregPage.getnoticeTypePreRegSelect();
+  expect(noticeTypeText).toBe("Death - FOT");
 
   // Fill in identification type and number
   await preregPage.selectIdentificationType(data.identificationType);
@@ -57,15 +59,12 @@ test("Prereg PK FOT", async ({ page }) => {
   const filledIdentificationNo = await preregPage.getIdentificationNo();
   expect(filledIdentificationNo).toBe(data.identificationNo);
 
-  await preregPage.selectNoticeAndBenefitClaimFormOption("Others");
+  await preregPage.selectNoticeAndBenefitClaimFormOption(data.noticeAndBenefitClaimForm);
   const NoticeAndBenefitClaimFormOptionText = await preregPage.getselectNoticeAndBenefitClaimFormText();
-  // expect(NoticeAndBenefitClaimFormOptionText).toBe("Others")
+  expect(NoticeAndBenefitClaimFormOptionText).toBe(data.noticeAndBenefitClaimForm);
 
-  await preregPage.fillEmployerCode("A3702087818V");
-  // const filledEmployerCode = await preregPage.getEmployerCode();
-  //expect(filledEmployerCode).toBe("A3700059551B");
+  await preregPage.fillEmployerCode(data.employerCode);
 
-  await page.frameLocator("#baristaPageOut").locator("#row23column2").click();
   await preregPage.clickSearchButton();
 
   const pagePromise = page.waitForEvent("popup");
@@ -92,11 +91,12 @@ test("Prereg PK FOT", async ({ page }) => {
   await remarksPage.saveRemarksButton.click();
 
   const insuredPersonInfoPage = new InsuredPersonInfoPage(page1);
-  const calendarPage = new CalendarPage(page1);
+  await insuredPersonInfoPage.insuredPersonInfoButton.waitFor({ state: "visible" });
   await insuredPersonInfoPage.clickInsuredPersonInfoButton();
   await insuredPersonInfoPage.noticeAndBenefitClaimFormReceivedDateInput.click();
 
-  await calendarPage.selectDateInsuredPersonPage("1997", "9", "20");
+  const calendarPage = new CalendarPage(page1);
+  await calendarPage.selectDateInsuredPersonPage(data.accidentYear, data.accidentMonth, data.accidentDay);
   //if done revision will auto pull field
   await insuredPersonInfoPage.fillOccupationPKT("CS");
 

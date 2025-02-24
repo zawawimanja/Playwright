@@ -80,11 +80,10 @@ test.only("Prereg PK NTA EFT MC", async ({ page }) => {
   // Fill in employer code
   await preregPage.fillEmployerCode(data.employerCode);
   const filledEmployerCode = await preregPage.getEmployerCode();
+  await preregPage.employerCodeInput.click();
   expect(filledEmployerCode).toBe(data.employerCode);
 
   // Click search button
-
-  await preregPage.helperClick();
   await preregPage.clickSearchButton();
 
   const pagePromise = page.waitForEvent("popup");
@@ -137,6 +136,8 @@ test.only("Prereg PK NTA EFT MC", async ({ page }) => {
 
   const insuredPersonInfoPage = new InsuredPersonInfoPage(page1);
   const calendarPage = new CalendarPage(page1);
+
+  await page1.waitForLoadState("networkidle");
 
   await insuredPersonInfoPage.insuredPersonInfoButton.waitFor();
   await insuredPersonInfoPage.clickInsuredPersonInfoButton();
@@ -230,7 +231,22 @@ test.only("Prereg PK NTA EFT MC", async ({ page }) => {
   const page2 = await page2Promise;
 
   const srnPage = new SRNPage(page2);
-  await srnPage.saveSchemeRefValue();
+  // await srnPage.saveSchemeRefValue();
+
+  // Wait for the element to be present
+  await page2.getByLabel("Scheme Ref No:").waitFor();
+
+  const schemeRefValue = await page2.getByLabel("Scheme Ref No:").inputValue();
+  console.log("SRN from locator: " + schemeRefValue);
+  const filePath = path.resolve(__dirname, "schemeRefValue.json");
+  fs.writeFileSync(filePath, JSON.stringify({ schemeRefValue }));
+
+  // Check if the file exists
+  if (fs.existsSync(filePath)) {
+    console.log("File schemeRefValue.json exists at path: " + filePath);
+  } else {
+    console.log("File schemeRefValue.json does not exist at path: " + filePath);
+  }
 
   // Perform other actions as needed
   await page2.getByRole("button", { name: "Close" }).click();
