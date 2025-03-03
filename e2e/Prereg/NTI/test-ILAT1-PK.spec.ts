@@ -44,8 +44,9 @@ test.only("Prereg PK ILAT MC EFT", async ({ page }) => {
   await expect(leftTabPage.preregistrationLink).toBeVisible();
   leftTabPage.clickPreregistration();
 
-  await preregPage.selectNoticeTypePreRegOption("ILAT");
-  // Verify the selected option text
+  await preregPage.selectNoticeTypePreRegOption(data.noticeType);
+  const selectedOptionText = await preregPage.SelectedNoticeTypeText;
+  expect(selectedOptionText).toBe(data.noticeType);
 
   await preregPage.selectIdentificationType("2");
   const selectedIdentificationTypeText = await preregPage.getSelectedIdentificationTypeText();
@@ -73,25 +74,13 @@ test.only("Prereg PK ILAT MC EFT", async ({ page }) => {
   }
 
   const remarksPage = new RemarksPage(page1);
+  await remarksPage.remarksButton.waitFor();
+  await expect(remarksPage.remarksButton).toBeVisible();
+  await expect(remarksPage.sectionTabs).toContainText("Remarks");
   remarksPage.clickRemarksButton();
-  // await remarksPage.remarksButton.waitFor();
-  // await expect(remarksPage.remarksButton).toBeVisible();
-  // await expect(remarksPage.sectionTabs).toContainText("Remarks");
-  // await remarksPage.remarksButton.waitFor();
-  // await remarksPage.addRemarksButton.click();
-  // await remarksPage.textbox.fill("test");
-  // await remarksPage.saveRemarksButton.click();
 
   //error message
   //if exist check close button and if not continue
-
-  // Check if the "Close" button exists and is visible
-  const closeButton = page1.getByRole("button", { name: "Close" });
-  await page1.getByLabel("Message").waitFor();
-  if (await page1.getByLabel("Message").isVisible()) {
-    await closeButton.waitFor();
-    await closeButton.click(); // Click the button if it exists
-  }
 
   const insuredPersonInfoPage = new InsuredPersonInfoPage(page1);
   const calendarPage = new CalendarPage(page1);

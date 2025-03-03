@@ -139,10 +139,9 @@ test.only("Prereg PK NTA EFT MC", async ({ page }) => {
 
   await page1.waitForLoadState("networkidle");
 
-  await insuredPersonInfoPage.insuredPersonInfoButton.waitFor();
+  await insuredPersonInfoPage.insuredPersonInfoButton.waitFor({ state: "visible" });
   await insuredPersonInfoPage.clickInsuredPersonInfoButton();
   await insuredPersonInfoPage.noticeAndBenefitClaimFormReceivedDateInput.click();
-
   await calendarPage.selectDateInsuredPersonPage(data.accidentYear, data.accidentMonth, data.accidentDay);
   //await calendarPage.selectDateInsuredPersonPage(data.accidentYear, data.accidentMonth, data.accidentDay);
   //if done revision will auto pull field
@@ -175,11 +174,11 @@ test.only("Prereg PK NTA EFT MC", async ({ page }) => {
 
   //await page1.getByRole("textbox").nth(1).click();
   await calendarPage.mcDate().nth(1).click();
-  await calendarPage.selectDateInsuredPersonPage("2023", "2", "1");
+  await calendarPage.selectDateInsuredPersonPage("2025", "2", "1");
 
   //await page1.getByRole("textbox").nth(2).click();
   await calendarPage.mcDate().nth(2).click();
-  await calendarPage.selectDateMCEndDate("2023", "2", "20");
+  await calendarPage.selectDateMCEndDate("2025", "5", "31");
   await medicalCertificatePage.submitButton().click();
 
   const wagesInfoPage = new WagesInfoPage(page1);

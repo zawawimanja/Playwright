@@ -23,8 +23,8 @@ import { InvalidityInfoPage } from "../../../pages/invalidity_info";
 import { ButtonPage } from "../../../utils/button";
 
 test.beforeEach(async ({ page }) => {
-  //await login(page, "atilia.pks", "u@T_atilia");
-  await login(page, "nazira.pks", "u@T_nazira");
+  await login(page, "atilia.pks", "u@T_atilia");
+  // await login(page, "nazira.pks", "u@T_nazira");
 });
 
 export let schemeRefValue: string;
@@ -62,8 +62,8 @@ test("Prereg SCO ILAT", async ({ page }) => {
 
       headerPage.clickUserProfile();
       headerPage.clickSignOut();
-      //await login(page, "nazira.pks", "u@T_nazira");
-      await login(page, "atilia.pks", "u@T_atilia");
+      await login(page, "nazira.pks", "u@T_nazira");
+      // await login(page, "atilia.pks", "u@T_atilia");
     }
   }
 
