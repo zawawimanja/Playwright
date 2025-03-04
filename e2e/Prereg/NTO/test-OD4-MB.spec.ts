@@ -219,6 +219,7 @@ test("Prereg MB OD", async ({ page }) => {
   const supportingDocumentPage = new SupportingDocumentPage(page2);
   await supportingDocumentPage.clickSupportingDocumentButton();
 
+  await page2.waitForLoadState("networkidle");
   const previewSubmissionPage = new PreviewSubmissionPage(page2);
   await previewSubmissionPage.previewSubmissionButton.waitFor({ state: "visible" });
   await expect(previewSubmissionPage.previewSubmissionButton).toBeVisible();

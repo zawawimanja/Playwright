@@ -29,8 +29,12 @@ export class PreregistrationPage {
     return this.baristaPageOut.locator("#Heading31");
   }
 
-  private get noticeTypePreRegSelect() {
+  get noticeTypePreRegSelect() {
     return this.baristaPageOut.locator("#NoticeTypePreReg");
+  }
+
+  public async getnoticeTypePreRegSelect(): Promise<string> {
+    return await this.noticeTypePreRegSelect.locator("option:checked").innerText();
   }
 
   get noticeAndBenefitClaimFormSelect() {
@@ -45,8 +49,8 @@ export class PreregistrationPage {
     return this.baristaPageOut.getByLabel("Identification No.");
   }
 
-  private get employerCodeInput() {
-    return this.baristaPageOut.getByLabel("Employer Code*");
+  get employerCodeInput() {
+    return this.baristaPageOut.getByRole("textbox", { name: "Employer Code" });
   }
 
   get helper() {
@@ -58,7 +62,7 @@ export class PreregistrationPage {
   }
 
   private get accidentDate() {
-    return this.baristaPageOut.getByLabel("Accident Date*");
+    return this.baristaPageOut.getByRole("textbox", { name: "Accident Date" });
   }
 
   private get claimFormSubmissionByListButton() {
@@ -151,7 +155,7 @@ export class PreregistrationPage {
   }
 
   get accidentTimeLabel() {
-    return this.baristaPageOut.getByLabel("Accident Time*");
+    return this.baristaPageOut.getByRole("textbox", { name: "Accident Time" });
   }
 
   async clickAccidentTime() {

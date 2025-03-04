@@ -68,7 +68,7 @@ test("Prereg SCO NTA", async ({ page }) => {
 
       headerPage.clickUserProfile();
       headerPage.clickSignOut();
-      // await login(page, "nazira.pks", "u@T_nazira");
+      //  await login(page, "nazira.pks", "u@T_nazira");
       await login(page, "atilia.pks", "u@T_atilia");
     }
   }

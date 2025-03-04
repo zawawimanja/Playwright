@@ -15,8 +15,8 @@ import { HeaderPage } from "../../../pages/header";
 import { ButtonPage } from "../../../utils/button";
 
 test.beforeEach(async ({ page }) => {
-  await login(page, "atilia.pks", "u@T_atilia");
-  //await login(page, "nazira.pks", "u@T_nazira");
+  // await login(page, "atilia.pks", "u@T_atilia");
+  await login(page, "nazira.pks", "u@T_nazira");
 });
 
 export let schemeRefValue: string;
@@ -40,7 +40,7 @@ test("Prereg SCO ILAT S2", async ({ page }) => {
 
     // Click my cases left tab
     await leftTabPage.clickMyCases();
-    await casesPage.init(); // Initialize and read schemeRefValue
+    await casesPage.init("ILAT-BI2PI"); // Initialize and read schemeRefValue
 
     console.log("Retrieved SRN: " + casesPage.casesCreated); // Log retrieved value
     // Check if the case exists for the current login user
@@ -56,8 +56,8 @@ test("Prereg SCO ILAT S2", async ({ page }) => {
 
       headerPage.clickUserProfile();
       headerPage.clickSignOut();
-      await login(page, "nazira.pks", "u@T_nazira");
-      // await login(page, "atilia.pks", "u@T_atilia");
+      // await login(page, "nazira.pks", "u@T_nazira");
+      await login(page, "atilia.pks", "u@T_atilia");
     }
   }
 

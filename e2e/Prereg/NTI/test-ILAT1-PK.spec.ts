@@ -16,6 +16,7 @@ import { SubmitPage } from "../../../pages/submit";
 import { CasesPage } from "../../../pages/cases";
 import { InvalidityInfoPage } from "../../../pages/invalidity_info";
 import { ButtonPage } from "../../../utils/button";
+import { readCSV } from "../../../helper/csvHelper";
 
 const fs = require("fs");
 const path = require("path");
@@ -26,11 +27,16 @@ test.beforeEach(async ({ page }) => {
 //test
 export let schemeRefValue: string;
 
-test("Prereg PK ILAT MC EFT", async ({ page }) => {
+test.only("Prereg PK ILAT MC EFT", async ({ page }) => {
   const preregPage = new PreregistrationPage(page);
   const leftTabPage = new LeftTabPage(page);
   let submitPage = new SubmitPage(page);
   const casesPage = new CasesPage(page, submitPage);
+
+  // Read data from CSV
+  const csvFilePath = path.resolve(__dirname, "../../../testData/testData.csv"); // Path to CSV file
+  const testData = await readCSV(csvFilePath);
+  const data = testData[0]; // Use the first row of data
 
   await leftTabPage.leftBar.waitFor();
   await expect(leftTabPage.leftBar).toBeVisible();
@@ -38,29 +44,37 @@ test("Prereg PK ILAT MC EFT", async ({ page }) => {
   // User Click Pre-Registration
   await expect(leftTabPage.preregistrationLink).toBeVisible();
   leftTabPage.clickPreregistration();
-  // User Choose Notice Type 
-  await preregPage.selectNoticeTypePreRegOption("ILAT");
-  // Verify the selected option text
+
+
+  await preregPage.noticeTypePreRegSelect.waitFor({ state: "visible" });
+  await preregPage.selectNoticeTypePreRegOption(data.noticeType);
+  const selectedOptionText = await preregPage.SelectedNoticeTypeText;
+  expect(selectedOptionText).toBe(data.noticeType);
+
 
   // User Select Identification Type = New IC
   await preregPage.selectIdentificationType("2");
   const selectedIdentificationTypeText = await preregPage.getSelectedIdentificationTypeText();
-  expect(selectedIdentificationTypeText).toBe("New IC");
-  // User fill in Identification Number
-  await preregPage.fillIdentificationNo("890218265181");
-  const filledIdentificationNo = await preregPage.getIdentificationNo();
-  // expect(filledIdentificationNo).toBe("960618145171");
 
-  // User select Notice and Benefit Claim Form Submission by = Insured Person
-  await preregPage.selectNoticeAndBenefitClaimFormOption("Insured Person");
+  expect(selectedIdentificationTypeText).toBe(data.identificationType);
+
+  await preregPage.fillIdentificationNo(data.identificationNo);
+
+  const filledIdentificationNo = await preregPage.getIdentificationNo();
+  expect(filledIdentificationNo).toBe(data.identificationNo);
+
+  await preregPage.noticeAndBenefitClaimFormSelect.waitFor({ state: "visible" });
+  await preregPage.selectNoticeAndBenefitClaimFormOption(data.noticeAndBenefitClaimForm);
+
   const NoticeAndBenefitClaimFormOptionText = await preregPage.getselectNoticeAndBenefitClaimFormText();
-  expect(NoticeAndBenefitClaimFormOptionText).toBe("Insured Person");
+  expect(NoticeAndBenefitClaimFormOptionText).toBe(data.noticeAndBenefitClaimForm);
 
   await preregPage.clickClaimFormSubmissionByListButton();
   await preregPage.clickSearchButton();
   const pagePromise = page.waitForEvent("popup");
   await preregPage.clickNextButton();
   const page1 = await pagePromise;
+  await page1.waitForLoadState("networkidle");
   const draftPage = new DraftPage(page1);
 
   if (await draftPage.closeButton.isVisible()) {
@@ -69,25 +83,13 @@ test("Prereg PK ILAT MC EFT", async ({ page }) => {
   }
 
   const remarksPage = new RemarksPage(page1);
+  await remarksPage.remarksButton.waitFor();
+  await expect(remarksPage.remarksButton).toBeVisible();
+  await expect(remarksPage.sectionTabs).toContainText("Remarks");
   remarksPage.clickRemarksButton();
-  // await remarksPage.remarksButton.waitFor();
-  // await expect(remarksPage.remarksButton).toBeVisible();
-  // await expect(remarksPage.sectionTabs).toContainText("Remarks");
-  // await remarksPage.remarksButton.waitFor();
-  // await remarksPage.addRemarksButton.click();
-  // await remarksPage.textbox.fill("test");
-  // await remarksPage.saveRemarksButton.click();
 
   //error message
   //if exist check close button and if not continue
-
-  // Check if the "Close" button exists and is visible
-  const closeButton = page1.getByRole("button", { name: "Close" });
-  await page1.getByLabel("Message").waitFor();
-  if (await page1.getByLabel("Message").isVisible()) {
-    await closeButton.waitFor();
-    await closeButton.click(); // Click the button if it exists
-  }
 
   const insuredPersonInfoPage = new InsuredPersonInfoPage(page1);
   const calendarPage = new CalendarPage(page1);

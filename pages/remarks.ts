@@ -34,6 +34,10 @@ export class RemarksPage {
     return this.page.locator("#AddRemarksDetailsR").getByRole("textbox");
   }
 
+  get textboxSAO() {
+    return this.page.locator("#AddRemarksDetails_Subform_Remarks").getByRole("textbox");
+  }
+
   get textboxSCONTA() {
     return this.page.locator('[id^="subCtrlPreviewRow2-"]').first().getByRole("textbox");
   }

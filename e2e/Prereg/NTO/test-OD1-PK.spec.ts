@@ -23,13 +23,14 @@ import { readCSV } from "../../../helper/csvHelper"; // Import the CSV helper
 // filepath: /c:/Users/aaror/Downloads/Playwright/e2e/Prereg/S2 - ILAT-BI2PI/test-ILAT-PK.spec.ts
 const fs = require("fs");
 const path = require("path");
+
 test.beforeEach(async ({ page }) => {
   await login(page, "afzan.pks", "u@T_afzan");
 });
 
 export let schemeRefValue: string;
 
-test("Prereg PK OD MC EFT", async ({ page }) => {
+test.only("Prereg PK OD MC EFT", async ({ page }) => {
   const preregPage = new PreregistrationPage(page);
   const leftTabPage = new LeftTabPage(page);
   let submitPage = new SubmitPage(page);
@@ -46,9 +47,11 @@ test("Prereg PK OD MC EFT", async ({ page }) => {
   await expect(leftTabPage.preregistrationLink).toBeVisible();
   // When click on the PreRegisteration tab
   leftTabPage.clickPreregistration();
+  await page.waitForLoadState("networkidle");
 
   await preregPage.selectNoticeTypePreRegOption("OD");
-  // Verify the selected option text
+  const selectedOptionText = await preregPage.SelectedNoticeTypeText;
+  expect(selectedOptionText).toBe("OD");
 
   await preregPage.selectInsuredPersonEmployment("Yes");
   const selectedEmploymentText = await preregPage.getSelectedInsuredPersonEmploymentText();
@@ -72,7 +75,7 @@ test("Prereg PK OD MC EFT", async ({ page }) => {
 
   await preregPage.fillEmployerCode(data.employerCode);
   const filledEmployerCode = await preregPage.getEmployerCode();
-  //expect(filledEmployerCode).toBe("A3700059551B");
+  expect(filledEmployerCode).toBe(data.employerCode);
 
   // Click the "Submit" button to proceed to
   await preregPage.clickClaimFormSubmissionByListButton();
@@ -245,7 +248,7 @@ test("Prereg PK OD MC EFT", async ({ page }) => {
   await page2.getByRole("button", { name: "Close" }).click();
 });
 
-test.only("Prereg PK OD MC Bankcruptcy", async ({ page }) => {
+test("Prereg PK OD MC Bankcruptcy", async ({ page }) => {
   const preregPage = new PreregistrationPage(page);
   const leftTabPage = new LeftTabPage(page);
   let submitPage = new SubmitPage(page);

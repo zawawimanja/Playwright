@@ -36,7 +36,7 @@ test("Prereg PK ILAT S2", async ({ page }) => {
 
   await preregPage.setSearchByOption("IC");
 
-  await preregPage.enterIdentificationNo("770628015322");
+  await preregPage.enterIdentificationNo("740704086038");
 
   await preregPage.clickSearchButton();
   await preregPage.clickCreateRevisionButton();

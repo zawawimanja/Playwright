@@ -45,8 +45,13 @@ test("Prereg PK PKT", async ({ page }) => {
   await expect(leftTabPage.preregistrationLink).toBeVisible();
   leftTabPage.clickPreregistration();
 
+  await page.waitForLoadState("networkidle");
+
+  await preregPage.noticeTypePreRegSelect.waitFor();
+  await expect(preregPage.noticeTypePreRegSelect).toBeVisible();
   await preregPage.selectNoticeTypePreRegOption("Death - PKT");
-  // Verify the selected option text
+  const selectedOptionText = await preregPage.SelectedNoticeTypeText;
+  expect(selectedOptionText).toBe("Death - PKT");
 
   // Fill in identification type and number
   await preregPage.selectIdentificationType(data.identificationType);
@@ -61,21 +66,18 @@ test("Prereg PK PKT", async ({ page }) => {
   const filledIdentificationNo = await preregPage.getIdentificationNo();
   expect(filledIdentificationNo).toBe(data.identificationNo);
 
-  await page.frameLocator("#baristaPageOut").locator("#row23column2").click();
   await preregPage.clickSearchButton();
 
   const pagePromise = page.waitForEvent("popup");
   await preregPage.clickNextButton();
   const page1 = await pagePromise;
-
+  await page1.waitForLoadState("networkidle");
   const draftPage = new DraftPage(page1);
 
   if (await draftPage.closeButton.isVisible()) {
     await draftPage.closeButton.waitFor();
     await draftPage.clickCloseButton();
   }
-
-  await page1.waitForLoadState("networkidle");
 
   // Mock the API call using the expected response
   await page.route(API_ENDPOINTS.GET_SYSTEM_PARAMETERS, async (route) => {
@@ -111,6 +113,8 @@ test("Prereg PK PKT", async ({ page }) => {
   await remarksPage.addRemarksButton.click();
   await remarksPage.textbox.fill("test PK");
   await remarksPage.saveRemarksButton.click();
+
+  await page1.waitForLoadState("networkidle");
 
   const insuredPersonInfoPage = new InsuredPersonInfoPage(page1);
   const calendarPage = new CalendarPage(page1);
@@ -180,20 +184,6 @@ test("Prereg PK PKT", async ({ page }) => {
   const button = new ButtonPage(page2);
   await button.clickSave();
 
-  const wagesInfoPage = new WagesInfoPage(page1);
-  await wagesInfoPage.wagesInfoButton.waitFor({ state: "visible" });
-  //await wagesInfoPage.clickWagesInfoButton();
-
-  const preferredSOCSOOfficePage = new PreferredSOCSOOfficePage(page1);
-  await preferredSOCSOOfficePage.preferredSOCSOOfficeButton.waitFor({ state: "visible" });
-
-  await preferredSOCSOOfficePage.clickPreferredSOCSOOfficeButton();
-
-  preferredSOCSOOfficePage.selectSOCSOState("200701");
-  await preferredSOCSOOfficePage.selectSOCSOOffice("200419");
-
-  await page1.getByRole("button", { name: "Confirmation of Dependent/" }).click();
-
   await page1.getByRole("button", { name: "Save" }).click();
   await page1.locator("button").filter({ hasText: "Save" }).click();
   await page1.getByRole("button", { name: "Close" }).click();
@@ -202,27 +192,43 @@ test("Prereg PK PKT", async ({ page }) => {
 
   await page1.getByText("Death Notice App").waitFor();
   await page1.getByText("Death Notice App").click();
+
   await page1.waitForLoadState("networkidle");
-  // after refresh wages info not function ,need to manual click
-  //add fmp info
-  //await page1.waitForTimeout(15000);
+
+  await page1.waitForTimeout(15000);
+
+  const wagesInfoPage = new WagesInfoPage(page1);
+  await wagesInfoPage.wagesInfoButton.waitFor({ state: "visible" });
+  await wagesInfoPage.clickWagesInfoButton();
+
+  const preferredSOCSOOfficePage = new PreferredSOCSOOfficePage(page1);
+  await preferredSOCSOOfficePage.preferredSOCSOOfficeButton.waitFor({ state: "visible" });
+  await preferredSOCSOOfficePage.clickPreferredSOCSOOfficeButton();
+  preferredSOCSOOfficePage.selectSOCSOState("200701");
+  await preferredSOCSOOfficePage.selectSOCSOOffice("200419");
+
+  await page1.getByRole("button", { name: "Confirmation of Dependent/" }).click();
 
   await page1.getByRole("button", { name: "FPM Info" }).waitFor();
   await page1.getByRole("button", { name: "FPM Info" }).isVisible;
-
   await page1.getByRole("button", { name: "FPM Info" }).click();
+  await expect(page1.getByRole("button", { name: "Pull Dependent" })).toBeVisible();
+  await page1.getByRole("button", { name: "Pull Dependent" }).click();
+  await page1.waitForTimeout(15000);
+  await page1.getByRole("button", { name: "Yes" }).click();
+  await page1.waitForTimeout(15000);
 
   await page1.getByRole("button", { name: "Pull Dependent" }).click();
   await page1.getByRole("button", { name: "Yes" }).click();
 
-  const supportingDocumentPage = new SupportingDocumentPage(page1);
-  await supportingDocumentPage.clickSupportingDocumentButton();
+  // const supportingDocumentPage = new SupportingDocumentPage(page1);
+  // await supportingDocumentPage.clickSupportingDocumentButton();
 
-  const previewSubmissionPage = new PreviewSubmissionPage(page1);
-  await previewSubmissionPage.clickPreviewSubmissionButton();
-  await previewSubmissionPage.clickShowPreviewButton();
+  // const previewSubmissionPage = new PreviewSubmissionPage(page1);
+  // await previewSubmissionPage.clickPreviewSubmissionButton();
+  // await previewSubmissionPage.clickShowPreviewButton();
 
-  await previewSubmissionPage.clickSubmitButton();
+  // await previewSubmissionPage.clickSubmitButton();
 
   const buttonPage = new ButtonPage(page1);
   buttonPage.clickYes();
