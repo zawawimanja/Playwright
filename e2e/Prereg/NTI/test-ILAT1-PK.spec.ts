@@ -24,7 +24,7 @@ const path = require("path");
 test.beforeEach(async ({ page }) => {
   await login(page, "afzan.pks", "u@T_afzan");
 });
-
+//test
 export let schemeRefValue: string;
 
 test.only("Prereg PK ILAT MC EFT", async ({ page }) => {
@@ -41,24 +41,31 @@ test.only("Prereg PK ILAT MC EFT", async ({ page }) => {
   await leftTabPage.leftBar.waitFor();
   await expect(leftTabPage.leftBar).toBeVisible();
 
+  // User Click Pre-Registration
   await expect(leftTabPage.preregistrationLink).toBeVisible();
   leftTabPage.clickPreregistration();
+
 
   await preregPage.noticeTypePreRegSelect.waitFor({ state: "visible" });
   await preregPage.selectNoticeTypePreRegOption(data.noticeType);
   const selectedOptionText = await preregPage.SelectedNoticeTypeText;
   expect(selectedOptionText).toBe(data.noticeType);
 
+
+  // User Select Identification Type = New IC
   await preregPage.selectIdentificationType("2");
   const selectedIdentificationTypeText = await preregPage.getSelectedIdentificationTypeText();
+
   expect(selectedIdentificationTypeText).toBe(data.identificationType);
 
   await preregPage.fillIdentificationNo(data.identificationNo);
+
   const filledIdentificationNo = await preregPage.getIdentificationNo();
   expect(filledIdentificationNo).toBe(data.identificationNo);
 
   await preregPage.noticeAndBenefitClaimFormSelect.waitFor({ state: "visible" });
   await preregPage.selectNoticeAndBenefitClaimFormOption(data.noticeAndBenefitClaimForm);
+
   const NoticeAndBenefitClaimFormOptionText = await preregPage.getselectNoticeAndBenefitClaimFormText();
   expect(NoticeAndBenefitClaimFormOptionText).toBe(data.noticeAndBenefitClaimForm);
 

@@ -45,6 +45,7 @@ test.only("Prereg PK OD MC EFT", async ({ page }) => {
   await expect(leftTabPage.leftBar).toBeVisible();
 
   await expect(leftTabPage.preregistrationLink).toBeVisible();
+  // When click on the PreRegisteration tab
   leftTabPage.clickPreregistration();
   await page.waitForLoadState("networkidle");
 
@@ -55,16 +56,19 @@ test.only("Prereg PK OD MC EFT", async ({ page }) => {
   await preregPage.selectInsuredPersonEmployment("Yes");
   const selectedEmploymentText = await preregPage.getSelectedInsuredPersonEmploymentText();
   expect(selectedEmploymentText).toBe("Yes");
+  // The selected option text remaining as 'Yes'
 
   // Fill in identification type and number
   await preregPage.selectIdentificationType(data.identificationType);
   const selectedIdentificationTypeText = await preregPage.getSelectedIdentificationTypeText();
   expect(selectedIdentificationTypeText).toBe(data.identificationType);
 
+  // Verify the selected option text
   await preregPage.selectNoticeAndBenefitClaimFormOption("Insured Person");
   await expect(preregPage.noticeAndBenefitClaimFormSelect).toHaveValue("Insured Person");
   await expect(preregPage.noticeAndBenefitClaimFormSelect).toContainText("Insured Person");
 
+  // Select any option from the dropdown list, e.g, "New ID"
   await preregPage.fillIdentificationNo(data.identificationNo);
   const filledIdentificationNo = await preregPage.getIdentificationNo();
   expect(filledIdentificationNo).toBe(data.identificationNo);
@@ -73,6 +77,7 @@ test.only("Prereg PK OD MC EFT", async ({ page }) => {
   const filledEmployerCode = await preregPage.getEmployerCode();
   expect(filledEmployerCode).toBe(data.employerCode);
 
+  // Click the "Submit" button to proceed to
   await preregPage.clickClaimFormSubmissionByListButton();
   await preregPage.clickSearchButton();
   const pagePromise = page.waitForEvent("popup");

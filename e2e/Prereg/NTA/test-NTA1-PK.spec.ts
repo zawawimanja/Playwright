@@ -43,7 +43,7 @@ test.only("Prereg PK NTA EFT MC", async ({ page }) => {
   const csvFilePath = path.resolve(__dirname, "../../../testData/testData.csv"); // Path to CSV file
   const testData = await readCSV(csvFilePath);
   const data = testData[0]; // Use the first row of data
-
+//test
   await leftTabPage.leftBar.waitFor();
   await expect(leftTabPage.leftBar).toBeVisible();
 
