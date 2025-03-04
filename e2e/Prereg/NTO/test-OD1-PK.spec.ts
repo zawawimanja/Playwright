@@ -30,7 +30,7 @@ test.beforeEach(async ({ page }) => {
 
 export let schemeRefValue: string;
 
-test("Prereg PK OD MC EFT", async ({ page }) => {
+test.only("Prereg PK OD MC EFT", async ({ page }) => {
   const preregPage = new PreregistrationPage(page);
   const leftTabPage = new LeftTabPage(page);
   let submitPage = new SubmitPage(page);
@@ -46,9 +46,11 @@ test("Prereg PK OD MC EFT", async ({ page }) => {
 
   await expect(leftTabPage.preregistrationLink).toBeVisible();
   leftTabPage.clickPreregistration();
+  await page.waitForLoadState("networkidle");
 
   await preregPage.selectNoticeTypePreRegOption("OD");
-  // Verify the selected option text
+  const selectedOptionText = await preregPage.SelectedNoticeTypeText;
+  expect(selectedOptionText).toBe("OD");
 
   await preregPage.selectInsuredPersonEmployment("Yes");
   const selectedEmploymentText = await preregPage.getSelectedInsuredPersonEmploymentText();
@@ -69,7 +71,7 @@ test("Prereg PK OD MC EFT", async ({ page }) => {
 
   await preregPage.fillEmployerCode(data.employerCode);
   const filledEmployerCode = await preregPage.getEmployerCode();
-  //expect(filledEmployerCode).toBe("A3700059551B");
+  expect(filledEmployerCode).toBe(data.employerCode);
 
   await preregPage.clickClaimFormSubmissionByListButton();
   await preregPage.clickSearchButton();
@@ -241,7 +243,7 @@ test("Prereg PK OD MC EFT", async ({ page }) => {
   await page2.getByRole("button", { name: "Close" }).click();
 });
 
-test.only("Prereg PK OD MC Bankcruptcy", async ({ page }) => {
+test("Prereg PK OD MC Bankcruptcy", async ({ page }) => {
   const preregPage = new PreregistrationPage(page);
   const leftTabPage = new LeftTabPage(page);
   let submitPage = new SubmitPage(page);

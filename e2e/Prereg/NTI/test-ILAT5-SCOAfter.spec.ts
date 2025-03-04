@@ -21,6 +21,7 @@ import { MyCasesPage } from "../../../pages/mycases";
 import { HeaderPage } from "../../../pages/header";
 import { InvalidityInfoPage } from "../../../pages/invalidity_info";
 import { ButtonPage } from "../../../utils/button";
+import { RemarksPage } from "../../../pages/remarks";
 
 test.beforeEach(async ({ page }) => {
   await login(page, "atilia.pks", "u@T_atilia");
@@ -79,14 +80,14 @@ test("Prereg SCO ILAT", async ({ page }) => {
     await draftPage.clickCloseButton();
   }
 
-  // const remarksPage = new RemarksPage(page2);
-  // await remarksPage.remarksButton.waitFor();
-  // await expect(remarksPage.remarksButton).toBeVisible();
-  // await expect(remarksPage.sectionTabs).toContainText("Remarks");
-  // await remarksPage.remarksButton.waitFor();
-  // await remarksPage.addRemarksButton.click();
-  // await remarksPage.textbox.fill("test");
-  // await remarksPage.saveRemarksButton.click();
+  const remarksPage = new RemarksPage(page2);
+  await remarksPage.remarksButton.waitFor();
+  await expect(remarksPage.remarksButton).toBeVisible();
+  await expect(remarksPage.sectionTabs).toContainText("Remarks");
+
+  await remarksPage.addRemarksButton.click();
+  await remarksPage.textboxSAO.fill("test");
+  await remarksPage.saveRemarksButton.click();
 
   const preparerInformationPage = new PreparerInformationPage(page2);
   await preparerInformationPage.clickpreparerInformationButton();

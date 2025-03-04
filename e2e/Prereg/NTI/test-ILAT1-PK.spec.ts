@@ -44,6 +44,7 @@ test.only("Prereg PK ILAT MC EFT", async ({ page }) => {
   await expect(leftTabPage.preregistrationLink).toBeVisible();
   leftTabPage.clickPreregistration();
 
+  await preregPage.noticeTypePreRegSelect.waitFor({ state: "visible" });
   await preregPage.selectNoticeTypePreRegOption(data.noticeType);
   const selectedOptionText = await preregPage.SelectedNoticeTypeText;
   expect(selectedOptionText).toBe(data.noticeType);
@@ -66,6 +67,7 @@ test.only("Prereg PK ILAT MC EFT", async ({ page }) => {
   const pagePromise = page.waitForEvent("popup");
   await preregPage.clickNextButton();
   const page1 = await pagePromise;
+  await page1.waitForLoadState("networkidle");
   const draftPage = new DraftPage(page1);
 
   if (await draftPage.closeButton.isVisible()) {

@@ -21,6 +21,7 @@ import { MyCasesPage } from "../../../pages/mycases";
 import { HeaderPage } from "../../../pages/header";
 import { InvalidityInfoPage } from "../../../pages/invalidity_info";
 import { ButtonPage } from "../../../utils/button";
+import { RemarksPage } from "../../../pages/remarks";
 
 test.beforeEach(async ({ page }) => {
   await login(page, "atilia.pks", "u@T_atilia");
@@ -78,14 +79,14 @@ test("Prereg SCO ILAT", async ({ page }) => {
     await draftPage.clickCloseButton();
   }
 
-  // const remarksPage = new RemarksPage(page2);
-  // await remarksPage.remarksButton.waitFor();
-  // await expect(remarksPage.remarksButton).toBeVisible();
-  // await expect(remarksPage.sectionTabs).toContainText("Remarks");
-  // await remarksPage.remarksButton.waitFor();
-  // await remarksPage.addRemarksButton.click();
-  // await remarksPage.textbox.fill("test");
-  // await remarksPage.saveRemarksButton.click();
+  const remarksPage = new RemarksPage(page2);
+  await remarksPage.remarksButton.waitFor();
+  await expect(remarksPage.remarksButton).toBeVisible();
+  await expect(remarksPage.sectionTabs).toContainText("Remarks");
+
+  await remarksPage.addRemarksButton.click();
+  await remarksPage.textbox.fill("test");
+  await remarksPage.saveRemarksButton.click();
 
   const preparerInformationPage = new PreparerInformationPage(page2);
   await preparerInformationPage.clickpreparerInformationButton();
@@ -125,26 +126,8 @@ test("Prereg SCO ILAT", async ({ page }) => {
   await expect(medicalOpinionPage.medicalOpinionButton).toBeVisible();
   await medicalOpinionPage.clickMedicalOpinionButton();
 
-  await page.waitForLoadState("networkidle");
+  await page2.waitForLoadState("networkidle");
 
-  await page.screenshot({ path: "debug_screenshot.png" });
-
-  // const elementState = await page.evaluate(() => {
-  //   const element = document.querySelector('div[name="Recommendation"][role="button"]');
-  //   return {
-  //     exists: !!element,
-  //     visible: element && (element as HTMLElement).offsetParent !== null,
-  //     disabled: element && element.getAttribute("aria-disabled") === "true",
-  //   };
-  // });
-  // console.log("Element state:", elementState);
-
-  // await page.waitForTimeout(5000); // Wait for 500ms
-  // await page.waitForFunction(() => {
-  //   const element = document.querySelector('div[name="Recommendation"][role="button"]');
-  //   return element && element.getAttribute("aria-disabled") === "false" && element.offsetParent !== null;
-  // });
-  //temporary solution
   const recommendationPage = new RecommendationPage(page2);
 
   await recommendationPage.clickRecommendationButton();

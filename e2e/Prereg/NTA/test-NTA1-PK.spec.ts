@@ -174,11 +174,11 @@ test.only("Prereg PK NTA EFT MC", async ({ page }) => {
 
   //await page1.getByRole("textbox").nth(1).click();
   await calendarPage.mcDate().nth(1).click();
-  await calendarPage.selectDateInsuredPersonPage("2025", "2", "1");
+  await calendarPage.selectDateInsuredPersonPage("2023", "7", "1");
 
   //await page1.getByRole("textbox").nth(2).click();
   await calendarPage.mcDate().nth(2).click();
-  await calendarPage.selectDateMCEndDate("2025", "5", "31");
+  await calendarPage.selectDateMCEndDate("2023", "7", "15");
   await medicalCertificatePage.submitButton().click();
 
   const wagesInfoPage = new WagesInfoPage(page1);

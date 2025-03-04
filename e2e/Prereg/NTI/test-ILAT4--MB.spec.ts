@@ -78,6 +78,7 @@ test("Prereg MB ILAT", async ({ page }) => {
   }
 
   const page3Promise = page2.waitForEvent("popup");
+  await page2.getByLabel("Invalidity Decision*").selectOption("Yes");
   await page2.getByRole("button", { name: "New" }).click();
 
   const page4 = await page3Promise;
@@ -114,10 +115,10 @@ test("Prereg MB ILAT", async ({ page }) => {
 
   await remarksPage.clickRemarksButton();
 
-  // await remarksPage.addRemarksButton.waitFor();
-  // await remarksPage.addRemarksButton.click();
-  // await remarksPage.textboxIO.fill("test mb");
-  // await remarksPage.saveRemarksButton.click();
+  await remarksPage.addRemarksButton.waitFor();
+  await remarksPage.addRemarksButton.click();
+  await remarksPage.textboxSAO.fill("test mb");
+  await remarksPage.saveRemarksButton.click();
 
   const preparerInformationPage = new PreparerInformationPage(page2);
   await preparerInformationPage.clickpreparerInformationButton();

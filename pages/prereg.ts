@@ -50,7 +50,7 @@ export class PreregistrationPage {
   }
 
   get employerCodeInput() {
-    return this.baristaPageOut.getByLabel("Employer Code*");
+    return this.baristaPageOut.getByRole("textbox", { name: "Employer Code" });
   }
 
   get helper() {
