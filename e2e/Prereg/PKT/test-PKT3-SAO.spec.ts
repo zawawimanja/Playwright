@@ -18,6 +18,7 @@ import { SubmitPage } from "../../../pages/submit";
 import { MyCasesPage } from "../../../pages/mycases";
 import { HeaderPage } from "../../../pages/header";
 import { ButtonPage } from "../../../utils/button";
+import { SRNPage } from "../../../pages/srn";
 import { readCSV } from "../../../helper/csvHelper"; // Import the CSV helper
 // filepath: /c:/Users/aaror/Downloads/Playwright/e2e/Prereg/S2 - ILAT-BI2PI/test-ILAT-PK.spec.ts
 const fs = require("fs");
@@ -122,7 +123,9 @@ test("Prereg SAO NTA", async ({ page }) => {
   await page3.getByRole("button", { name: "Save" }).click();
 
   await page2.getByRole("button", { name: "FPM Info" }).click();
+
   const page5Promise = page3.waitForEvent("popup");
+
   await page3.getByRole("button", { name: "CREATE" }).click();
   const page5 = await page5Promise;
   await page5.getByRole("button", { name: "Yes" }).click();
@@ -145,12 +148,6 @@ test("Prereg SAO NTA", async ({ page }) => {
 
   await page5.getByRole("button", { name: "Proceed" }).click();
 
-  await page2.reload();
-  await page2.waitForLoadState("networkidle");
-  // after refresh wages info not function ,need to manual click
-  //add fmp info
-  await page2.waitForTimeout(15000);
-
   const recommendationPage1 = new RecommendationPage(page2);
   await recommendationPage1.clickSAORecommendationButton();
 
@@ -170,12 +167,24 @@ test("Prereg SAO NTA", async ({ page }) => {
   const buttonPage = new ButtonPage(page2);
   buttonPage.clickYes();
 
-  // const page4Promise = page2.waitForEvent("popup");
-  // const page4 = await page4Promise;
+  const page4Promise = page2.waitForEvent("popup");
+  const page4 = await page4Promise;
 
   // Wait for the element to be present
-  await page.getByLabel("Scheme Ref No.").waitFor();
+  await page4.getByLabel("Scheme Ref No:").waitFor();
+
+  const schemeRefValue1 = await page4.getByLabel("Scheme Ref No:").inputValue();
+  console.log("SRN from locator: " + schemeRefValue1);
+  const filePath1 = path.resolve(__dirname, "schemeRefValue.json");
+  fs.writeFileSync(filePath1, JSON.stringify({ schemeRefValue }));
+
+  // Check if the file exists
+  if (fs.existsSync(filePath1)) {
+    console.log("File schemeRefValue.json exists at path: " + filePath1);
+  } else {
+    console.log("File schemeRefValue.json does not exist at path: " + filePath1);
+  }
 
   // Perform other actions as needed
-  await page.getByRole("button", { name: "Proceed" }).click();
+  await page2.getByRole("button", { name: "Close" }).click();
 });

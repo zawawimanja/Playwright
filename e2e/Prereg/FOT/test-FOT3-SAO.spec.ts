@@ -114,6 +114,7 @@ test("Prereg SAO FOT", async ({ page }) => {
   const page3Promise = page2.waitForEvent("popup");
   await page2.getByRole("button", { name: "Update" }).click();
   const page3 = await page3Promise;
+  await page3.getByLabel("Eligible as Dependent*").isVisible;
   await page3.getByLabel("Eligible as Dependent*").selectOption("90102");
   await page3.getByRole("button", { name: "Save" }).click();
 
@@ -127,7 +128,7 @@ test("Prereg SAO FOT", async ({ page }) => {
   await page2.waitForTimeout(15000);
 
   //select approval
-
+  await page2.getByRole("button", { name: "Approval" }).nth(0).isVisible;
   await page2.getByRole("button", { name: "Approval" }).nth(0).click();
   await page2.getByLabel("Action*").selectOption("10212");
 
@@ -169,7 +170,10 @@ test("Prereg SAO FOT", async ({ page }) => {
 
   await page2.getByRole("button", { name: "Wages Information (SBK)" }).click();
   const wages = new WagesInfoPage(page2);
+  await page2.getByLabel("Is Wages Paid on the Day of").isVisible;
   await page2.getByLabel("Is Wages Paid on the Day of").selectOption("Yes");
+  const wagesInfoPage = new WagesInfoPage(page2);
+  await wagesInfoPage.selectAllEnabledWagesOptions("Yes");
 
   const supportingDocumentPage = new SupportingDocumentPage(page2);
   await supportingDocumentPage.clickSupportingDocumentButton();

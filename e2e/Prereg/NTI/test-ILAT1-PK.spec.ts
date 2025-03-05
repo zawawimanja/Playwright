@@ -38,6 +38,8 @@ test.only("Prereg PK ILAT MC EFT", async ({ page }) => {
   const testData = await readCSV(csvFilePath);
   const data = testData[0]; // Use the first row of data
 
+  await page.waitForLoadState("networkidle");
+
   await leftTabPage.leftBar.waitFor();
   await expect(leftTabPage.leftBar).toBeVisible();
 
@@ -45,12 +47,10 @@ test.only("Prereg PK ILAT MC EFT", async ({ page }) => {
   await expect(leftTabPage.preregistrationLink).toBeVisible();
   leftTabPage.clickPreregistration();
 
-
   await preregPage.noticeTypePreRegSelect.waitFor({ state: "visible" });
   await preregPage.selectNoticeTypePreRegOption(data.noticeType);
   const selectedOptionText = await preregPage.SelectedNoticeTypeText;
   expect(selectedOptionText).toBe(data.noticeType);
-
 
   // User Select Identification Type = New IC
   await preregPage.selectIdentificationType("2");
