@@ -41,6 +41,8 @@ test.only("Prereg PK OD MC EFT", async ({ page }) => {
   const testData = await readCSV(csvFilePath);
   const data = testData[0]; // Use the first row of data
 
+  await page.waitForLoadState("networkidle");
+
   await leftTabPage.leftBar.waitFor();
   await expect(leftTabPage.leftBar).toBeVisible();
 

@@ -39,6 +39,8 @@ test("Prereg PK PKT", async ({ page }) => {
   const testData = await readCSV(csvFilePath);
   const data = testData[0]; // Use the first row of data
 
+  await page.waitForLoadState("networkidle");
+
   await leftTabPage.leftBar.waitFor();
   await expect(leftTabPage.leftBar).toBeVisible();
 
@@ -47,8 +49,8 @@ test("Prereg PK PKT", async ({ page }) => {
 
   await page.waitForLoadState("networkidle");
 
-  await preregPage.noticeTypePreRegSelect.waitFor();
-  await expect(preregPage.noticeTypePreRegSelect).toBeVisible();
+  await preregPage.noticeTypePreRegSelect.waitFor({ state: "visible" });
+
   await preregPage.selectNoticeTypePreRegOption("Death - PKT");
   const selectedOptionText = await preregPage.SelectedNoticeTypeText;
   expect(selectedOptionText).toBe("Death - PKT");
@@ -214,21 +216,21 @@ test("Prereg PK PKT", async ({ page }) => {
   await page1.getByRole("button", { name: "FPM Info" }).click();
   await expect(page1.getByRole("button", { name: "Pull Dependent" })).toBeVisible();
   await page1.getByRole("button", { name: "Pull Dependent" }).click();
-  await page1.waitForTimeout(15000);
+  await page1.waitForTimeout(10000);
   await page1.getByRole("button", { name: "Yes" }).click();
-  await page1.waitForTimeout(15000);
+  await page1.waitForTimeout(10000);
 
   await page1.getByRole("button", { name: "Pull Dependent" }).click();
   await page1.getByRole("button", { name: "Yes" }).click();
 
-  // const supportingDocumentPage = new SupportingDocumentPage(page1);
-  // await supportingDocumentPage.clickSupportingDocumentButton();
+  const supportingDocumentPage = new SupportingDocumentPage(page1);
+  await supportingDocumentPage.clickSupportingDocumentButton();
 
-  // const previewSubmissionPage = new PreviewSubmissionPage(page1);
-  // await previewSubmissionPage.clickPreviewSubmissionButton();
-  // await previewSubmissionPage.clickShowPreviewButton();
+  const previewSubmissionPage = new PreviewSubmissionPage(page1);
+  await previewSubmissionPage.clickPreviewSubmissionButton();
+  await previewSubmissionPage.clickShowPreviewButton();
 
-  // await previewSubmissionPage.clickSubmitButton();
+  await previewSubmissionPage.clickSubmitButton();
 
   const buttonPage = new ButtonPage(page1);
   buttonPage.clickYes();

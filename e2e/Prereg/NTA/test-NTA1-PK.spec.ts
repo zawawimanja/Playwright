@@ -22,8 +22,6 @@ import { CasesPage } from "../../../pages/cases";
 import { ButtonPage } from "../../../utils/button";
 import { readCSV } from "../../../helper/csvHelper";
 import { SRNPage } from "../../../pages/srn";
-import { expectedResponse } from "../../../mockData/mockData"; // Adjust the path as necessary
-import { API_ENDPOINTS } from "../../../endpoint/endpoints"; // Adjust the path as necessary
 
 const fs = require("fs");
 const path = require("path");
@@ -43,7 +41,9 @@ test.only("Prereg PK NTA EFT MC", async ({ page }) => {
   const csvFilePath = path.resolve(__dirname, "../../../testData/testData.csv"); // Path to CSV file
   const testData = await readCSV(csvFilePath);
   const data = testData[0]; // Use the first row of data
-//test
+
+  await page.waitForLoadState("networkidle");
+  //test
   await leftTabPage.leftBar.waitFor();
   await expect(leftTabPage.leftBar).toBeVisible();
 
@@ -98,31 +98,6 @@ test.only("Prereg PK NTA EFT MC", async ({ page }) => {
     await draftPage.closeButton.waitFor();
     await draftPage.clickCloseButton();
   }
-
-  // Mock the API call using the expected response
-  await page.route(API_ENDPOINTS.GET_SYSTEM_PARAMETERS, async (route) => {
-    await route.fulfill({
-      status: 200, // Set the status code
-      contentType: "application/json", // Set the content type
-      body: JSON.stringify(expectedResponse), // Use the imported expected response
-    });
-  });
-
-  // Trigger the API call directly from the page context and return the response
-  const apiResponse = await page.evaluate(async (endpoint) => {
-    const response = await fetch(endpoint); // Use passed endpoint
-
-    // Ensure we wait for the response to be parsed as JSON
-    const data = await response.json(); // Parse JSON response
-
-    return { status: response.status, data }; // Return status and data
-  }, API_ENDPOINTS.GET_SYSTEM_PARAMETERS); // Pass endpoint as an argument
-
-  // Assert that we received a response
-  expect(apiResponse.status).toBe(200); // Assert that the status code is 200
-
-  // Assert that the body matches expected mock data structure
-  expect(apiResponse.data).toEqual(expectedResponse); // Use the imported expected response for assertion
 
   const remarksPage = new RemarksPage(page1);
   await remarksPage.remarksButton.waitFor();

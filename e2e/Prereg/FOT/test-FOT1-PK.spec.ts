@@ -38,6 +38,7 @@ test("Prereg PK FOT", async ({ page }) => {
   const testData = await readCSV(csvFilePath);
   const data = testData[0]; // Use the first row of data
 
+  await page.waitForLoadState("networkidle");
   await leftTabPage.leftBar.waitFor();
   await expect(leftTabPage.leftBar).toBeVisible();
 
@@ -45,6 +46,7 @@ test("Prereg PK FOT", async ({ page }) => {
   leftTabPage.clickPreregistration();
 
   await page.waitForLoadState("networkidle");
+
   await preregPage.noticeTypePreRegSelect.waitFor({ state: "visible" });
   await preregPage.selectNoticeTypePreRegOption("Death - FOT");
   const noticeTypeText = await preregPage.getnoticeTypePreRegSelect();
@@ -81,14 +83,16 @@ test("Prereg PK FOT", async ({ page }) => {
   await page1.waitForLoadState("networkidle");
 
   const remarksPage = new RemarksPage(page1);
-  remarksPage.clickRemarksButton();
   await remarksPage.remarksButton.waitFor();
   await expect(remarksPage.remarksButton).toBeVisible();
   await expect(remarksPage.sectionTabs).toContainText("Remarks");
-  await remarksPage.remarksButton.waitFor();
+  remarksPage.clickRemarksButton();
+
   await remarksPage.addRemarksButton.click();
   await remarksPage.textbox.fill("test PK");
   await remarksPage.saveRemarksButton.click();
+
+  await page1.waitForLoadState("networkidle");
 
   const insuredPersonInfoPage = new InsuredPersonInfoPage(page1);
   await insuredPersonInfoPage.insuredPersonInfoButton.waitFor({ state: "visible" });
@@ -180,10 +184,14 @@ test("Prereg PK FOT", async ({ page }) => {
   await page1.getByRole("button", { name: "FPM Info" }).isVisible;
 
   await page1.getByRole("button", { name: "FPM Info" }).click();
+  await expect(page1.getByRole("button", { name: "Pull Dependent" })).toBeVisible();
+  await page1.getByRole("button", { name: "Pull Dependent" }).click();
+  await page1.waitForTimeout(10000);
+  await page1.getByRole("button", { name: "Yes" }).click();
+  await page1.waitForTimeout(10000);
 
   await page1.getByRole("button", { name: "Pull Dependent" }).click();
   await page1.getByRole("button", { name: "Yes" }).click();
-
   const wagesInfoPage = new WagesInfoPage(page1);
   await wagesInfoPage.clickWagesInfoButton();
   await page1.getByLabel("Is Wages Paid on the Day of").selectOption("No");
