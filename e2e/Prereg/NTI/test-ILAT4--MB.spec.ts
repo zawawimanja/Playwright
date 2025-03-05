@@ -170,7 +170,6 @@ test("Prereg MB ILAT", async ({ page }) => {
 
   await page2.waitForLoadState("networkidle");
 
-  await page2.screenshot({ path: "debug_screenshot.png" });
   await page2.waitForTimeout(5000);
 
   const previewSubmissionPage = new PreviewSubmissionPage(page2);

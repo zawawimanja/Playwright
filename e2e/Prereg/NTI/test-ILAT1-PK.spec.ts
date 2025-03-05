@@ -47,10 +47,12 @@ test.only("Prereg PK ILAT MC EFT", async ({ page }) => {
   await expect(leftTabPage.preregistrationLink).toBeVisible();
   leftTabPage.clickPreregistration();
 
+  await page.waitForLoadState("networkidle");
+
   await preregPage.noticeTypePreRegSelect.waitFor({ state: "visible" });
-  await preregPage.selectNoticeTypePreRegOption(data.noticeType);
+  await preregPage.selectNoticeTypePreRegOption("ILAT");
   const selectedOptionText = await preregPage.SelectedNoticeTypeText;
-  expect(selectedOptionText).toBe(data.noticeType);
+  expect(selectedOptionText).toBe("ILAT");
 
   // User Select Identification Type = New IC
   await preregPage.selectIdentificationType("2");
