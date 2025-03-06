@@ -21,8 +21,7 @@ import { ButtonPage } from "../../../utils/button";
 import { SRNPage } from "../../../pages/srn";
 import { readCSV } from "../../../helper/csvHelper"; // Import the CSV helper
 // filepath: /c:/Users/aaror/Downloads/Playwright/e2e/Prereg/S2 - ILAT-BI2PI/test-ILAT-PK.spec.ts
-const fs = require("fs");
-const path = require("path");
+
 test.beforeEach(async ({ page }) => {
   //await login(page, "roliana.pks", "u@T_roliana");
   await login(page, "uat_ali", "u@T_ali");
@@ -66,10 +65,12 @@ test("Prereg SAO NTA", async ({ page }) => {
   }
 
   const pagePromise = page.waitForEvent("popup");
+
+
   await page.frameLocator("#baristaPageOut").frameLocator("#APWorkCenter").getByText("Open Task").click();
   const page2 = await pagePromise;
-
   await page2.waitForLoadState("networkidle");
+
 
   const draftPage = new DraftPage(page2);
   if ((await draftPage.closeButton.count()) > 0) {
@@ -114,21 +115,51 @@ test("Prereg SAO NTA", async ({ page }) => {
   await page2.getByRole("button", { name: "Contribution Based on Section" }).click();
   await page2.getByRole("button", { name: "Wages Information (SI)" }).click();
 
+  await page2.getByRole("button", { name: "Dependent Info" }).isVisible();
   await page2.getByRole("button", { name: "Dependent Info" }).click();
+
   const page3Promise = page2.waitForEvent("popup");
   await page2.getByRole("button", { name: "Update" }).click();
+
   const page3 = await page3Promise;
   await page3.waitForLoadState("networkidle");
+
+  await expect(page3.getByLabel('Eligible as Dependent*')).toBeVisible();
   await page3.getByLabel("Eligible as Dependent*").selectOption("90102");
   await page3.getByRole("button", { name: "Save" }).click();
 
+  await page2.getByRole("button", { name: "FPM Info" }).isVisible();
+
   await page2.getByRole("button", { name: "FPM Info" }).click();
 
-  const page5Promise = page3.waitForEvent("popup");
+  const page5Promise = page2.waitForEvent("popup");
 
-  await page3.getByRole("button", { name: "CREATE" }).click();
+  await expect(page2.getByRole('button', { name: 'CREATE' })).toBeVisible();
+  await page2.getByRole("button", { name: "CREATE" }).click();
+
   const page5 = await page5Promise;
+  await page5.waitForLoadState("networkidle");
+
+
+
+
+  await expect(page5.getByText('ConfirmationCloseCreate')).toBeVisible();
+  await expect(page5.locator('body')).toContainText('ConfirmationClose');
+  await expect(page5.getByText('Confirmation')).toBeVisible();
+
+  await expect(page5.getByRole('paragraph')).toContainText('Create Funeral Benefit Case: Are You Sure to Create FPM Case?');
+  await expect(page5.getByText('Create Funeral Benefit Case:')).toBeVisible();
+
+
   await page5.getByRole("button", { name: "Yes" }).click();
+
+
+
+  // const page17Promise = page13.waitForEvent('popup');
+  //   await page13.getByRole('button', { name: 'CREATE' }).click();
+  //   const page17 = await page17Promise;
+
+
 
   // Wait for the element to be present
   await page5.getByLabel("Scheme Ref No:").waitFor();
@@ -156,6 +187,9 @@ test("Prereg SAO NTA", async ({ page }) => {
   await page2.getByRole("button", { name: "Approval" }).click();
   await page2.getByLabel("Action*").selectOption("10211");
 
+  await page2.reload();
+  await page2.waitForLoadState("networkidle");
+
   const supportingDocumentPage = new SupportingDocumentPage(page2);
   await supportingDocumentPage.clickSupportingDocumentButton();
 
@@ -168,10 +202,12 @@ test("Prereg SAO NTA", async ({ page }) => {
   buttonPage.clickYes();
 
   const page4Promise = page2.waitForEvent("popup");
+
   const page4 = await page4Promise;
+  await page4.waitForLoadState("networkidle");
 
   // Wait for the element to be present
-  await page4.getByLabel("Scheme Ref No:").waitFor();
+  await page.getByRole('textbox', { name: 'Scheme Ref No:' }).waitFor();
 
   const schemeRefValue1 = await page4.getByLabel("Scheme Ref No:").inputValue();
   console.log("SRN from locator: " + schemeRefValue1);

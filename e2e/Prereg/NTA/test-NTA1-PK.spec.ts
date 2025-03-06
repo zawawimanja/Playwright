@@ -54,6 +54,18 @@ test.only("Prereg PK NTA EFT MC", async ({ page }) => {
   //When I click on the Preregistration link
   leftTabPage.clickPreregistration();
 
+  await expect(page.locator('#baristaPageOut').contentFrame().getByRole('heading', { name: 'Pre-Registration' })).toBeVisible();
+  await expect(page.locator('#baristaPageOut').contentFrame().locator('h2')).toContainText('Pre-Registration');
+
+
+  await expect(page.locator('#baristaPageOut').contentFrame().getByRole('heading', { name: 'Search Insured Person &' })).toBeVisible();
+  await expect(page.locator('#baristaPageOut').contentFrame().locator('#Heading31')).toContainText('Search Insured Person & Employer Registration Status');
+
+
+  await expect(page.locator('#baristaPageOut').contentFrame().locator('#ctrlField596').getByText('Notice Type')).toBeVisible();
+  await expect(page.locator('#baristaPageOut').contentFrame().locator('#ctrlField596')).toContainText('Notice Type');
+
+
   // Fill in data from CSV
   await preregPage.selectNoticeTypePreRegOption(data.noticeType);
   const selectedOptionText = await preregPage.SelectedNoticeTypeText;

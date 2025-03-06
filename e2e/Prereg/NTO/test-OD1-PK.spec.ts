@@ -53,6 +53,18 @@ test.only("Prereg PK OD MC EFT", async ({ page }) => {
   leftTabPage.clickPreregistration();
   await page.waitForLoadState("networkidle");
 
+  await expect(page.locator('#baristaPageOut').contentFrame().getByRole('heading', { name: 'Pre-Registration' })).toBeVisible();
+  await expect(page.locator('#baristaPageOut').contentFrame().locator('h2')).toContainText('Pre-Registration');
+
+
+  await expect(page.locator('#baristaPageOut').contentFrame().getByRole('heading', { name: 'Search Insured Person &' })).toBeVisible();
+  await expect(page.locator('#baristaPageOut').contentFrame().locator('#Heading31')).toContainText('Search Insured Person & Employer Registration Status');
+
+
+  await expect(page.locator('#baristaPageOut').contentFrame().locator('#ctrlField596').getByText('Notice Type')).toBeVisible();
+  await expect(page.locator('#baristaPageOut').contentFrame().locator('#ctrlField596')).toContainText('Notice Type');
+
+
   await preregPage.selectNoticeTypePreRegOption("OD");
   const selectedOptionText = await preregPage.SelectedNoticeTypeText;
   expect(selectedOptionText).toBe("OD");

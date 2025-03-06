@@ -21,9 +21,11 @@ import { SubmitPage } from '../../../pages/submit';
 import { CasesPage } from '../../../pages/cases';
 import { ButtonPage } from '../../../utils/button';
 import { readCSV } from '../../../helper/csvHelper'; // Import the CSV helper
-// filepath: /c:/Users/aaror/Downloads/Playwright/e2e/Prereg/S2 - ILAT-BI2PI/test-ILAT-PK.spec.ts
-const fs = require('fs');
-const path = require('path');
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
+import fs from 'fs';
+import path from 'path';
+
 
 test.beforeEach(async ({ page }) => {
   await login(page, 'afzan.pks', 'u@T_afzan');
@@ -37,7 +39,9 @@ test.only('Prereg PK NTA HUK EFT MC', async ({ page }) => {
   const timePage = new TimePage(page);
 
   // Read data from CSV
-  const csvFilePath = path.resolve(__dirname, '../../../testData/testData.csv'); // Path to CSV file
+  const __filename = fileURLToPath(import.meta.url);
+  const __dirname = dirname(__filename);
+  const csvFilePath = path.resolve(__dirname, "../../../testData/testData.csv"); // Path to CSV file
   const testData = await readCSV(csvFilePath);
   const data = testData[0]; // Use the first row of data
 
@@ -63,7 +67,7 @@ test.only('Prereg PK NTA HUK EFT MC', async ({ page }) => {
   const page13Promise = page.waitForEvent('popup');
   await page
     .frameLocator('#baristaPageOut')
-    .getByRole('button', { name: 'Open' })
+    .getByRole('button', { name: 'Open' }).first()
     .click();
   const page1 = await page13Promise;
 

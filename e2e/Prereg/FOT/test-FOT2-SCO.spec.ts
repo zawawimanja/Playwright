@@ -22,8 +22,8 @@ import { HeaderPage } from "../../../pages/header";
 import { ButtonPage } from "../../../utils/button";
 
 test.beforeEach(async ({ page }) => {
-  await login(page, "atilia.pks", "u@T_atilia");
-  //await login(page, "nazira.pks", "u@T_nazira");
+  // await login(page, "atilia.pks", "u@T_atilia");
+  await login(page, "nazira.pks", "u@T_nazira");
 });
 
 export let schemeRefValue: string;
@@ -61,8 +61,8 @@ test("Prereg SCO FOT", async ({ page }) => {
 
       headerPage.clickUserProfile();
       headerPage.clickSignOut();
-      await login(page, "nazira.pks", "u@T_nazira");
-      //await login(page, "atilia.pks", "u@T_atilia");
+      //    await login(page, "nazira.pks", "u@T_nazira");
+      await login(page, "atilia.pks", "u@T_atilia");
     }
   }
 
@@ -131,6 +131,16 @@ test("Prereg SCO FOT", async ({ page }) => {
   await page2.getByLabel("Action*").waitFor();
   await page2.getByLabel("Action*").isVisible();
   await page2.getByLabel("Action*").selectOption("10210");
+
+
+  await page2.locator('[id^="_WhethertheinsuredpersonisanemployeeundertheSOCSOAct-"]').first().selectOption('1');
+  await page2.locator('[id^="_WhethertheSOCSOActappliestothisindustry-"]').first().selectOption('1');
+  await page2.locator('[id^="_Whetherthepersonalinjuryiscausedbyanaccident-"]').first().selectOption('1');
+  await page2.locator('[id^="_Whethertheaccidentisinthecourseofhisheremploymentc-"]').first().selectOption('1');
+  await page2.locator('[id^="_Whethertheaccidentarisedoutofhisemployment-"]').first().selectOption('1');
+
+
+
 
   //click fpm info to enable wages
   await page2.getByRole("button", { name: "FPM Info" }).click();

@@ -38,7 +38,7 @@ test("Prereg SAO NTA", async ({ page }) => {
   let submitPage = new SubmitPage(page);
   const casesPage = new CasesPage(page, submitPage);
   const myCasesPage = new MyCasesPage(page, casesPage);
-  await casesPage.init("NTA");
+  await casesPage.init("HUK");
 
   let loginUser = "roliana.pks";
   let caseFound = false;
