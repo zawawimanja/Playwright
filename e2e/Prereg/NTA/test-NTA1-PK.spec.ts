@@ -22,9 +22,10 @@ import { CasesPage } from "../../../pages/cases";
 import { ButtonPage } from "../../../utils/button";
 import { readCSV } from "../../../helper/csvHelper";
 import { SRNPage } from "../../../pages/srn";
-
-const fs = require("fs");
-const path = require("path");
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
+import * as fs from 'fs';
+import * as path from 'path';
 
 test.beforeEach(async ({ page }) => {
   await login(page, "afzan.pks", "u@T_afzan");
@@ -38,6 +39,8 @@ test.only("Prereg PK NTA EFT MC", async ({ page }) => {
   const timePage = new TimePage(page);
 
   // Read data from CSV
+  const __filename = fileURLToPath(import.meta.url);
+  const __dirname = dirname(__filename);
   const csvFilePath = path.resolve(__dirname, "../../../testData/testData.csv"); // Path to CSV file
   const testData = await readCSV(csvFilePath);
   const data = testData[0]; // Use the first row of data

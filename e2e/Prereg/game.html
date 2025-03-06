@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Click Game</title>
+    <style>
+      #gameArea {
+        width: 500px;
+        height: 300px;
+        border: 2px solid black;
+        position: relative;
+        background-color: #f0f0f0;
+      }
+
+      #target {
+        width: 50px;
+        height: 50px;
+        background-color: red;
+        position: absolute;
+        cursor: pointer;
+        border-radius: 50%;
+      }
+
+      #score,
+      #timer {
+        font-size: 20px;
+        margin: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="score">Score: 0</div>
+    <div id="timer">Time: 10</div>
+    <div id="gameArea">
+      <button id="target">Click Me!</button>
+    </div>
+
+    <script>
+      let score = 0;
+      let timeLeft = 10;
+      const target = document.getElementById('target');
+      const scoreDisplay = document.getElementById('score');
+      const timerDisplay = document.getElementById('timer');
+      let gameActive = true;
+
+      // Move button to random position
+      function moveTarget() {
+        if (gameActive) {
+          const gameArea = document.getElementById('gameArea');
+          const maxX = gameArea.clientWidth - target.clientWidth;
+          const maxY = gameArea.clientHeight - target.clientHeight;
+
+          const newX = Math.floor(Math.random() * maxX);
+          const newY = Math.floor(Math.random() * maxY);
+
+          target.style.left = newX + 'px';
+          target.style.top = newY + 'px';
+        }
+      }
+
+      // Update score when clicked
+      target.addEventListener('click', () => {
+        if (gameActive) {
+          score++;
+          scoreDisplay.textContent = `Score: ${score}`;
+          moveTarget();
+        }
+      });
+
+      // Timer countdown
+      const countdown = setInterval(() => {
+        timeLeft--;
+        timerDisplay.textContent = `Time: ${timeLeft}`;
+
+        if (timeLeft <= 0) {
+          clearInterval(countdown);
+          gameActive = false;
+          alert(`Game Over! Your score: ${score}`);
+          target.style.display = 'none';
+        }
+      }, 1000);
+
+      // Initial position
+      moveTarget();
+    </script>
+  </body>
+</html>

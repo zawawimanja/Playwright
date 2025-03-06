@@ -69,7 +69,9 @@ test("Prereg SAO ILAT", async ({ page }) => {
     }
   }
 
+
   const pagePromise = page.waitForEvent("popup");
+  await page.waitForLoadState("networkidle");
   await page.frameLocator("#baristaPageOut").frameLocator("#APWorkCenter").getByText("Open Task").click();
   const page2 = await pagePromise;
 
@@ -145,6 +147,8 @@ test("Prereg SAO ILAT", async ({ page }) => {
   const buttonPage = new ButtonPage(page2);
   buttonPage.clickYes();
 
+
+  await page2.waitForLoadState("networkidle");
   const page3Promise = page2.waitForEvent("popup");
   const page3 = await page3Promise;
 
@@ -153,4 +157,6 @@ test("Prereg SAO ILAT", async ({ page }) => {
 
   // Perform other actions as needed
   await page3.getByRole("button", { name: "Close" }).click();
+
+
 });

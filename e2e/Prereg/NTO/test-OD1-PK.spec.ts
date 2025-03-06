@@ -20,9 +20,10 @@ import { SubmitPage } from "../../../pages/submit";
 import { CasesPage } from "../../../pages/cases";
 import { ButtonPage } from "../../../utils/button";
 import { readCSV } from "../../../helper/csvHelper"; // Import the CSV helper
-// filepath: /c:/Users/aaror/Downloads/Playwright/e2e/Prereg/S2 - ILAT-BI2PI/test-ILAT-PK.spec.ts
-const fs = require("fs");
-const path = require("path");
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
+import * as fs from 'fs';
+import * as path from 'path';
 
 test.beforeEach(async ({ page }) => {
   await login(page, "afzan.pks", "u@T_afzan");
@@ -37,10 +38,11 @@ test.only("Prereg PK OD MC EFT", async ({ page }) => {
   const casesPage = new CasesPage(page, submitPage);
 
   // Read data from CSV
+  const __filename = fileURLToPath(import.meta.url);
+  const __dirname = dirname(__filename);
   const csvFilePath = path.resolve(__dirname, "../../../testData/testData.csv"); // Path to CSV file
   const testData = await readCSV(csvFilePath);
-  const data = testData[0]; // Use the first row of data
-
+  const data = testData[0]; // U
   await page.waitForLoadState("networkidle");
 
   await leftTabPage.leftBar.waitFor();
@@ -82,7 +84,10 @@ test.only("Prereg PK OD MC EFT", async ({ page }) => {
   // Click the "Submit" button to proceed to
   await preregPage.clickClaimFormSubmissionByListButton();
   await preregPage.clickSearchButton();
+
+
   const pagePromise = page.waitForEvent("popup");
+  await page.waitForLoadState("networkidle");
   await preregPage.clickNextButton();
   const page1 = await pagePromise;
 
@@ -228,7 +233,9 @@ test.only("Prereg PK OD MC EFT", async ({ page }) => {
   const buttonPage = new ButtonPage(page1);
   buttonPage.clickYes();
 
+
   const page2Promise = page1.waitForEvent("popup");
+  await page1.waitForLoadState("networkidle");
   const page2 = await page2Promise;
 
   // Wait for the element to be present
