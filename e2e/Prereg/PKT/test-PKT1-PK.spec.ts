@@ -53,11 +53,25 @@ test("Prereg PK PKT", async ({ page }) => {
 
   await page.waitForLoadState("networkidle");
 
-  await preregPage.noticeTypePreRegSelect.waitFor({ state: "visible" });
+  await expect(page.locator('#baristaPageOut').contentFrame().getByRole('heading', { name: 'Pre-Registration' })).toBeVisible();
+  await expect(page.locator('#baristaPageOut').contentFrame().locator('h2')).toContainText('Pre-Registration');
 
+
+  await expect(page.locator('#baristaPageOut').contentFrame().getByRole('heading', { name: 'Search Insured Person &' })).toBeVisible();
+  await expect(page.locator('#baristaPageOut').contentFrame().locator('#Heading31')).toContainText('Search Insured Person & Employer Registration Status');
+
+
+  await expect(page.locator('#baristaPageOut').contentFrame().locator('#ctrlField596').getByText('Notice Type')).toBeVisible();
+  await expect(page.locator('#baristaPageOut').contentFrame().locator('#ctrlField596')).toContainText('Notice Type');
+
+  await preregPage.noticeTypePreRegSelect.waitFor({ state: "visible" });
   await preregPage.selectNoticeTypePreRegOption("Death - PKT");
+
   const selectedOptionText = await preregPage.SelectedNoticeTypeText;
   expect(selectedOptionText).toBe("Death - PKT");
+
+
+
 
   // Fill in identification type and number
   await preregPage.selectIdentificationType(data.identificationType);
@@ -75,6 +89,7 @@ test("Prereg PK PKT", async ({ page }) => {
   await preregPage.clickSearchButton();
 
   const pagePromise = page.waitForEvent("popup");
+  await page.waitForLoadState("networkidle");
   await preregPage.clickNextButton();
   const page1 = await pagePromise;
   await page1.waitForLoadState("networkidle");
@@ -154,7 +169,9 @@ test("Prereg PK PKT", async ({ page }) => {
   //add dependent info
   await page1.getByRole("button", { name: "Dependent Info" }).click();
   await page1.getByLabel("Dependent Information").selectOption("Yes");
+
   const page2Promise = page1.waitForEvent("popup");
+  await page1.waitForLoadState("networkidle");
   await page1.getByRole("button", { name: "Add Dependent" }).click();
   const page2 = await page2Promise;
 
@@ -244,9 +261,8 @@ test("Prereg PK PKT", async ({ page }) => {
 
   // Wait for the element to be present
   await page.waitForLoadState("networkidle");
-  await page.getByLabel("Scheme Ref No.").isVisible();
-  await page.locator("#SchemeRefNoCaseInfo").isVisible();
-  await page.locator("#SchemeRefNoCaseInfo").waitFor();
+  await page.getByRole('textbox', { name: 'Scheme Ref No:' }).waitFor();
+
 
   const schemeRefValue = await page.$eval("#SchemeRefNoCaseInfo", (input) => {
     return (input as HTMLInputElement).value; // Cast to HTMLInputElement and return its value
@@ -264,5 +280,5 @@ test("Prereg PK PKT", async ({ page }) => {
   }
 
   // Perform other actions as needed
-  await page.getByRole("button", { name: "Proceed" }).click();
+  await page.getByRole("button", { name: "Close" }).click();
 });

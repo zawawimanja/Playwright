@@ -148,10 +148,10 @@ test("Prereg SAO ILAT", async ({ page }) => {
   buttonPage.clickYes();
 
 
-  await page2.waitForLoadState("networkidle");
+
   const page3Promise = page2.waitForEvent("popup");
   const page3 = await page3Promise;
-
+  await page3.waitForLoadState("networkidle");
   // Wait for the element to be present
   await page3.getByLabel("Scheme Ref No:").waitFor();
 

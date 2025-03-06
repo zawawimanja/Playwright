@@ -51,6 +51,18 @@ test("Prereg PK FOT", async ({ page }) => {
 
   await page.waitForLoadState("networkidle");
 
+  await expect(page.locator('#baristaPageOut').contentFrame().getByRole('heading', { name: 'Pre-Registration' })).toBeVisible();
+  await expect(page.locator('#baristaPageOut').contentFrame().locator('h2')).toContainText('Pre-Registration');
+
+
+  await expect(page.locator('#baristaPageOut').contentFrame().getByRole('heading', { name: 'Search Insured Person &' })).toBeVisible();
+  await expect(page.locator('#baristaPageOut').contentFrame().locator('#Heading31')).toContainText('Search Insured Person & Employer Registration Status');
+
+
+  await expect(page.locator('#baristaPageOut').contentFrame().locator('#ctrlField596').getByText('Notice Type')).toBeVisible();
+  await expect(page.locator('#baristaPageOut').contentFrame().locator('#ctrlField596')).toContainText('Notice Type');
+
+
   await preregPage.noticeTypePreRegSelect.waitFor({ state: "visible" });
   await preregPage.selectNoticeTypePreRegOption("Death - FOT");
   const noticeTypeText = await preregPage.getnoticeTypePreRegSelect();
@@ -232,8 +244,8 @@ test("Prereg PK FOT", async ({ page }) => {
 
   // Wait for the element to be present
   await page.waitForLoadState("networkidle");
-  await page.getByLabel("Scheme Ref No.").isVisible();
-  await page.getByLabel("Scheme Ref No.").waitFor();
+  await page.getByRole('textbox', { name: 'Scheme Ref No:' }).waitFor();
+
 
   const schemeRefValue = await page.getByLabel("Scheme Ref No.").inputValue();
   console.log("SRN from locator: " + schemeRefValue);

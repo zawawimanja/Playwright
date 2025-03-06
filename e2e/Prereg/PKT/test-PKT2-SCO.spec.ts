@@ -141,8 +141,10 @@ test("Prereg SCO PKT", async ({ page }) => {
   // const page3Promise = page2.waitForEvent("popup");
   // const page3 = await page3Promise;
 
-  await page.getByLabel("Scheme Ref No.").waitFor();
+  await page.getByRole('textbox', { name: 'Scheme Ref No:' }).waitFor();
 
   // Perform other actions as needed
-  await page.getByRole("button", { name: "Proceed" }).click();
+  await page.getByRole("button", { name: "Close" }).click();
+
+
 });

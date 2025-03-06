@@ -21,12 +21,11 @@ import { ButtonPage } from "../../../utils/button";
 import { WagesInfoPage } from "../../../pages/wages_info";
 import { readCSV } from "../../../helper/csvHelper"; // Import the CSV helper
 // filepath: /c:/Users/aaror/Downloads/Playwright/e2e/Prereg/S2 - ILAT-BI2PI/test-ILAT-PK.spec.ts
-const fs = require("fs");
-const path = require("path");
+
 
 test.beforeEach(async ({ page }) => {
-  await login(page, "roliana.pks", "u@T_roliana");
-  //await login(page, "uat_ali", "u@T_ali");
+  //await login(page, "roliana.pks", "u@T_roliana");
+  await login(page, "uat_ali", "u@T_ali");
 });
 
 export let schemeRefValue: string;
@@ -61,8 +60,8 @@ test("Prereg SAO FOT", async ({ page }) => {
 
       headerPage.clickUserProfile();
       headerPage.clickSignOut();
-      await login(page, "uat_ali", "u@T_ali");
-      //await login(page, "roliana.pks", "u@T_roliana");
+      // await login(page, "uat_ali", "u@T_ali");
+      await login(page, "roliana.pks", "u@T_roliana");
     }
   }
 
@@ -114,6 +113,7 @@ test("Prereg SAO FOT", async ({ page }) => {
   const page3Promise = page2.waitForEvent("popup");
   await page2.getByRole("button", { name: "Update" }).click();
   const page3 = await page3Promise;
+  await page3.waitForLoadState("networkidle");
   await page3.getByLabel("Eligible as Dependent*").isVisible;
   await page3.getByLabel("Eligible as Dependent*").selectOption("90102");
   await page3.getByRole("button", { name: "Save" }).click();
@@ -125,10 +125,12 @@ test("Prereg SAO FOT", async ({ page }) => {
   await page2.waitForLoadState("networkidle");
   // after refresh wages info not function ,need to manual click
   //add fmp info
-  await page2.waitForTimeout(15000);
+
 
   //select approval
   await page2.getByRole("button", { name: "Approval" }).nth(0).isVisible;
+
+
   await page2.getByRole("button", { name: "Approval" }).nth(0).click();
   await page2.getByLabel("Action*").selectOption("10212");
 
