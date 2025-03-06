@@ -17,9 +17,11 @@ import { CasesPage } from "../../../pages/cases";
 import { InvalidityInfoPage } from "../../../pages/invalidity_info";
 import { ButtonPage } from "../../../utils/button";
 import { readCSV } from "../../../helper/csvHelper";
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
+import * as fs from 'fs';
+import * as path from 'path';
 
-const fs = require("fs");
-const path = require("path");
 
 test.beforeEach(async ({ page }) => {
   await login(page, "afzan.pks", "u@T_afzan");
@@ -31,13 +33,14 @@ test.only("Prereg PK ILAT MC EFT", async ({ page }) => {
   const preregPage = new PreregistrationPage(page);
   const leftTabPage = new LeftTabPage(page);
   let submitPage = new SubmitPage(page);
-  const casesPage = new CasesPage(page, submitPage);
+
 
   // Read data from CSV
+  const __filename = fileURLToPath(import.meta.url);
+  const __dirname = dirname(__filename);
   const csvFilePath = path.resolve(__dirname, "../../../testData/testData.csv"); // Path to CSV file
   const testData = await readCSV(csvFilePath);
-  const data = testData[0]; // Use the first row of data
-
+  const data = testData[0]; // U
   await page.waitForLoadState("networkidle");
 
   await leftTabPage.leftBar.waitFor();

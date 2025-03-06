@@ -25,8 +25,8 @@ import { InvalidityInfoPage } from "../../../pages/invalidity_info";
 import { WagesInfoPage } from "../../../pages/wages_info";
 import { ButtonPage } from "../../../utils/button";
 test.beforeEach(async ({ page }) => {
-  await login(page, "hilmi.pks", "u@T_hilmi");
-  //await login(page, "aslam.pks", "u@T_aslam");
+  //await login(page, "hilmi.pks", "u@T_hilmi");
+  await login(page, "aslam.pks", "u@T_aslam");
 });
 
 export let schemeRefValue: string;
@@ -62,12 +62,15 @@ test("Prereg MB ILAT", async ({ page }) => {
 
       headerPage.clickUserProfile();
       headerPage.clickSignOut();
-      //await login(page, "hilmi.pks", "u@T_hilmi");
-      await login(page, "aslam.pks", "u@T_aslam");
+      await login(page, "hilmi.pks", "u@T_hilmi");
+      // await login(page, "aslam.pks", "u@T_aslam");
     }
   }
 
+
+
   const pagePromise = page.waitForEvent("popup");
+  await page.waitForLoadState("networkidle");
   await page.frameLocator("#baristaPageOut").frameLocator("#APWorkCenter").getByText("Open Task").click();
   const page2 = await pagePromise;
 
@@ -77,7 +80,9 @@ test("Prereg MB ILAT", async ({ page }) => {
     await draftPage.clickCloseButton();
   }
 
+
   const page3Promise = page2.waitForEvent("popup");
+  await page.waitForLoadState("networkidle");
   await page2.getByLabel("Invalidity Decision*").selectOption("Yes");
   await page2.getByRole("button", { name: "New" }).click();
 
@@ -170,7 +175,7 @@ test("Prereg MB ILAT", async ({ page }) => {
 
   await page2.waitForLoadState("networkidle");
 
-  await page2.waitForTimeout(5000);
+  await page2.waitForTimeout(15000);
 
   const previewSubmissionPage = new PreviewSubmissionPage(page2);
   await previewSubmissionPage.clickPreviewSubmissionButton();
@@ -180,7 +185,10 @@ test("Prereg MB ILAT", async ({ page }) => {
   const buttonPage = new ButtonPage(page2);
   buttonPage.clickYes();
 
+
+
   const page5Promise = page2.waitForEvent("popup");
+  await page2.waitForLoadState("networkidle");
   const page5 = await page5Promise;
 
   // Wait for the element to be present

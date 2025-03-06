@@ -1,32 +1,37 @@
 {
-  "name": "playwrightpython",
+  "name": "your-project-name",
   "version": "1.0.0",
   "main": "index.js",
   "directories": {
     "test": "tests"
   },
-  "scripts": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "description": "",
+  "type": "module",
   "devDependencies": {
     "@eslint/js": "^9.21.0",
     "@playwright/test": "^1.50.1",
-    "@types/node": "^22.5.1",
+    "@types/node": "^21.16.0",
     "@typescript-eslint/eslint-plugin": "^8.26.0",
     "@typescript-eslint/parser": "^8.26.0",
     "eslint": "^9.21.0",
     "eslint-plugin-unused-imports": "^4.1.4",
     "globals": "^16.0.0",
+    "ts-node": "^10.9.2",
+    "tsx": "^4.17.1",
+    "typescript": "^5.4.3",
     "typescript-eslint": "^8.26.0"
   },
   "dependencies": {
     "@cucumber/cucumber": "^11.2.0",
-    "csv-parser": "^3.1.0",
+    "csv-parser": "^3.2.0",
     "dotenv": "^16.4.5",
     "openai": "^4.85.4",
-    "playwright": "^1.50.1",
-    "ts-node": "^10.9.2"
+    "playwright": "^1.50.1"
   }
 }

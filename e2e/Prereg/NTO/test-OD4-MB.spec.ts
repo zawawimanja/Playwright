@@ -68,6 +68,7 @@ test("Prereg MB OD", async ({ page }) => {
   }
 
   const pagePromise = page.waitForEvent("popup");
+  await page.waitForLoadState("networkidle");
   await page.frameLocator("#baristaPageOut").frameLocator("#APWorkCenter").getByText("Open Task").click();
   const page2 = await pagePromise;
 
@@ -82,7 +83,10 @@ test("Prereg MB OD", async ({ page }) => {
 
   await page2.getByRole("button", { name: "SMB Information" }).click();
 
+
   const page3Promise = page2.waitForEvent("popup");
+
+  await page2.waitForLoadState("networkidle");
   const buttonPage = new ButtonPage(page2);
   await buttonPage.clickNew();
 
@@ -215,6 +219,7 @@ test("Prereg MB OD", async ({ page }) => {
 
   await page2.reload();
   await page2.waitForLoadState("networkidle");
+  await page2.waitForTimeout(5000);
 
   const supportingDocumentPage = new SupportingDocumentPage(page2);
   await supportingDocumentPage.clickSupportingDocumentButton();
@@ -230,7 +235,10 @@ test("Prereg MB OD", async ({ page }) => {
   const buttonPage1 = new ButtonPage(page2);
   buttonPage1.clickYes();
 
+
+
   const page4Promise = page2.waitForEvent("popup");
+  await page2.waitForLoadState("networkidle");
   const page4 = await page4Promise;
 
   // Wait for the element to be present
