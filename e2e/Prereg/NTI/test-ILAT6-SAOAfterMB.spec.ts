@@ -29,9 +29,9 @@ test.beforeEach(async ({ page }) => {
   await login(page, "uat_ali", "u@T_ali");
 });
 
-export let schemeRefValue: string;
+
 test("Prereg SCO ILAT", async ({ page }) => {
-  const preregPage = new PreregistrationPage(page);
+
   const leftTabPage = new LeftTabPage(page);
   let submitPage = new SubmitPage(page);
   const casesPage = new CasesPage(page, submitPage);

@@ -29,10 +29,10 @@ test.beforeEach(async ({ page }) => {
   await login(page, "aslam.pks", "u@T_aslam");
 });
 
-export let schemeRefValue: string;
+
 test("Prereg MB ILAT", async ({ page }) => {
-  let value = "";
-  const preregPage = new PreregistrationPage(page);
+
+
   const leftTabPage = new LeftTabPage(page);
   let submitPage = new SubmitPage(page);
   const casesPage = new CasesPage(page, submitPage);

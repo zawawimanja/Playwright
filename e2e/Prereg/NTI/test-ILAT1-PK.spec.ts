@@ -32,7 +32,7 @@ export let schemeRefValue: string;
 test.only("Prereg PK ILAT MC EFT", async ({ page }) => {
   const preregPage = new PreregistrationPage(page);
   const leftTabPage = new LeftTabPage(page);
-  let submitPage = new SubmitPage(page);
+
 
 
   // Read data from CSV
@@ -105,8 +105,6 @@ test.only("Prereg PK ILAT MC EFT", async ({ page }) => {
   await expect(remarksPage.sectionTabs).toContainText("Remarks");
   remarksPage.clickRemarksButton();
 
-  //error message
-  //if exist check close button and if not continue
 
   const insuredPersonInfoPage = new InsuredPersonInfoPage(page1);
   const calendarPage = new CalendarPage(page1);
