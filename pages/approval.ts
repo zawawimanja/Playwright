@@ -1,8 +1,8 @@
-import { Page } from "@playwright/test";
+import { Page } from '@playwright/test';
 
 export class ApprovalPage {
   private REMARKS_BUTTON_SELECTOR = '[role="button"][name="Remarks"]';
-  private SECTION_TABS_SELECTOR = "#sectionTabs";
+  private SECTION_TABS_SELECTOR = '#sectionTabs';
 
   private page: Page;
 
@@ -19,54 +19,54 @@ export class ApprovalPage {
   }
 
   get addRemarksButton() {
-    return this.page.getByRole("button", { name: "Add Remarks" });
+    return this.page.getByRole('button', { name: 'Add Remarks' });
   }
 
   get saveRemarksButton() {
-    return this.page.getByRole("button", { name: "Save Remarks" });
+    return this.page.getByRole('button', { name: 'Save Remarks' });
   }
 
   get textbox() {
-    return this.page.getByRole("textbox");
+    return this.page.getByRole('textbox');
   }
 
   get recommendationButton() {
-    return this.page.getByRole("button", { name: "Recommendation" });
+    return this.page.getByRole('button', { name: 'Recommendation' });
   }
 
   get approvalButton() {
-    return this.page.getByRole("button", { name: "Approval" });
+    return this.page.getByRole('button', { name: 'Approval' });
   }
 
   get actionRecommend() {
-    return this.page.locator("#ActionRecommend");
+    return this.page.locator('#ActionRecommend');
   }
 
   get actionApprove() {
-    return this.page.locator("#ActionApprove");
+    return this.page.locator('#ActionApprove');
   }
 
   async selectSAOActionOptionBeforeMB() {
-    await this.actionApprove.selectOption("10207");
+    await this.actionApprove.selectOption('10207');
   }
 
   get actionApproveSAONTA() {
-    return this.page.getByLabel("Action");
+    return this.page.getByLabel('Action');
   }
 
   get actionApproveAfterMB() {
-    return this.page.locator("#ActionApprovalAfterMB");
+    return this.page.locator('#ActionApprovalAfterMB');
   }
   get actionApproveSAOHUKAfterMB() {
-    return this.page.locator("Action*");
+    return this.page.locator('Action*');
   }
 
   async selectSAOActionOptionAfterMB() {
-    await this.actionApproveAfterMB.selectOption("10203");
+    await this.actionApproveAfterMB.selectOption('10203');
   }
 
   async selectSAOActionHUKOptionAfterMB() {
-    await this.actionApproveSAOHUKAfterMB.selectOption("10203");
+    await this.actionApproveSAOHUKAfterMB.selectOption('10203');
   }
 
   async clickRecommendationButton() {
@@ -78,19 +78,22 @@ export class ApprovalPage {
   }
 
   async selectActionOption() {
-    await this.actionRecommend.selectOption("10207");
+    await this.actionRecommend.selectOption('10207');
   }
 
   async selectSAOActionOption() {
-    await this.actionApprove.selectOption("10222");
+    await this.actionApprove.selectOption('10222');
   }
 
-  async selectSAOActionOptionNTA(text) {
-    await this.actionApproveSAONTA.selectOption(text);
+  async selectSAOActionOptionNTA(text: string) {
+    await this.page.getByLabel('Action').selectOption(text);
   }
 
   async selectUnderSectionEmploymentInjury() {
-    await this.underSectionEmploymentInjury.first().selectOption("205601");
+    await this.page
+      .locator('[id^="UnderSectionADetailsSAOA-"]')
+      .first()
+      .selectOption('205601');
   }
 
   get underSectionEmploymentInjury() {

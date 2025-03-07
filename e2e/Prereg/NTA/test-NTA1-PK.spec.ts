@@ -238,17 +238,6 @@ test.only('Prereg PK NTA EFT MC', async ({ page }) => {
   } else {
     await bankInformationPage.selectAccountNo('No');
     await page1.getByLabel('Reason*').selectOption('207301');
-    await expect(
-      page2.getByRole('button', { name: 'Insured Person Information' }),
-    ).toBeVisible();
-    await page2.locator('#row1column2').click();
-    await page2.locator('#row1column2').click();
-    await page2.locator('body').press('ControlOrMeta+z');
-    await page2.locator('body').press('ControlOrMeta+z');
-    await page2.locator('body').press('ControlOrMeta+z');
-    await page2.locator('body').press('ControlOrMeta+z');
-    await page2.locator('body').press('ControlOrMeta+z');
-    await page2.locator('body').press('ControlOrMeta+z');
     await page1.getByLabel('Insolvency Search').selectOption('1');
     await page1.getByLabel('Insolvency State').selectOption('200701');
     await page1.getByLabel('Insolvency Branch').selectOption('806005');
