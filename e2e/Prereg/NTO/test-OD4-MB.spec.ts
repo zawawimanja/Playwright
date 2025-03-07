@@ -32,7 +32,7 @@ test.beforeEach(async ({ page }) => {
 export let schemeRefValue: string;
 test("Prereg MB OD", async ({ page }) => {
   let value = "";
-  const preregPage = new PreregistrationPage(page);
+
   const leftTabPage = new LeftTabPage(page);
   let submitPage = new SubmitPage(page);
   const casesPage = new CasesPage(page, submitPage);
@@ -219,7 +219,7 @@ test("Prereg MB OD", async ({ page }) => {
 
   await page2.reload();
   await page2.waitForLoadState("networkidle");
-  await page2.waitForTimeout(5000);
+  await page2.waitForTimeout(15000);
 
   const supportingDocumentPage = new SupportingDocumentPage(page2);
   await supportingDocumentPage.clickSupportingDocumentButton();

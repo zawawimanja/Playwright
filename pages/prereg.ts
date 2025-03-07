@@ -85,6 +85,13 @@ export class PreregistrationPage {
     await this.noticeTypePreRegSelect.selectOption(option);
   }
 
+
+  async getOptions(): Promise<string[]> {
+    const options = await this.noticeTypePreRegSelect.locator('option').allTextContents();
+    return options;
+  }
+
+
   public async getSelectedInsuredPersonEmploymentText(): Promise<string> {
     return await this.insuredPersonEmployment.locator("option:checked").innerText();
   }

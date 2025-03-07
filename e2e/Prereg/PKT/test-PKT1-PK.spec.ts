@@ -34,7 +34,7 @@ test("Prereg PK PKT", async ({ page }) => {
   const preregPage = new PreregistrationPage(page);
   const leftTabPage = new LeftTabPage(page);
   let submitPage = new SubmitPage(page);
-  const casesPage = new CasesPage(page, submitPage);
+
 
   // Read data from CSV
   const __filename = fileURLToPath(import.meta.url);
