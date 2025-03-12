@@ -135,9 +135,7 @@ test('Prereg SAO FOT', async ({ page }) => {
   await page2.waitForTimeout(15000);
   //select approval
   await page2.getByRole('button', { name: 'Approval' }).click();
-  // await page2.getByRole('button', { name: 'Approval' }).nth(0).isVisible;
 
-  // await page2.getByRole('button', { name: 'Approval' }).nth(0).click();
   await page2.getByLabel('Action*').selectOption('10212');
 
   await page2.locator('[id^="Q1EIQADetailsSAOA-"]').first().selectOption('1');
