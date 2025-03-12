@@ -23,8 +23,8 @@ import { readCSV } from '../../../helper/csvHelper'; // Import the CSV helper
 // filepath: /c:/Users/aaror/Downloads/Playwright/e2e/Prereg/S2 - ILAT-BI2PI/test-ILAT-PK.spec.ts
 
 test.beforeEach(async ({ page }) => {
-  //await login(page, "roliana.pks", "u@T_roliana");
-  await login(page, 'uat_ali', 'u@T_ali');
+  await login(page, 'roliana.pks', 'u@T_roliana');
+  //await login(page, 'uat_ali', 'u@T_ali');
 });
 
 export let schemeRefValue: string;
@@ -58,8 +58,8 @@ test('Prereg SAO FOT', async ({ page }) => {
 
       headerPage.clickUserProfile();
       headerPage.clickSignOut();
-      // await login(page, "uat_ali", "u@T_ali");
-      await login(page, 'roliana.pks', 'u@T_roliana');
+      await login(page, 'uat_ali', 'u@T_ali');
+      // await login(page, 'roliana.pks', 'u@T_roliana');
     }
   }
 
@@ -70,7 +70,7 @@ test('Prereg SAO FOT', async ({ page }) => {
     .getByText('Open Task')
     .click();
   const page2 = await pagePromise;
-
+  await page2.waitForLoadState('networkidle');
   const draftPage = new DraftPage(page2);
   if ((await draftPage.closeButton.count()) > 0) {
     await draftPage.closeButton.waitFor();
@@ -97,6 +97,9 @@ test('Prereg SAO FOT', async ({ page }) => {
   await insuredPersonInfoPage.clickInsuredPersonInfoButton();
 
   await page2.getByRole('button', { name: 'Death Info' }).click();
+  await expect(page2.getByRole('checkbox')).toBeVisible();
+
+  await page2.getByRole('checkbox').check();
 
   const preferredSOCSOOfficePage = new PreferredSOCSOOfficePage(page2);
   await preferredSOCSOOfficePage.clickPreferredSOCSOOfficeButton();
@@ -131,9 +134,10 @@ test('Prereg SAO FOT', async ({ page }) => {
   //add fmp info
   await page2.waitForTimeout(15000);
   //select approval
-  await page2.getByRole('button', { name: 'Approval' }).nth(0).isVisible;
+  await page2.getByRole('button', { name: 'Approval' }).click();
+  // await page2.getByRole('button', { name: 'Approval' }).nth(0).isVisible;
 
-  await page2.getByRole('button', { name: 'Approval' }).nth(0).click();
+  // await page2.getByRole('button', { name: 'Approval' }).nth(0).click();
   await page2.getByLabel('Action*').selectOption('10212');
 
   await page2.locator('[id^="Q1EIQADetailsSAOA-"]').first().selectOption('1');
@@ -160,21 +164,21 @@ test('Prereg SAO FOT', async ({ page }) => {
 
   await page5.getByRole('button', { name: 'Yes' }).click();
   //create fpm file
-  // Wait for the element to be present
-  await page.getByLabel('Scheme Ref No.').waitFor();
+  // // Wait for the element to be present
+  // await page.getByLabel('Scheme Ref No.').waitFor();
 
-  const schemeRefValue = await page.getByLabel('Scheme Ref No:').inputValue();
-  console.log('SRN from locator: ' + schemeRefValue);
-  //create srn fpm
-  const filePath = path.resolve(__dirname, 'schemeRefValueFPM.json');
-  fs.writeFileSync(filePath, JSON.stringify({ schemeRefValue }));
+  // const schemeRefValue = await page.getByLabel('Scheme Ref No:').inputValue();
+  // console.log('SRN from locator: ' + schemeRefValue);
+  // //create srn fpm
+  // const filePath = path.resolve(__dirname, 'schemeRefValueFPM.json');
+  // fs.writeFileSync(filePath, JSON.stringify({ schemeRefValue }));
 
-  // Check if the file exists
-  if (fs.existsSync(filePath)) {
-    console.log('File schemeRefValue.json exists at path: ' + filePath);
-  } else {
-    console.log('File schemeRefValue.json does not exist at path: ' + filePath);
-  }
+  // // Check if the file exists
+  // if (fs.existsSync(filePath)) {
+  //   console.log('File schemeRefValue.json exists at path: ' + filePath);
+  // } else {
+  //   console.log('File schemeRefValue.json does not exist at path: ' + filePath);
+  // }
 
   await page.getByRole('button', { name: 'Proceed' }).click();
 
@@ -188,6 +192,8 @@ test('Prereg SAO FOT', async ({ page }) => {
   const wagesInfoPage = new WagesInfoPage(page2);
   await wagesInfoPage.selectAllEnabledWagesOptions('Yes');
 
+  await page2.getByRole('button', { name: 'Save' }).click();
+
   const supportingDocumentPage = new SupportingDocumentPage(page2);
   await supportingDocumentPage.clickSupportingDocumentButton();
 
@@ -199,11 +205,28 @@ test('Prereg SAO FOT', async ({ page }) => {
   const buttonPage = new ButtonPage(page2);
   buttonPage.clickYes();
 
-  // const page4Promise = page2.waitForEvent("popup");
-  // const page4 = await page4Promise;
+  const page5Promise = page2.waitForEvent('popup');
+  const page6 = await page5Promise;
 
-  await page.getByLabel('Scheme Ref No.').waitFor();
+  // Debugging: Check if the popup page is correctly referenced
+  console.log('Popup page URL:', page6.url());
+
+  // Wait for the element to be present
+  await page6.waitForLoadState('networkidle');
+
+  // Additional wait to ensure the page is fully loaded
+  await page6.waitForTimeout(10000);
+
+  const schemeRefNoTextbox = await page6.locator('#SchemeRefNo');
+  console.log(
+    'Scheme Ref No textbox is visible using page3' + schemeRefNoTextbox,
+  );
+
+  // Wait for the element to be present
+  await schemeRefNoTextbox.waitFor();
+  const schemeRefValue1 = await schemeRefNoTextbox.inputValue();
+  console.log('SRN from locator: ' + schemeRefValue1);
 
   // Perform other actions as needed
-  await page.getByRole('button', { name: 'Proceed' }).click();
+  await page6.getByRole('button', { name: 'Close' }).click();
 });
