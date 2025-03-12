@@ -1,5 +1,5 @@
-import { Page } from "@playwright/test";
-import { CasesPage } from "../pages/cases";
+import { Locator, Page } from '@playwright/test';
+import { CasesPage } from '../pages/cases';
 
 export class MyCasesPage {
   private page: Page;
@@ -11,11 +11,11 @@ export class MyCasesPage {
   }
 
   get myCasesButton() {
-    return this.page.getByRole("link", { name: "My Cases" });
+    return this.page.getByRole('link', { name: 'My Cases' });
   }
 
   get frameLocator() {
-    return this.page.frameLocator("#baristaPageOut");
+    return this.page.frameLocator('#baristaPageOut');
   }
 
   async clickAccident(type: string): Promise<boolean> {
@@ -23,69 +23,69 @@ export class MyCasesPage {
 
     // Choose the locator based on the type
     switch (type) {
-      case "SCO":
+      case 'SCO':
         locator = this.page
-          .frameLocator("#baristaPageOut")
-          .frameLocator("#APWorkCenter")
+          .frameLocator('#baristaPageOut')
+          .frameLocator('#APWorkCenter')
           .locator(
-            `//td[a[contains(text(), '${this.casespage.casesCreated}')]]/following-sibling::td[contains(@title, 'Accident Notice SCO')]`
+            `//td[a[contains(text(), '${this.casespage.casesCreated}')]]/following-sibling::td[contains(@title, 'Accident Notice SCO')]`,
           );
         console.log(`Locator: ${locator}`);
         break;
 
-      case "HUK SCO":
+      case 'HUK SCO':
         locator = this.page
-          .frameLocator("#baristaPageOut")
-          .frameLocator("#APWorkCenter")
+          .frameLocator('#baristaPageOut')
+          .frameLocator('#APWorkCenter')
           .locator(
-            `//td[a[contains(text(), '${this.casespage.casesCreated}')]]/following-sibling::td[contains(@title, 'HUK SCO')]`
+            `//td[a[contains(text(), '${this.casespage.casesCreated}')]]/following-sibling::td[contains(@title, 'HUK SCO')]`,
           );
         console.log(`Locator: ${locator}`);
         break;
 
-      case "HUK SAO":
+      case 'HUK SAO':
         locator = this.page
-          .frameLocator("#baristaPageOut")
-          .frameLocator("#APWorkCenter")
+          .frameLocator('#baristaPageOut')
+          .frameLocator('#APWorkCenter')
           .locator(
-            `//td[a[contains(text(), '${this.casespage.casesCreated}')]]/following-sibling::td[contains(@title, 'HUK SAO')]`
+            `//td[a[contains(text(), '${this.casespage.casesCreated}')]]/following-sibling::td[contains(@title, 'HUK SAO')]`,
           );
         console.log(`Locator: ${locator}`);
         break;
 
-      case "SAO":
+      case 'SAO':
         locator = this.page
-          .frameLocator("#baristaPageOut")
-          .frameLocator("#APWorkCenter")
+          .frameLocator('#baristaPageOut')
+          .frameLocator('#APWorkCenter')
           .locator(
-            `//td[a[contains(text(), '${this.casespage.casesCreated}')]]/following-sibling::td[contains(@title, 'Accident Notice SAO')]`
+            `//td[a[contains(text(), '${this.casespage.casesCreated}')]]/following-sibling::td[contains(@title, 'Accident Notice SAO')]`,
           );
         console.log(`Locator: ${locator}`);
         break;
 
-      case "MB":
+      case 'MB':
         locator = this.page
-          .frameLocator("#baristaPageOut")
-          .frameLocator("#APWorkCenter")
+          .frameLocator('#baristaPageOut')
+          .frameLocator('#APWorkCenter')
           .locator(
-            `//td[a[contains(text(), '${this.casespage.casesCreated}')]]/following-sibling::td[contains(@title, 'Medical Board Info')]`
+            `//td[a[contains(text(), '${this.casespage.casesCreated}')]]/following-sibling::td[contains(@title, 'Medical Board Info')]`,
           );
 
         console.log(`Locator: ${locator}`);
         break;
 
-      case "HUK MB":
+      case 'HUK MB':
         locator = this.page
-          .frameLocator("#baristaPageOut")
-          .frameLocator("#APWorkCenter")
+          .frameLocator('#baristaPageOut')
+          .frameLocator('#APWorkCenter')
           .locator(
-            `//td[a[contains(text(), '${this.casespage.casesCreated}')]]/following-sibling::td[contains(@title, 'HUK MB')]`
+            `//td[a[contains(text(), '${this.casespage.casesCreated}')]]/following-sibling::td[contains(@title, 'HUK MB')]`,
           );
 
         console.log(`Locator: ${locator}`);
         break;
       default:
-        console.log("Invalid type provided.");
+        console.log('Invalid type provided.');
         return false; // Return false if the type is invalid
     }
 
@@ -93,10 +93,10 @@ export class MyCasesPage {
 
     try {
       await locator.click({ timeout: 30000 }); // Attempt to click with a timeout
-      console.log("Case found and clicked.");
+      console.log('Case found and clicked.');
       return true; // Return true if element was found and clicked
     } catch (error) {
-      console.log("No matching elements found or failed to click.");
+      console.log('No matching elements found or failed to click.');
       return false; // Return false if element was not found or click failed
     }
   }
@@ -106,38 +106,54 @@ export class MyCasesPage {
 
     // Choose the locator based on the type
     switch (type) {
-      case "SCO":
+      case 'SCO':
         locator = this.page
-          .frameLocator("#baristaPageOut")
-          .frameLocator("#APWorkCenter")
+          .locator('#baristaPageOut')
+          .contentFrame()
+          .locator('#APWorkCenter')
+          .contentFrame()
+
           .locator(
-            `//td[a[contains(text(), '${this.casespage.casesCreated}')]]/following-sibling::td[contains(@title, 'Death Notice SCO')]`
+            `//tr[td[a[contains(text(), '${this.casespage.casesCreated}')]] and td[contains(@title, 'Death Notice SCO')]]/td[contains(@title, 'Death Notice SCO')]`,
+          );
+        //    .locator(
+        //   `//tr[td[a[contains(text(), '${this.casespage.casesCreated}')]]]/td[contains(@title, 'Death Notice SCO')]`,
+        // );
+
+        console.log(`Locator: ${locator}`);
+        break;
+
+      case 'SAO':
+        // locator = this.page
+        //   .frameLocator('#baristaPageOut')
+        //   .frameLocator('#APWorkCenter')
+        //   .locator(
+        //     `//td[a[contains(text(), '${this.casespage.casesCreated}')]]/following-sibling::td[contains(@title, 'Death Notice SAO')]`,
+        //   );
+        locator = this.page
+          .locator('#baristaPageOut')
+          .contentFrame()
+          .locator('#APWorkCenter')
+          .contentFrame()
+
+          .locator(
+            `//tr[td[a[contains(text(), '${this.casespage.casesCreated}')]] and td[contains(@title, 'Death Notice SAO')]]/td[contains(@title, 'Death Notice SAO')]`,
           );
         console.log(`Locator: ${locator}`);
         break;
 
-      case "SAO":
+      case 'MB':
         locator = this.page
-          .frameLocator("#baristaPageOut")
-          .frameLocator("#APWorkCenter")
+          .frameLocator('#baristaPageOut')
+          .frameLocator('#APWorkCenter')
           .locator(
-            `//td[a[contains(text(), '${this.casespage.casesCreated}')]]/following-sibling::td[contains(@title, 'Death Notice SAO')]`
-          );
-        console.log(`Locator: ${locator}`);
-        break;
-
-      case "MB":
-        locator = this.page
-          .frameLocator("#baristaPageOut")
-          .frameLocator("#APWorkCenter")
-          .locator(
-            `//td[a[contains(text(), '${this.casespage.casesCreated}')]]/following-sibling::td[contains(@title, 'Medical Board Info')]`
+            `//td[a[contains(text(), '${this.casespage.casesCreated}')]]/following-sibling::td[contains(@title, 'Medical Board Info')]`,
           );
 
         console.log(`Locator: ${locator}`);
         break;
       default:
-        console.log("Invalid type provided.");
+        console.log('Invalid type provided.');
         return false; // Return false if the type is invalid
     }
 
@@ -145,10 +161,10 @@ export class MyCasesPage {
 
     try {
       await locator.click({ timeout: 30000 }); // Attempt to click with a timeout
-      console.log("Case found and clicked.");
+      console.log('Case found and clicked.');
       return true; // Return true if element was found and clicked
     } catch (error) {
-      console.log("No matching elements found or failed to click.");
+      console.log('No matching elements found or failed to click.');
       return false; // Return false if element was not found or click failed
     }
   }
@@ -158,38 +174,38 @@ export class MyCasesPage {
 
     // Choose the locator based on the type
     switch (type) {
-      case "SCO":
+      case 'SCO':
         locator = this.page
-          .frameLocator("#baristaPageOut")
-          .frameLocator("#APWorkCenter")
+          .frameLocator('#baristaPageOut')
+          .frameLocator('#APWorkCenter')
           .locator(
-            `//td[a[contains(text(), '${this.casespage.casesCreated}')]]/following-sibling::td[contains(@title, 'Death Notice SCO')]`
+            `//td[a[contains(text(), '${this.casespage.casesCreated}')]]/following-sibling::td[contains(@title, 'Death Notice SCO')]`,
           );
         console.log(`Locator: ${locator}`);
         break;
 
-      case "SAO RPO":
+      case 'SAO RPO':
         locator = this.page
-          .frameLocator("#baristaPageOut")
-          .frameLocator("#APWorkCenter")
+          .frameLocator('#baristaPageOut')
+          .frameLocator('#APWorkCenter')
           .locator(
-            `//td[a[contains(text(), '${this.casespage.casesCreated}')]]/following-sibling::td[contains(@title, 'Revision Payment Option SAO')]`
+            `//td[a[contains(text(), '${this.casespage.casesCreated}')]]/following-sibling::td[contains(@title, 'Revision Payment Option SAO')]`,
           );
         console.log(`Locator: ${locator}`);
         break;
 
-      case "MB":
+      case 'MB':
         locator = this.page
-          .frameLocator("#baristaPageOut")
-          .frameLocator("#APWorkCenter")
+          .frameLocator('#baristaPageOut')
+          .frameLocator('#APWorkCenter')
           .locator(
-            `//td[a[contains(text(), '${this.casespage.casesCreated}')]]/following-sibling::td[contains(@title, 'Medical Board Info')]`
+            `//td[a[contains(text(), '${this.casespage.casesCreated}')]]/following-sibling::td[contains(@title, 'Medical Board Info')]`,
           );
 
         console.log(`Locator: ${locator}`);
         break;
       default:
-        console.log("Invalid type provided.");
+        console.log('Invalid type provided.');
         return false; // Return false if the type is invalid
     }
 
@@ -197,10 +213,10 @@ export class MyCasesPage {
 
     try {
       await locator.click({ timeout: 30000 }); // Attempt to click with a timeout
-      console.log("Case found and clicked.");
+      console.log('Case found and clicked.');
       return true; // Return true if element was found and clicked
     } catch (error) {
-      console.log("No matching elements found or failed to click.");
+      console.log('No matching elements found or failed to click.');
       return false; // Return false if element was not found or click failed
     }
   }
@@ -210,38 +226,38 @@ export class MyCasesPage {
 
     // Choose the locator based on the type
     switch (type) {
-      case "OD":
+      case 'OD':
         locator = this.page
-          .frameLocator("#baristaPageOut")
-          .frameLocator("#APWorkCenter")
+          .frameLocator('#baristaPageOut')
+          .frameLocator('#APWorkCenter')
           .locator(
-            `//td[a[contains(text(), '${this.casespage.casesCreated}')]]/following-sibling::td[contains(@title, 'Occupational Disease Notice')]`
+            `//td[a[contains(text(), '${this.casespage.casesCreated}')]]/following-sibling::td[contains(@title, 'Occupational Disease Notice')]`,
           );
         console.log(`Locator: ${locator}`);
         break;
 
-      case "SAO":
+      case 'SAO':
         locator = this.page
-          .frameLocator("#baristaPageOut")
-          .frameLocator("#APWorkCenter")
+          .frameLocator('#baristaPageOut')
+          .frameLocator('#APWorkCenter')
           .locator(
-            `//td[a[contains(text(), '${this.casespage.casesCreated}')]]/following-sibling::td[contains(@title, 'Occupation Disease Notice SAO')]`
+            `//td[a[contains(text(), '${this.casespage.casesCreated}')]]/following-sibling::td[contains(@title, 'Occupation Disease Notice SAO')]`,
           );
         console.log(`Locator: ${locator}`);
         break;
 
-      case "MB":
+      case 'MB':
         locator = this.page
-          .frameLocator("#baristaPageOut")
-          .frameLocator("#APWorkCenter")
+          .frameLocator('#baristaPageOut')
+          .frameLocator('#APWorkCenter')
           .locator(
-            `//td[a[contains(text(), '${this.casespage.casesCreated}')]]/following-sibling::td[contains(@title, 'Medical Board Info')]`
+            `//td[a[contains(text(), '${this.casespage.casesCreated}')]]/following-sibling::td[contains(@title, 'Medical Board Info')]`,
           );
 
         console.log(`Locator: ${locator}`);
         break;
       default:
-        console.log("Invalid type provided.");
+        console.log('Invalid type provided.');
         return false; // Return false if the type is invalid
     }
 
@@ -249,10 +265,10 @@ export class MyCasesPage {
 
     try {
       await locator.click({ timeout: 30000 }); // Attempt to click with a timeout
-      console.log("Case found and clicked.");
+      console.log('Case found and clicked.');
       return true; // Return true if element was found and clicked
     } catch (error) {
-      console.log("No matching elements found or failed to click.");
+      console.log('No matching elements found or failed to click.');
       return false; // Return false if element was not found or click failed
     }
   }
@@ -262,50 +278,50 @@ export class MyCasesPage {
 
     // Choose the locator based on the type
     switch (type) {
-      case "SCO":
+      case 'SCO':
         locator = this.page
-          .frameLocator("#baristaPageOut")
-          .frameLocator("#APWorkCenter")
+          .frameLocator('#baristaPageOut')
+          .frameLocator('#APWorkCenter')
           .locator(
-            `//td[a[contains(text(), '${this.casespage.casesCreated}')]]/following-sibling::td[contains(@title, 'SCO IO Form')]`
+            `//td[a[contains(text(), '${this.casespage.casesCreated}')]]/following-sibling::td[contains(@title, 'SCO IO Form')]`,
           );
         console.log(`Locator: ${locator}`);
         break;
 
-      case "SAO":
+      case 'SAO':
         locator = this.page
-          .frameLocator("#baristaPageOut")
-          .frameLocator("#APWorkCenter")
+          .frameLocator('#baristaPageOut')
+          .frameLocator('#APWorkCenter')
           .locator(
-            `//td[a[contains(text(), '${this.casespage.casesCreated}')]]/following-sibling::td[contains(@title, 'SAO Form')]`
-          );
-
-        console.log(`Locator: ${locator}`);
-        break;
-
-      case "SAOS1":
-        locator = this.page
-          .frameLocator("#baristaPageOut")
-          .frameLocator("#APWorkCenter")
-          .locator(
-            `//td[a[contains(text(), '${this.casespage.casesCreated}')]]/following-sibling::td[contains(@title, 'Invalidity Notice SAO')]`
+            `//td[a[contains(text(), '${this.casespage.casesCreated}')]]/following-sibling::td[contains(@title, 'SAO Form')]`,
           );
 
         console.log(`Locator: ${locator}`);
         break;
 
-      case "MB":
+      case 'SAOS1':
         locator = this.page
-          .frameLocator("#baristaPageOut")
-          .frameLocator("#APWorkCenter")
+          .frameLocator('#baristaPageOut')
+          .frameLocator('#APWorkCenter')
           .locator(
-            `//td[a[contains(text(), '${this.casespage.casesCreated}')]]/following-sibling::td[contains(@title, 'Medical Board')]`
+            `//td[a[contains(text(), '${this.casespage.casesCreated}')]]/following-sibling::td[contains(@title, 'Invalidity Notice SAO')]`,
+          );
+
+        console.log(`Locator: ${locator}`);
+        break;
+
+      case 'MB':
+        locator = this.page
+          .frameLocator('#baristaPageOut')
+          .frameLocator('#APWorkCenter')
+          .locator(
+            `//td[a[contains(text(), '${this.casespage.casesCreated}')]]/following-sibling::td[contains(@title, 'Medical Board')]`,
           );
 
         console.log(`Locator: ${locator}`);
         break;
       default:
-        console.log("Invalid type provided.");
+        console.log('Invalid type provided.');
         return false; // Return false if the type is invalid
     }
 
@@ -313,11 +329,14 @@ export class MyCasesPage {
 
     try {
       await locator.click({ timeout: 30000 }); // Attempt to click with a timeout
-      console.log("Case found and clicked.");
+      console.log('Case found and clicked.');
       return true; // Return true if element was found and clicked
     } catch (error) {
-      console.log("No matching elements found or failed to click.");
+      console.log('No matching elements found or failed to click.');
       return false; // Return false if element was not found or click failed
     }
   }
+}
+function expect(arg0: Locator) {
+  throw new Error('Function not implemented.');
 }

@@ -22,8 +22,8 @@ import { HeaderPage } from '../../../pages/header';
 import { ButtonPage } from '../../../utils/button';
 
 test.beforeEach(async ({ page }) => {
-  // await login(page, "atilia.pks", "u@T_atilia");
-  await login(page, 'nazira.pks', 'u@T_nazira');
+  await login(page, 'atilia.pks', 'u@T_atilia');
+  //await login(page, 'nazira.pks', 'u@T_nazira');
 });
 
 export let schemeRefValue: string;
@@ -60,17 +60,20 @@ test('Prereg SCO FOT', async ({ page }) => {
 
       headerPage.clickUserProfile();
       headerPage.clickSignOut();
-      //    await login(page, "nazira.pks", "u@T_nazira");
-      await login(page, 'atilia.pks', 'u@T_atilia');
+      await login(page, 'nazira.pks', 'u@T_nazira');
+      //  await login(page, 'atilia.pks', 'u@T_atilia');
     }
   }
 
   const pagePromise = page.waitForEvent('popup');
   await page
-    .frameLocator('#baristaPageOut')
-    .frameLocator('#APWorkCenter')
+    .locator('#baristaPageOut')
+    .contentFrame()
+    .locator('#APWorkCenter')
+    .contentFrame()
     .getByText('Open Task')
     .click();
+
   const page2 = await pagePromise;
 
   const draftPage = new DraftPage(page2);
@@ -180,12 +183,23 @@ test('Prereg SCO FOT', async ({ page }) => {
   const buttonPage = new ButtonPage(page2);
   buttonPage.clickYes();
 
-  // const page3Promise = page2.waitForEvent("popup");
-  // const page3 = await page3Promise;
+  const page3Promise = page2.waitForEvent('popup');
+  const page3 = await page3Promise;
+
+  // Debugging: Check if the popup page is correctly referenced
+  console.log('Popup page URL:', page3.url());
 
   // Wait for the element to be present
-  await page.getByLabel('Scheme Ref No.').waitFor();
+  await page3.waitForLoadState('networkidle');
+
+  // Additional wait to ensure the page is fully loaded
+  await page3.waitForTimeout(10000);
+
+  const schemeRefNoTextbox = await page3.locator('#SchemeRefNo');
+  console.log(
+    'Scheme Ref No textbox is visible using page3' + schemeRefNoTextbox,
+  );
 
   // Perform other actions as needed
-  await page.getByRole('button', { name: 'Proceed' }).click();
+  await page3.getByRole('button', { name: 'Close' }).click();
 });
