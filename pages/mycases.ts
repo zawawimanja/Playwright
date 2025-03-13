@@ -32,7 +32,7 @@ export class MyCasesPage {
           .contentFrame()
 
           .locator(
-            `//tr[td[a[contains(text(), '${this.casespage.casesCreated}')]] and td[contains(@title, 'Accident Notice SCO')]]/td[contains(@title, 'Accident Notice SCO')]`,
+            `//tr[td[a[contains(text(), '${this.casespage.casesCreated}')]]]/td[contains(@title, 'Accident Notice SCO')]`,
           );
 
         console.log(`Locator: ${locator}`);
@@ -42,8 +42,9 @@ export class MyCasesPage {
         locator = this.page
           .frameLocator('#baristaPageOut')
           .frameLocator('#APWorkCenter')
+
           .locator(
-            `//td[a[contains(text(), '${this.casespage.casesCreated}')]]/following-sibling::td[contains(@title, 'HUK SCO')]`,
+            `//tr[td[a[contains(text(), '${this.casespage.casesCreated}')]]]/td[contains(@title, 'HUK SCO')]`,
           );
         console.log(`Locator: ${locator}`);
         break;
@@ -52,19 +53,16 @@ export class MyCasesPage {
         locator = this.page
           .frameLocator('#baristaPageOut')
           .frameLocator('#APWorkCenter')
+
           .locator(
-            `//td[a[contains(text(), '${this.casespage.casesCreated}')]]/following-sibling::td[contains(@title, 'HUK SAO')]`,
+            `//tr[td[a[contains(text(), '${this.casespage.casesCreated}')]]]/td[contains(@title, 'HUK SAO')]`,
           );
+
         console.log(`Locator: ${locator}`);
         break;
 
       case 'SAO':
         locator = this.page
-          // .frameLocator('#baristaPageOut')
-          // .frameLocator('#APWorkCenter')
-          // .locator(
-          //   `//td[a[contains(text(), '${this.casespage.casesCreated}')]]/following-sibling::td[contains(@title, 'Accident Notice SAO')]`,
-          // );
 
           .locator('#baristaPageOut')
           .contentFrame()
@@ -72,7 +70,7 @@ export class MyCasesPage {
           .contentFrame()
 
           .locator(
-            `//tr[td[a[contains(text(), '${this.casespage.casesCreated}')]] and td[contains(@title, 'Accident Notice SAO')]]/td[contains(@title, 'Accident Notice SAO')]`,
+            `//tr[td[a[contains(text(), '${this.casespage.casesCreated}')]]]/td[contains(@title, 'Accident Notice SAO')]`,
           );
 
         console.log(`Locator: ${locator}`);
@@ -82,8 +80,9 @@ export class MyCasesPage {
         locator = this.page
           .frameLocator('#baristaPageOut')
           .frameLocator('#APWorkCenter')
+
           .locator(
-            `//td[a[contains(text(), '${this.casespage.casesCreated}')]]/following-sibling::td[contains(@title, 'Medical Board Info')]`,
+            `//tr[td[a[contains(text(), '${this.casespage.casesCreated}')]]]/td[contains(@title, 'Medical Board Info)]`,
           );
 
         console.log(`Locator: ${locator}`);
@@ -93,8 +92,9 @@ export class MyCasesPage {
         locator = this.page
           .frameLocator('#baristaPageOut')
           .frameLocator('#APWorkCenter')
+
           .locator(
-            `//td[a[contains(text(), '${this.casespage.casesCreated}')]]/following-sibling::td[contains(@title, 'HUK MB')]`,
+            `//tr[td[a[contains(text(), '${this.casespage.casesCreated}')]]]/td[contains(@title, 'HUK MB')]`,
           );
 
         console.log(`Locator: ${locator}`);
@@ -129,7 +129,7 @@ export class MyCasesPage {
           .contentFrame()
 
           .locator(
-            `//tr[td[a[contains(text(), '${this.casespage.casesCreated}')]] and td[contains(@title, 'Death Notice SCO')]]/td[contains(@title, 'Death Notice SCO')]`,
+            `//tr[td[a[contains(text(), '${this.casespage.casesCreated}')]]]/td[contains(@title, 'Death Notice SCO')]`,
           );
 
         console.log(`Locator: ${locator}`);
@@ -143,7 +143,7 @@ export class MyCasesPage {
           .contentFrame()
 
           .locator(
-            `//tr[td[a[contains(text(), '${this.casespage.casesCreated}')]] and td[contains(@title, 'Death Notice SAO')]]/td[contains(@title, 'Death Notice SAO')]`,
+            `//tr[td[a[contains(text(), '${this.casespage.casesCreated}')]]]/td[contains(@title, 'Death Notice SAO')]`,
           );
         console.log(`Locator: ${locator}`);
         break;
@@ -152,8 +152,9 @@ export class MyCasesPage {
         locator = this.page
           .frameLocator('#baristaPageOut')
           .frameLocator('#APWorkCenter')
+
           .locator(
-            `//td[a[contains(text(), '${this.casespage.casesCreated}')]]/following-sibling::td[contains(@title, 'Medical Board Info')]`,
+            `//tr[td[a[contains(text(), '${this.casespage.casesCreated}')]]]/td[contains(@title, 'Medical Board Info')]`,
           );
 
         console.log(`Locator: ${locator}`);
@@ -184,9 +185,11 @@ export class MyCasesPage {
         locator = this.page
           .frameLocator('#baristaPageOut')
           .frameLocator('#APWorkCenter')
+
           .locator(
-            `//td[a[contains(text(), '${this.casespage.casesCreated}')]]/following-sibling::td[contains(@title, 'Death Notice SCO')]`,
+            `//tr[td[a[contains(text(), '${this.casespage.casesCreated}')]]]/td[contains(@title, 'Death Notice SCO')]`,
           );
+
         console.log(`Locator: ${locator}`);
         break;
 
@@ -194,9 +197,11 @@ export class MyCasesPage {
         locator = this.page
           .frameLocator('#baristaPageOut')
           .frameLocator('#APWorkCenter')
+
           .locator(
-            `//td[a[contains(text(), '${this.casespage.casesCreated}')]]/following-sibling::td[contains(@title, 'Revision Payment Option SAO')]`,
+            `//tr[td[a[contains(text(), '${this.casespage.casesCreated}')]]]/td[contains(@title, 'Revision Payment Option SAO')]`,
           );
+
         console.log(`Locator: ${locator}`);
         break;
 
@@ -204,8 +209,9 @@ export class MyCasesPage {
         locator = this.page
           .frameLocator('#baristaPageOut')
           .frameLocator('#APWorkCenter')
+
           .locator(
-            `//td[a[contains(text(), '${this.casespage.casesCreated}')]]/following-sibling::td[contains(@title, 'Medical Board Info')]`,
+            `//tr[td[a[contains(text(), '${this.casespage.casesCreated}')]]]/td[contains(@title, 'Medical Board Info')]`,
           );
 
         console.log(`Locator: ${locator}`);
@@ -241,7 +247,7 @@ export class MyCasesPage {
           .contentFrame()
 
           .locator(
-            `//tr[td[a[contains(text(), '${this.casespage.casesCreated}')]] and td[contains(@title, 'Occupational Disease Notice')]]/td[contains(@title, 'Occupational Disease Notice')]`,
+            `//tr[td[a[contains(text(), '${this.casespage.casesCreated}')]]]/td[contains(@title, 'Occupational Disease Notice')]`,
           );
         console.log(`Locator: ${locator}`);
         break;
@@ -255,7 +261,7 @@ export class MyCasesPage {
           .contentFrame()
 
           .locator(
-            `//tr[td[a[contains(text(), '${this.casespage.casesCreated}')]] and td[contains(@title, 'Occupation Disease Notice SAO')]]/td[contains(@title, 'Occupation Disease Notice SAO')]`,
+            `//tr[td[a[contains(text(), '${this.casespage.casesCreated}')]]]/td[contains(@title, 'Occupation Disease Notice SAO')]`,
           );
         console.log(`Locator: ${locator}`);
         break;
@@ -269,7 +275,7 @@ export class MyCasesPage {
           .contentFrame()
 
           .locator(
-            `//tr[td[a[contains(text(), '${this.casespage.casesCreated}')]] and td[contains(@title, 'Medical Board Info')]]/td[contains(@title, 'Medical Board Info')]`,
+            `//tr[td[a[contains(text(), '${this.casespage.casesCreated}')]]]/td[contains(@title, 'Medical Board Info')]`,
           );
 
         console.log(`Locator: ${locator}`);
@@ -305,7 +311,7 @@ export class MyCasesPage {
           .contentFrame()
 
           .locator(
-            `//tr[td[a[contains(text(), '${this.casespage.casesCreated}')]] and td[contains(@title, 'SCO IO Form')]]/td[contains(@title, 'SCO IO Form')]`,
+            `//tr[td[a[contains(text(), '${this.casespage.casesCreated}')]]]/td[contains(@title, 'SCO IO Form')]`,
           );
 
         console.log(`Locator: ${locator}`);
@@ -320,7 +326,7 @@ export class MyCasesPage {
           .contentFrame()
 
           .locator(
-            `//tr[td[a[contains(text(), '${this.casespage.casesCreated}')]] and td[contains(@title, 'SAO Form')]]/td[contains(@title, 'SAO Form')]`,
+            `//tr[td[a[contains(text(), '${this.casespage.casesCreated}')]]]/td[contains(@title, 'AO Form')]`,
           );
 
         console.log(`Locator: ${locator}`);
@@ -335,7 +341,7 @@ export class MyCasesPage {
           .contentFrame()
 
           .locator(
-            `//tr[td[a[contains(text(), '${this.casespage.casesCreated}')]] and td[contains(@title, 'Invalidity Notice SAO')]]/td[contains(@title, 'Invalidity Notice SAO')]`,
+            `//tr[td[a[contains(text(), '${this.casespage.casesCreated}')]]]/td[contains(@title, 'Invalidity Notice SAO')]`,
           );
 
         console.log(`Locator: ${locator}`);
@@ -350,7 +356,7 @@ export class MyCasesPage {
           .contentFrame()
 
           .locator(
-            `//tr[td[a[contains(text(), '${this.casespage.casesCreated}')]] and td[contains(@title, 'Medical Board')]]/td[contains(@title, 'Medical Board')]`,
+            `//tr[td[a[contains(text(), '${this.casespage.casesCreated}')]]]/td[contains(@title, 'Medical Board')]`,
           );
 
         console.log(`Locator: ${locator}`);
