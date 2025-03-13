@@ -31,6 +31,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 test.beforeEach(async ({ page }) => {
+  await page.setViewportSize({ width: 1920, height: 1080 });
   await login(page, 'afzan.pks', 'u@T_afzan');
 });
 
