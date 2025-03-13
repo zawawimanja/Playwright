@@ -17,11 +17,10 @@ import { ConfirmationOfInsuredPage } from '../../../pages/confirm_person';
 import { AccidentInformationPage } from '../../../pages/accident_info';
 import { CalendarPage } from '../../../utils/calendar';
 import { TimePage } from '../../../utils/time';
-import { SubmitPage } from '../../../pages/submit';
-import { CasesPage } from '../../../pages/cases';
 import { ButtonPage } from '../../../utils/button';
 import { readCSV } from '../../../helper/csvHelper';
 import { SRNPage } from '../../../pages/srn';
+import { validateConstants } from '../../../utils/validateConstants';
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 import * as fs from 'fs';
@@ -29,6 +28,14 @@ import * as path from 'path';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
+
+// Load constants from JSON file
+const constants = JSON.parse(
+  fs.readFileSync(path.resolve(__dirname, '../../../constants.json'), 'utf-8'),
+);
+
+// Validate constants
+validateConstants(constants);
 
 test.beforeEach(async ({ page }) => {
   await page.setViewportSize({ width: 1920, height: 1080 });
@@ -71,16 +78,16 @@ async function runTest(page: import('@playwright/test').Page, data: TestData) {
     page
       .locator('#baristaPageOut')
       .contentFrame()
-      .getByRole('heading', { name: 'Home Page' }),
+      .getByRole('heading', { name: constants.homePageHeading }),
   ).toBeVisible();
   await expect(
     page.locator('#baristaPageOut').contentFrame().locator('#previewPanel'),
-  ).toContainText('Home Page');
+  ).toContainText(constants.homePageText);
   await expect(
     page
       .locator('#baristaPageOut')
       .contentFrame()
-      .getByRole('img', { name: 'Socso Logo is missing.' }),
+      .getByRole('img', { name: constants.socsoLogoAltText }),
   ).toBeVisible();
 
   await page.waitForLoadState('networkidle');
@@ -94,32 +101,32 @@ async function runTest(page: import('@playwright/test').Page, data: TestData) {
     page
       .locator('#baristaPageOut')
       .contentFrame()
-      .getByRole('heading', { name: 'Pre-Registration' }),
+      .getByRole('heading', { name: constants.preRegistrationHeading }),
   ).toBeVisible();
   await expect(
     page.locator('#baristaPageOut').contentFrame().locator('h2'),
-  ).toContainText('Pre-Registration');
+  ).toContainText(constants.preRegistrationText);
 
   await expect(
     page
       .locator('#baristaPageOut')
       .contentFrame()
-      .getByRole('heading', { name: 'Search Insured Person &' }),
+      .getByRole('heading', { name: constants.searchInsuredPersonHeading }),
   ).toBeVisible();
   await expect(
     page.locator('#baristaPageOut').contentFrame().locator('#Heading31'),
-  ).toContainText('Search Insured Person & Employer Registration Status');
+  ).toContainText(constants.searchInsuredPersonText);
 
   await expect(
     page
       .locator('#baristaPageOut')
       .contentFrame()
       .locator('#ctrlField596')
-      .getByText('Notice Type'),
+      .getByText(constants.noticeTypeText),
   ).toBeVisible();
   await expect(
     page.locator('#baristaPageOut').contentFrame().locator('#ctrlField596'),
-  ).toContainText('Notice Type');
+  ).toContainText(constants.noticeTypeText);
 
   // Fill in data from CSV
   await preregPage.selectNoticeTypePreRegOption(data.noticeType);
@@ -181,7 +188,7 @@ async function runTest(page: import('@playwright/test').Page, data: TestData) {
   const remarksPage = new RemarksPage(page1);
   await remarksPage.remarksButton.waitFor();
   await expect(remarksPage.remarksButton).toBeVisible();
-  await expect(remarksPage.sectionTabs).toContainText('Remarks');
+  await expect(remarksPage.sectionTabs).toContainText(constants.remarksText);
   remarksPage.clickRemarksButton();
 
   await remarksPage.addRemarksButton.click();
@@ -197,7 +204,7 @@ async function runTest(page: import('@playwright/test').Page, data: TestData) {
     state: 'visible',
   });
   await expect(page1.locator('#sectionTabs')).toContainText(
-    'Insured Person Information',
+    constants.insuredPersonInfoText,
   );
   await insuredPersonInfoPage.clickInsuredPersonInfoButton();
   await insuredPersonInfoPage.noticeAndBenefitClaimFormReceivedDateInput.click();
@@ -206,38 +213,38 @@ async function runTest(page: import('@playwright/test').Page, data: TestData) {
     data.accidentMonth,
     data.accidentDay,
   );
-  await insuredPersonInfoPage.fillOccupation('CS');
+  await insuredPersonInfoPage.fillOccupation(constants.occupation);
 
-  await insuredPersonInfoPage.fillAddress1('Taman');
-  await insuredPersonInfoPage.fillAddress(2, 'Lorong 10');
-  await insuredPersonInfoPage.fillAddress(3, 'Jalan 1');
-  await insuredPersonInfoPage.selectState('200714');
-  await insuredPersonInfoPage.selectCity('201460');
-  await insuredPersonInfoPage.fillPostcode('51000');
-  await insuredPersonInfoPage.selectNationality('201749');
+  await insuredPersonInfoPage.fillAddress1(constants.address1);
+  await insuredPersonInfoPage.fillAddress(2, constants.address2);
+  await insuredPersonInfoPage.fillAddress(3, constants.address3);
+  await insuredPersonInfoPage.selectState(constants.state);
+  await insuredPersonInfoPage.selectCity(constants.city);
+  await insuredPersonInfoPage.fillPostcode(constants.postcode);
+  await insuredPersonInfoPage.selectNationality(constants.nationality);
 
   const employerInfoPage = new EmployerInfoPage(page1);
   await employerInfoPage.clickEmployerInfoButton();
 
-  //add Reference Notice Information
+  // Add Reference Notice Information
 
   const accidentInformationPage = new AccidentInformationPage(page1);
   await accidentInformationPage.clickAccidentInformationButton();
-  await accidentInformationPage.fillAccidentHappened('test');
-  await accidentInformationPage.fillAccidentInjury('test');
+  await accidentInformationPage.fillAccidentHappened(constants.accidentInjury);
+  await accidentInformationPage.fillAccidentInjury(constants.accidentInjury);
 
   const medicalCertificatePage = new MedicalCertificatePage(page1);
   await medicalCertificatePage.clickMedicalCertificateButton();
 
-  //1st mc
+  // 1st mc
   await medicalCertificatePage.addRecord();
   await medicalCertificatePage.enterClinicHospitalName('kl');
 
-  //await page1.getByRole("textbox").nth(1).click();
+  // await page1.getByRole("textbox").nth(1).click();
   await calendarPage.mcDate().nth(1).click();
   await calendarPage.selectDateInsuredPersonPage('2023', '7', '1');
 
-  //await page1.getByRole("textbox").nth(2).click();
+  // await page1.getByRole("textbox").nth(2).click();
   await calendarPage.mcDate().nth(2).click();
   await calendarPage.selectDateMCEndDate('2023', '7', '15');
   await medicalCertificatePage.submitButton().click();
@@ -247,13 +254,15 @@ async function runTest(page: import('@playwright/test').Page, data: TestData) {
 
   const preferredSOCSOOfficePage = new PreferredSOCSOOfficePage(page1);
   await preferredSOCSOOfficePage.clickPreferredSOCSOOfficeButton();
-  preferredSOCSOOfficePage.selectSOCSOState('200701');
-  await preferredSOCSOOfficePage.selectSOCSOOffice('200419');
+  await preferredSOCSOOfficePage.selectSOCSOState(constants.socsoState);
+  await preferredSOCSOOfficePage.selectSOCSOOffice(constants.socsoOffice);
 
   const certificationByEmployerPage = new CertificationByEmployerPage(page1);
   await certificationByEmployerPage.clickCertificationByEmployerButton();
-  await certificationByEmployerPage.fillName('MAT');
-  await certificationByEmployerPage.fillDesignation('CEO');
+  await certificationByEmployerPage.fillName(constants.employerName);
+  await certificationByEmployerPage.fillDesignation(
+    constants.employerDesignation,
+  );
   await certificationByEmployerPage.calendar.click();
   await calendarPage.selectDateInsuredPersonPage('2021', '8', '11');
 
@@ -265,15 +274,17 @@ async function runTest(page: import('@playwright/test').Page, data: TestData) {
   await bankInformationPage.accountNoSelect.click();
 
   if (data.EFT === 'Yes') {
-    await bankInformationPage.selectAccountNo('Yes');
-    await bankInformationPage.selectBankLocation('204101');
-    await bankInformationPage.selectBankNameAccident('802121');
-    await bankInformationPage.selectBankAccountType('204401');
-    await bankInformationPage.fillBankBranch('KL');
-    await bankInformationPage.fillBankAccountNo('12345678');
+    await bankInformationPage.selectAccountNo(constants.bankAccountYes);
+    await bankInformationPage.selectBankLocation(constants.bankLocation);
+    await bankInformationPage.selectBankNameAccident(
+      constants.bankNameAccident,
+    );
+    await bankInformationPage.selectBankAccountType(constants.bankAccountType);
+    await bankInformationPage.fillBankBranch(constants.bankBranch);
+    await bankInformationPage.fillBankAccountNo(constants.bankAccountNo);
   } else {
     await bankInformationPage.selectAccountNo('No');
-    await page1.getByLabel('Reason*').selectOption('207301');
+    await page1.getByLabel(constants.reasonLabel).selectOption('207301');
     await page1.getByLabel('Insolvency Search').selectOption('1');
     await page1.getByLabel('Insolvency State').selectOption('200701');
     await page1.getByLabel('Insolvency Branch').selectOption('806005');
@@ -302,9 +313,11 @@ async function runTest(page: import('@playwright/test').Page, data: TestData) {
   // await srnPage.saveSchemeRefValue();
 
   // Wait for the element to be present
-  await page2.getByLabel('Scheme Ref No:').waitFor();
+  await page2.getByLabel(constants.schemeRefNoLabel).waitFor();
 
-  const schemeRefValue = await page2.getByLabel('Scheme Ref No:').inputValue();
+  const schemeRefValue = await page2
+    .getByLabel(constants.schemeRefNoLabel)
+    .inputValue();
   console.log('SRN from locator: ' + schemeRefValue);
   const filePath = path.resolve(__dirname, 'schemeRefValue.json');
   fs.writeFileSync(filePath, JSON.stringify({ schemeRefValue }));
