@@ -1,44 +1,43 @@
-import { test, expect } from "@playwright/test";
-import { login } from "../../../utils/base"; // Import from base.ts
-import { PreregistrationPage } from "../../../pages/prereg";
-import { LeftTabPage } from "../../../pages/left_tab";
-import { DraftPage } from "../../../pages/draft";
-import { PreviewSubmissionPage } from "../../../pages/preview_submission";
-import { WagesInfoPage } from "../../../pages/wages_info";
-import { InsuredPersonInfoPage } from "../../../pages/insured_person_info";
-import { PreferredSOCSOOfficePage } from "../../../pages/socso_office";
-import { BankInformationPage } from "../../../pages/bank_info";
-import { SupportingDocumentPage } from "../../../pages/support_doc";
-import { ConfirmationOfInsuredPage } from "../../../pages/confirm_person";
-import { RecommendationPage } from "../../../pages/recommendation";
-import { MedicalOpinionPage } from "../../../pages/medical_opinion";
-import { PreparerInformationPage } from "../../../pages/preparer_info";
-import { CaseInformationPage } from "../../../pages/case_info";
-import { ApprovalPage } from "../../../pages/approval";
-import { InconsistentDoubtfulPage } from "../../../pages/inconsistentdoubtful";
-import { CasesPage } from "../../../pages/cases";
-import { SubmitPage } from "../../../pages/submit";
-import { MyCasesPage } from "../../../pages/mycases";
-import { HeaderPage } from "../../../pages/header";
-import { InvalidityInfoPage } from "../../../pages/invalidity_info";
-import { ButtonPage } from "../../../utils/button";
-import { RemarksPage } from "../../../pages/remarks";
+import { test, expect } from '@playwright/test';
+import { login } from '../../../utils/base'; // Import from base.ts
+import { PreregistrationPage } from '../../../pages/prereg';
+import { LeftTabPage } from '../../../pages/left_tab';
+import { DraftPage } from '../../../pages/draft';
+import { PreviewSubmissionPage } from '../../../pages/preview_submission';
+import { WagesInfoPage } from '../../../pages/wages_info';
+import { InsuredPersonInfoPage } from '../../../pages/insured_person_info';
+import { PreferredSOCSOOfficePage } from '../../../pages/socso_office';
+import { BankInformationPage } from '../../../pages/bank_info';
+import { SupportingDocumentPage } from '../../../pages/support_doc';
+import { ConfirmationOfInsuredPage } from '../../../pages/confirm_person';
+import { RecommendationPage } from '../../../pages/recommendation';
+import { MedicalOpinionPage } from '../../../pages/medical_opinion';
+import { PreparerInformationPage } from '../../../pages/preparer_info';
+import { CaseInformationPage } from '../../../pages/case_info';
+import { ApprovalPage } from '../../../pages/approval';
+import { InconsistentDoubtfulPage } from '../../../pages/inconsistentdoubtful';
+import { CasesPage } from '../../../pages/cases';
+import { SubmitPage } from '../../../pages/submit';
+import { MyCasesPage } from '../../../pages/mycases';
+import { HeaderPage } from '../../../pages/header';
+import { InvalidityInfoPage } from '../../../pages/invalidity_info';
+import { ButtonPage } from '../../../utils/button';
+import { RemarksPage } from '../../../pages/remarks';
 
 test.beforeEach(async ({ page }) => {
+  await page.setViewportSize({ width: 1920, height: 1080 });
   //await login(page, "roliana.pks", "u@T_roliana");
-  await login(page, "uat_ali", "u@T_ali");
+  await login(page, 'uat_ali', 'u@T_ali');
 });
 
-
-test("Prereg SAO ILAT", async ({ page }) => {
-
+test('Prereg SAO ILAT', async ({ page }) => {
   const leftTabPage = new LeftTabPage(page);
   let submitPage = new SubmitPage(page);
   const casesPage = new CasesPage(page, submitPage);
   const myCasesPage = new MyCasesPage(page, casesPage);
-  await casesPage.init("NTI");
+  await casesPage.init('NTI');
 
-  let loginUser = "roliana.pks";
+  let loginUser = 'roliana.pks';
   let caseFound = false;
 
   while (!caseFound) {
@@ -52,7 +51,7 @@ test("Prereg SAO ILAT", async ({ page }) => {
     await leftTabPage.clickMyCases();
 
     // Check if the case exists for the current login user
-    if (await myCasesPage.clickILAT("SAOS1")) {
+    if (await myCasesPage.clickILAT('SAOS1')) {
       caseFound = true;
       console.log(`Case found for user ${loginUser}`);
       break;
@@ -65,17 +64,20 @@ test("Prereg SAO ILAT", async ({ page }) => {
       headerPage.clickUserProfile();
       headerPage.clickSignOut();
       // await login(page, "uat_ali", "u@T_ali");
-      await login(page, "roliana.pks", "u@T_roliana");
+      await login(page, 'roliana.pks', 'u@T_roliana');
     }
   }
 
-
-  const pagePromise = page.waitForEvent("popup");
-  await page.waitForLoadState("networkidle");
-  await page.frameLocator("#baristaPageOut").frameLocator("#APWorkCenter").getByText("Open Task").click();
+  const pagePromise = page.waitForEvent('popup');
+  await page.waitForLoadState('networkidle');
+  await page
+    .frameLocator('#baristaPageOut')
+    .frameLocator('#APWorkCenter')
+    .getByText('Open Task')
+    .click();
   const page2 = await pagePromise;
 
-  await page2.waitForLoadState("networkidle");
+  await page2.waitForLoadState('networkidle');
 
   const draftPage = new DraftPage(page2);
   if ((await draftPage.closeButton.count()) > 0) {
@@ -86,11 +88,11 @@ test("Prereg SAO ILAT", async ({ page }) => {
   const remarksPage = new RemarksPage(page2);
   await remarksPage.remarksButton.waitFor();
   await expect(remarksPage.remarksButton).toBeVisible();
-  await expect(remarksPage.sectionTabs).toContainText("Remarks");
+  await expect(remarksPage.sectionTabs).toContainText('Remarks');
 
   await remarksPage.addRemarksButton.click();
 
-  await remarksPage.textboxSAO.fill("test");
+  await remarksPage.textboxSAO.fill('test');
   await remarksPage.saveRemarksButton.click();
 
   const preparerInformationPage = new PreparerInformationPage(page2);
@@ -134,7 +136,7 @@ test("Prereg SAO ILAT", async ({ page }) => {
 
   const approvalPage = new ApprovalPage(page2);
   await approvalPage.clickApprovalButton();
-  await recommendationPage.selectActionRecommendNTAILAT("10207");
+  await recommendationPage.selectActionRecommendNTAILAT('10207');
 
   const supportingDocumentPage = new SupportingDocumentPage(page2);
   await supportingDocumentPage.clickSupportingDocumentButton();
@@ -147,16 +149,12 @@ test("Prereg SAO ILAT", async ({ page }) => {
   const buttonPage = new ButtonPage(page2);
   buttonPage.clickYes();
 
-
-
-  const page3Promise = page2.waitForEvent("popup");
+  const page3Promise = page2.waitForEvent('popup');
   const page3 = await page3Promise;
-  await page3.waitForLoadState("networkidle");
+  await page3.waitForLoadState('networkidle');
   // Wait for the element to be present
-  await page3.getByLabel("Scheme Ref No:").waitFor();
+  await page3.getByLabel('Scheme Ref No:').waitFor();
 
   // Perform other actions as needed
-  await page3.getByRole("button", { name: "Close" }).click();
-
-
+  await page3.getByRole('button', { name: 'Close' }).click();
 });

@@ -26,6 +26,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 
 test.beforeEach(async ({ page }) => {
+  await page.setViewportSize({ width: 1920, height: 1080 });
   await login(page, 'afzan.pks', 'u@T_afzan');
 });
 

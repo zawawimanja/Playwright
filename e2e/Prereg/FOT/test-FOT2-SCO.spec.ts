@@ -22,6 +22,7 @@ import { HeaderPage } from '../../../pages/header';
 import { ButtonPage } from '../../../utils/button';
 
 test.beforeEach(async ({ page }) => {
+  await page.setViewportSize({ width: 1920, height: 1080 });
   await login(page, 'atilia.pks', 'u@T_atilia');
   //await login(page, 'nazira.pks', 'u@T_nazira');
 });

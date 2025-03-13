@@ -1,45 +1,43 @@
-import { test, expect } from "@playwright/test";
-import { login } from "../../../utils/base"; // Import from base.ts
-import { PreregistrationPage } from "../../../pages/prereg";
-import { LeftTabPage } from "../../../pages/left_tab";
-import { DraftPage } from "../../../pages/draft";
-import { RemarksPage } from "../../../pages/remarks";
-import { PreviewSubmissionPage } from "../../../pages/preview_submission";
-import { InsuredPersonInfoPage } from "../../../pages/insured_person_info";
-import { PreferredSOCSOOfficePage } from "../../../pages/socso_office";
-import { BankInformationPage } from "../../../pages/bank_info";
-import { SupportingDocumentPage } from "../../../pages/support_doc";
-import { ConfirmationOfInsuredPage } from "../../../pages/confirm_person";
-import { RecommendationPage } from "../../../pages/recommendation";
-import { MedicalOpinionPage } from "../../../pages/medical_opinion";
-import { PreparerInformationPage } from "../../../pages/preparer_info";
-import { CaseInformationPage } from "../../../pages/case_info";
-import { InconsistentDoubtfulPage } from "../../../pages/inconsistentdoubtful";
-import { CalendarPage } from "../../../utils/calendar";
-import { CasesPage } from "../../../pages/cases";
-import { SubmitPage } from "../../../pages/submit";
-import { MyCasesPage } from "../../../pages/mycases";
-import { MBSessionPage } from "../../../pages/mb_session";
-import { HeaderPage } from "../../../pages/header";
-import { InvalidityInfoPage } from "../../../pages/invalidity_info";
-import { WagesInfoPage } from "../../../pages/wages_info";
-import { ButtonPage } from "../../../utils/button";
+import { test, expect } from '@playwright/test';
+import { login } from '../../../utils/base'; // Import from base.ts
+import { PreregistrationPage } from '../../../pages/prereg';
+import { LeftTabPage } from '../../../pages/left_tab';
+import { DraftPage } from '../../../pages/draft';
+import { RemarksPage } from '../../../pages/remarks';
+import { PreviewSubmissionPage } from '../../../pages/preview_submission';
+import { InsuredPersonInfoPage } from '../../../pages/insured_person_info';
+import { PreferredSOCSOOfficePage } from '../../../pages/socso_office';
+import { BankInformationPage } from '../../../pages/bank_info';
+import { SupportingDocumentPage } from '../../../pages/support_doc';
+import { ConfirmationOfInsuredPage } from '../../../pages/confirm_person';
+import { RecommendationPage } from '../../../pages/recommendation';
+import { MedicalOpinionPage } from '../../../pages/medical_opinion';
+import { PreparerInformationPage } from '../../../pages/preparer_info';
+import { CaseInformationPage } from '../../../pages/case_info';
+import { InconsistentDoubtfulPage } from '../../../pages/inconsistentdoubtful';
+import { CalendarPage } from '../../../utils/calendar';
+import { CasesPage } from '../../../pages/cases';
+import { SubmitPage } from '../../../pages/submit';
+import { MyCasesPage } from '../../../pages/mycases';
+import { MBSessionPage } from '../../../pages/mb_session';
+import { HeaderPage } from '../../../pages/header';
+import { InvalidityInfoPage } from '../../../pages/invalidity_info';
+import { WagesInfoPage } from '../../../pages/wages_info';
+import { ButtonPage } from '../../../utils/button';
 test.beforeEach(async ({ page }) => {
+  await page.setViewportSize({ width: 1920, height: 1080 });
   //await login(page, "hilmi.pks", "u@T_hilmi");
-  await login(page, "aslam.pks", "u@T_aslam");
+  await login(page, 'aslam.pks', 'u@T_aslam');
 });
 
-
-test("Prereg MB ILAT", async ({ page }) => {
-
-
+test('Prereg MB ILAT', async ({ page }) => {
   const leftTabPage = new LeftTabPage(page);
   let submitPage = new SubmitPage(page);
   const casesPage = new CasesPage(page, submitPage);
   const myCasesPage = new MyCasesPage(page, casesPage);
-  await casesPage.init("NTI");
+  await casesPage.init('NTI');
 
-  let loginUser = "hilmi.pks";
+  let loginUser = 'hilmi.pks';
   let caseFound = false;
 
   while (!caseFound) {
@@ -53,7 +51,7 @@ test("Prereg MB ILAT", async ({ page }) => {
     await leftTabPage.clickMyCases();
 
     // Check if the case exists for the current login user
-    if (await myCasesPage.clickILAT("MB")) {
+    if (await myCasesPage.clickILAT('MB')) {
       caseFound = true;
       console.log(`Case found for user ${loginUser}`);
       break;
@@ -62,16 +60,18 @@ test("Prereg MB ILAT", async ({ page }) => {
 
       headerPage.clickUserProfile();
       headerPage.clickSignOut();
-      await login(page, "hilmi.pks", "u@T_hilmi");
+      await login(page, 'hilmi.pks', 'u@T_hilmi');
       // await login(page, "aslam.pks", "u@T_aslam");
     }
   }
 
-
-
-  const pagePromise = page.waitForEvent("popup");
-  await page.waitForLoadState("networkidle");
-  await page.frameLocator("#baristaPageOut").frameLocator("#APWorkCenter").getByText("Open Task").click();
+  const pagePromise = page.waitForEvent('popup');
+  await page.waitForLoadState('networkidle');
+  await page
+    .frameLocator('#baristaPageOut')
+    .frameLocator('#APWorkCenter')
+    .getByText('Open Task')
+    .click();
   const page2 = await pagePromise;
 
   const draftPage = new DraftPage(page2);
@@ -80,27 +80,26 @@ test("Prereg MB ILAT", async ({ page }) => {
     await draftPage.clickCloseButton();
   }
 
-
-  const page3Promise = page2.waitForEvent("popup");
-  await page.waitForLoadState("networkidle");
-  await page2.getByLabel("Invalidity Decision*").selectOption("Yes");
-  await page2.getByRole("button", { name: "New" }).click();
+  const page3Promise = page2.waitForEvent('popup');
+  await page.waitForLoadState('networkidle');
+  await page2.getByLabel('Invalidity Decision*').selectOption('Yes');
+  await page2.getByRole('button', { name: 'New' }).click();
 
   const page4 = await page3Promise;
-  await page4.getByRole("button", { name: "Add" }).click();
+  await page4.getByRole('button', { name: 'Add' }).click();
 
-  await page.waitForLoadState("networkidle");
+  await page.waitForLoadState('networkidle');
 
   //session venue
   const mbSessionPage = new MBSessionPage(page4);
-  await mbSessionPage.selectSessionVenue("ILAT");
+  await mbSessionPage.selectSessionVenue('ILAT');
   //session date
 
   const calendarPage = new CalendarPage(page4);
-  calendarPage.clickDate("Session DateILAT");
-  await calendarPage.selectDateInsuredPersonPage("2023", "1", "20");
+  calendarPage.clickDate('Session DateILAT');
+  await calendarPage.selectDateInsuredPersonPage('2023', '1', '20');
   //result
-  await mbSessionPage.setResultILat("9608101");
+  await mbSessionPage.setResultILat('9608101');
   //els
   // await page4.locator("#ctrlField1044").getByRole("combobox").selectOption("Yes");
   //recommendation for rehab
@@ -115,14 +114,14 @@ test("Prereg MB ILAT", async ({ page }) => {
   await remarksPage.remarksButton.waitFor();
   await expect(remarksPage.remarksButton).toBeVisible();
 
-  await expect(remarksPage.sectionTabs).toContainText("Remarks");
+  await expect(remarksPage.sectionTabs).toContainText('Remarks');
   //temporary solution
 
   await remarksPage.clickRemarksButton();
 
   await remarksPage.addRemarksButton.waitFor();
   await remarksPage.addRemarksButton.click();
-  await remarksPage.textboxSAO.fill("test mb");
+  await remarksPage.textboxSAO.fill('test mb');
   await remarksPage.saveRemarksButton.click();
 
   const preparerInformationPage = new PreparerInformationPage(page2);
@@ -153,7 +152,7 @@ test("Prereg MB ILAT", async ({ page }) => {
 
   //qc
 
-  await page2.getByRole("button", { name: "Scheme Qualifying" }).click();
+  await page2.getByRole('button', { name: 'Scheme Qualifying' }).click();
 
   const medicalOpinionPage = new MedicalOpinionPage(page2);
   await medicalOpinionPage.medicalOpinionButton.waitFor();
@@ -173,7 +172,7 @@ test("Prereg MB ILAT", async ({ page }) => {
 
   await page2.reload();
 
-  await page2.waitForLoadState("networkidle");
+  await page2.waitForLoadState('networkidle');
 
   await page2.waitForTimeout(15000);
 
@@ -185,15 +184,13 @@ test("Prereg MB ILAT", async ({ page }) => {
   const buttonPage = new ButtonPage(page2);
   buttonPage.clickYes();
 
-
-
-  const page5Promise = page2.waitForEvent("popup");
-  await page2.waitForLoadState("networkidle");
+  const page5Promise = page2.waitForEvent('popup');
+  await page2.waitForLoadState('networkidle');
   const page5 = await page5Promise;
 
   // Wait for the element to be present
-  await page5.getByLabel("Scheme Ref No:").waitFor();
+  await page5.getByLabel('Scheme Ref No:').waitFor();
 
   // Perform other actions as needed
-  await page5.getByRole("button", { name: "Close" }).click();
+  await page5.getByRole('button', { name: 'Close' }).click();
 });
