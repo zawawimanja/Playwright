@@ -27,31 +27,66 @@ import { dirname } from 'path';
 import * as fs from 'fs';
 import * as path from 'path';
 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
 test.beforeEach(async ({ page }) => {
   await login(page, 'afzan.pks', 'u@T_afzan');
 });
 
 export let schemeRefValue: string;
 
-test.only('Prereg PK NTA EFT MC', async ({ page }) => {
+async function getTestData(rowIndex: number) {
+  const csvFilePath = path.resolve(__dirname, '../../../testData/testData.csv'); // Path to CSV file
+  const testData = await readCSV(csvFilePath);
+  return testData[rowIndex];
+}
+
+interface TestData {
+  noticeType: string;
+  accidentYear: string;
+  accidentMonth: string;
+  accidentDay: string;
+  accidentHour: string;
+  accidentMinute: string;
+  accidentSecond: string;
+  identificationType: string;
+  identificationNo: string;
+  employerCode: string;
+  EFT: string;
+}
+
+async function runTest(page: import('@playwright/test').Page, data: TestData) {
   const preregPage = new PreregistrationPage(page);
   const leftTabPage = new LeftTabPage(page);
   const timePage = new TimePage(page);
 
-  // Read data from CSV
-  const __filename = fileURLToPath(import.meta.url);
-  const __dirname = dirname(__filename);
-  const csvFilePath = path.resolve(__dirname, '../../../testData/testData.csv'); // Path to CSV file
-  const testData = await readCSV(csvFilePath);
-  const data = testData[0]; // Use the first row of data
+  await page.waitForLoadState('networkidle');
+  await expect(
+    page.locator('#baristaPageOut').contentFrame().locator('#formPreview'),
+  ).toBeVisible();
+
+  await expect(
+    page
+      .locator('#baristaPageOut')
+      .contentFrame()
+      .getByRole('heading', { name: 'Home Page' }),
+  ).toBeVisible();
+  await expect(
+    page.locator('#baristaPageOut').contentFrame().locator('#previewPanel'),
+  ).toContainText('Home Page');
+  await expect(
+    page
+      .locator('#baristaPageOut')
+      .contentFrame()
+      .getByRole('img', { name: 'Socso Logo is missing.' }),
+  ).toBeVisible();
 
   await page.waitForLoadState('networkidle');
-  //test
   await leftTabPage.leftBar.waitFor();
   await expect(leftTabPage.leftBar).toBeVisible();
 
   await expect(leftTabPage.preregistrationLink).toBeVisible();
-  //When I click on the Preregistration link
   leftTabPage.clickPreregistration();
 
   await expect(
@@ -282,4 +317,14 @@ test.only('Prereg PK NTA EFT MC', async ({ page }) => {
 
   // Perform other actions as needed
   await page2.getByRole('button', { name: 'Close' }).click();
+}
+
+test.only('Prereg PK NTA EFT MC - Test Case 1', async ({ page }) => {
+  const data = await getTestData(0); // Use the first row of data
+  await runTest(page, data);
+});
+
+test('Prereg PK NTA BANKRUPT MC - Test Case 2', async ({ page }) => {
+  const data = await getTestData(1); // Use the second row of data
+  await runTest(page, data);
 });
