@@ -23,6 +23,7 @@ import { ButtonPage } from '../../../utils/button';
 import { readCSV } from '../../../helper/csvHelper'; // Import the CSV helper
 // filepath: /c:/Users/aaror/Downloads/Playwright/e2e/Prereg/S2 - ILAT-BI2PI/test-ILAT-PK.spec.ts
 test.beforeEach(async ({ page }) => {
+  await page.setViewportSize({ width: 1920, height: 1080 });
   await login(page, 'afzan.pks', 'u@T_afzan');
 });
 

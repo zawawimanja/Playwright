@@ -1,47 +1,47 @@
-import { test, expect } from "@playwright/test";
-import { login } from "../../../utils/base"; // Import from base.ts
-import { PreregistrationPage } from "../../../pages/prereg";
-import { LeftTabPage } from "../../../pages/left_tab";
-import { DraftPage } from "../../../pages/draft";
-import { RemarksPage } from "../../../pages/remarks";
-import { PreviewSubmissionPage } from "../../../pages/preview_submission";
-import { OccupationalDiseasePage } from "../../../pages/od_info";
-import { EmployerInfoPage } from "../../../pages/employer_info";
-import { MedicalCertificatePage } from "../../../pages/mc_info";
-import { InsuredPersonInfoPage } from "../../../pages/insured_person_info";
-import { PreferredSOCSOOfficePage } from "../../../pages/socso_office";
-import { CertificationByEmployerPage } from "../../../pages/cert_employer";
-import { BankInformationPage } from "../../../pages/bank_info";
-import { SupportingDocumentPage } from "../../../pages/support_doc";
-import { ConfirmationOfInsuredPage } from "../../../pages/confirm_person";
-import { RecommendationPage } from "../../../pages/recommendation";
-import { MedicalOpinionPage } from "../../../pages/medical_opinion";
-import { PreparerInformationPage } from "../../../pages/preparer_info";
-import { CaseInformationPage } from "../../../pages/case_info";
-import { AppointmentPage } from "../../../pages/appointment";
-import { InconsistentDoubtfulPage } from "../../../pages/inconsistentdoubtful";
-import { CasesPage } from "../../../pages/cases";
-import { SubmitPage } from "../../../pages/submit";
-import { MyCasesPage } from "../../../pages/mycases";
-import { HeaderPage } from "../../../pages/header";
-import { ButtonPage } from "../../../utils/button";
+import { test, expect } from '@playwright/test';
+import { login } from '../../../utils/base'; // Import from base.ts
+import { PreregistrationPage } from '../../../pages/prereg';
+import { LeftTabPage } from '../../../pages/left_tab';
+import { DraftPage } from '../../../pages/draft';
+import { RemarksPage } from '../../../pages/remarks';
+import { PreviewSubmissionPage } from '../../../pages/preview_submission';
+import { OccupationalDiseasePage } from '../../../pages/od_info';
+import { EmployerInfoPage } from '../../../pages/employer_info';
+import { MedicalCertificatePage } from '../../../pages/mc_info';
+import { InsuredPersonInfoPage } from '../../../pages/insured_person_info';
+import { PreferredSOCSOOfficePage } from '../../../pages/socso_office';
+import { CertificationByEmployerPage } from '../../../pages/cert_employer';
+import { BankInformationPage } from '../../../pages/bank_info';
+import { SupportingDocumentPage } from '../../../pages/support_doc';
+import { ConfirmationOfInsuredPage } from '../../../pages/confirm_person';
+import { RecommendationPage } from '../../../pages/recommendation';
+import { MedicalOpinionPage } from '../../../pages/medical_opinion';
+import { PreparerInformationPage } from '../../../pages/preparer_info';
+import { CaseInformationPage } from '../../../pages/case_info';
+import { AppointmentPage } from '../../../pages/appointment';
+import { InconsistentDoubtfulPage } from '../../../pages/inconsistentdoubtful';
+import { CasesPage } from '../../../pages/cases';
+import { SubmitPage } from '../../../pages/submit';
+import { MyCasesPage } from '../../../pages/mycases';
+import { HeaderPage } from '../../../pages/header';
+import { ButtonPage } from '../../../utils/button';
 
 test.beforeEach(async ({ page }) => {
+  await page.setViewportSize({ width: 1920, height: 1080 });
   // await login(page, "uat_muthu", "u@T_muthu");
-  await login(page, "uat_akaw", "u@T_akaw");
+  await login(page, 'uat_akaw', 'u@T_akaw');
 });
 
 export let schemeRefValue: string;
 
-test("Prereg IO OD", async ({ page }) => {
-
+test('Prereg IO OD', async ({ page }) => {
   const leftTabPage = new LeftTabPage(page);
   let submitPage = new SubmitPage(page);
   const casesPage = new CasesPage(page, submitPage);
   const myCasesPage = new MyCasesPage(page, casesPage);
-  await casesPage.init("NTO");
+  await casesPage.init('NTO');
 
-  let loginUser = "uat_muthu";
+  let loginUser = 'uat_muthu';
   let caseFound = false;
 
   while (!caseFound) {
@@ -55,7 +55,7 @@ test("Prereg IO OD", async ({ page }) => {
     await leftTabPage.clickMyCases();
 
     // Check if the case exists for the current login user
-    if (await myCasesPage.clickOD("OD")) {
+    if (await myCasesPage.clickOD('OD')) {
       caseFound = true;
       console.log(`Case found for user ${loginUser}`);
       break;
@@ -64,17 +64,17 @@ test("Prereg IO OD", async ({ page }) => {
 
       headerPage.clickUserProfile();
       headerPage.clickSignOut();
-      await login(page, "uat_muthu", "u@T_muthu");
+      await login(page, 'uat_muthu', 'u@T_muthu');
       //await login(page, "uat_akaw", "u@T_akaw");
     }
   }
 
   // Proceed with the rest of the test if the case is found
-  const page1Promise = page.waitForEvent("popup");
+  const page1Promise = page.waitForEvent('popup');
   await page
-    .frameLocator("#baristaPageOut")
-    .frameLocator("#APWorkCenter")
-    .getByRole("menuitem", { name: "Open Task" })
+    .frameLocator('#baristaPageOut')
+    .frameLocator('#APWorkCenter')
+    .getByRole('menuitem', { name: 'Open Task' })
     .click();
   const page2 = await page1Promise;
 
@@ -88,10 +88,10 @@ test("Prereg IO OD", async ({ page }) => {
   const remarksPage = new RemarksPage(page2);
   await remarksPage.remarksButton.waitFor();
   await expect(remarksPage.remarksButton).toBeVisible();
-  await expect(remarksPage.sectionTabs).toContainText("Remarks");
+  await expect(remarksPage.sectionTabs).toContainText('Remarks');
   await remarksPage.remarksButton.waitFor();
   await remarksPage.addRemarksButton.click();
-  await remarksPage.textboxIO.fill("test io");
+  await remarksPage.textboxIO.fill('test io');
 
   await remarksPage.saveRemarksButton.click();
 
@@ -136,14 +136,24 @@ test("Prereg IO OD", async ({ page }) => {
   await expect(recommendationPage.recommendationButton).toBeVisible();
   recommendationPage.clickRecommendationButton();
 
-  await page2.getByRole("heading", { name: "RECOMMENDATION", exact: true }).click();
-  await expect(page2.getByRole("heading", { name: "RECOMMENDATION", exact: true })).toBeVisible();
-  await expect(page2.locator("#Heading37")).toContainText("RECOMMENDATION");
-  await expect(page2.getByRole("heading", { name: "Recommendation", exact: true })).toBeVisible();
-  await expect(page2.locator("#Recommendation")).toContainText("Recommendation");
-  await page2.locator("#ctrlField407").getByText("Action*").click();
-  await expect(page2.locator("#ctrlField407")).toContainText("Action*");
-  await expect(page2.locator("#ctrlField407").getByText("Action*")).toBeVisible();
+  await page2
+    .getByRole('heading', { name: 'RECOMMENDATION', exact: true })
+    .click();
+  await expect(
+    page2.getByRole('heading', { name: 'RECOMMENDATION', exact: true }),
+  ).toBeVisible();
+  await expect(page2.locator('#Heading37')).toContainText('RECOMMENDATION');
+  await expect(
+    page2.getByRole('heading', { name: 'Recommendation', exact: true }),
+  ).toBeVisible();
+  await expect(page2.locator('#Recommendation')).toContainText(
+    'Recommendation',
+  );
+  await page2.locator('#ctrlField407').getByText('Action*').click();
+  await expect(page2.locator('#ctrlField407')).toContainText('Action*');
+  await expect(
+    page2.locator('#ctrlField407').getByText('Action*'),
+  ).toBeVisible();
   await expect(recommendationPage.actionRecommend).toBeVisible();
   await recommendationPage.actionRecommend.waitFor();
 
@@ -167,12 +177,12 @@ test("Prereg IO OD", async ({ page }) => {
   const buttonPage = new ButtonPage(page2);
   buttonPage.clickYes();
 
-  const page3Promise = page2.waitForEvent("popup");
+  const page3Promise = page2.waitForEvent('popup');
   const page3 = await page3Promise;
 
   // Wait for the element to be present
-  await page3.getByLabel("Scheme Ref No:").waitFor();
+  await page3.getByLabel('Scheme Ref No:').waitFor();
 
   // Perform other actions as needed
-  await page3.getByRole("button", { name: "Close" }).click();
+  await page3.getByRole('button', { name: 'Close' }).click();
 });

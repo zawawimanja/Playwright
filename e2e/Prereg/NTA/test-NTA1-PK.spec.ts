@@ -173,10 +173,9 @@ async function runTest(page: import('@playwright/test').Page, data: TestData) {
   await preregPage.clickSearchButton();
 
   const pagePromise = page.waitForEvent('popup');
+  await page.waitForLoadState('networkidle');
   await preregPage.clickNextButton();
   const page1 = await pagePromise;
-
-  await page.waitForLoadState('networkidle');
 
   const draftPage = new DraftPage(page1);
 
@@ -185,6 +184,7 @@ async function runTest(page: import('@playwright/test').Page, data: TestData) {
     await draftPage.clickCloseButton();
   }
 
+  await page.waitForLoadState('networkidle');
   const remarksPage = new RemarksPage(page1);
   await remarksPage.remarksButton.waitFor();
   await expect(remarksPage.remarksButton).toBeVisible();
@@ -214,7 +214,6 @@ async function runTest(page: import('@playwright/test').Page, data: TestData) {
     data.accidentDay,
   );
   await insuredPersonInfoPage.fillOccupation(constants.occupation);
-
   await insuredPersonInfoPage.fillAddress1(constants.address1);
   await insuredPersonInfoPage.fillAddress(2, constants.address2);
   await insuredPersonInfoPage.fillAddress(3, constants.address3);
