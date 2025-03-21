@@ -25,6 +25,7 @@ import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 import * as fs from 'fs';
 import * as path from 'path';
+import * as xlsx from 'xlsx';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -35,8 +36,6 @@ const constants = JSON.parse(
 );
 
 // Validate constants
-
-//test
 validateConstants(constants);
 
 test.beforeEach(async ({ page }) => {
@@ -47,26 +46,73 @@ test.beforeEach(async ({ page }) => {
 export let schemeRefValue: string;
 
 async function getTestData(rowIndex: number) {
-  const csvFilePath = path.resolve(__dirname, '../../../testData/testData.csv'); // Path to CSV file
-  const testData = await readCSV(csvFilePath);
-  return testData[rowIndex];
+  const excelFilePath = path.resolve(__dirname, '../../../testData/testDataSikap.xlsx');
+  const fileBuffer = fs.readFileSync(excelFilePath);
+  const workbook = xlsx.read(fileBuffer, { type: 'buffer' });
+  const sheetName = workbook.SheetNames[0];
+  const sheet = workbook.Sheets[sheetName];
+  
+  // Modified options to properly read headers
+  const jsonData = xlsx.utils.sheet_to_json(sheet, { 
+    raw: true,
+    defval: null,
+    blankrows: false,
+    header: 1
+  });
+
+  // Get headers from second row (index 1)
+  const headers = jsonData[1];
+  // Get actual data row (add 3 to skip header rows and get actual data)
+  const rowData = jsonData[rowIndex + 3];
+  
+  // Create object with proper headers and ensure string values
+  const data = {};
+  headers.forEach((header, index) => {
+    if (header) {
+      const value = rowData ? rowData[index] : null;
+      // Handle different data types
+      if (header.includes('Date') && typeof value === 'number') {
+        // Convert Excel date number to JavaScript Date
+        const date = new Date((value - 25569) * 86400 * 1000);
+        const month = date.getMonth() + 1;
+        const day = date.getDate();
+        const year = date.getFullYear();
+        data[header.trim()] = `${month}/${day}/${year}`;
+      } else if (header === 'Accident Time' && typeof value === 'number') {
+        // Convert Excel time decimal to HH:mm:ss format
+        const totalSeconds = Math.round(value * 86400); // Convert to seconds
+        let hours = Math.floor(totalSeconds / 3600);
+        const minutes = Math.floor((totalSeconds % 3600) / 60);
+        const seconds = totalSeconds % 60;
+        
+        // Handle 12-hour format (Excel uses 24-hour format)
+        if (hours >= 24) {
+            hours = hours % 24;
+        }
+        
+        // Convert to 12-hour format
+        const period = hours >= 12 ? 'PM' : 'AM';
+        hours = hours % 12;
+        hours = hours ? hours : 12; // Convert 0 to 12
+        
+        // Format as hh:mm:ss AM/PM
+        data[header.trim()] = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')} ${period}`;
+      } else {
+        // Handle other values
+        data[header.trim()] = value !== null ? String(value) : null;
+      }
+    }
+  });
+
+  // Debug logging
+  console.log('Headers:', headers);
+  console.log('Actual Row Data:', rowData);
+  console.log('Mapped Data:', data);
+
+  return data;
 }
 
-interface TestData {
-  noticeType: string;
-  accidentYear: string;
-  accidentMonth: string;
-  accidentDay: string;
-  accidentHour: string;
-  accidentMinute: string;
-  accidentSecond: string;
-  identificationType: string;
-  identificationNo: string;
-  employerCode: string;
-  EFT: string;
-}
-
-async function runTest(page: import('@playwright/test').Page, data: TestData) {
+async function runTest(page: import('@playwright/test').Page, data: any) {
   const preregPage = new PreregistrationPage(page);
   const leftTabPage = new LeftTabPage(page);
   const timePage = new TimePage(page);
@@ -131,46 +177,63 @@ async function runTest(page: import('@playwright/test').Page, data: TestData) {
     page.locator('#baristaPageOut').contentFrame().locator('#ctrlField596'),
   ).toContainText(constants.noticeTypeText);
 
-  // Fill in data from CSV
-  await preregPage.selectNoticeTypePreRegOption(data.noticeType);
+  // Fill in data from Excel
+  await preregPage.selectNoticeTypePreRegOption("Accident");
   const selectedOptionText = await preregPage.SelectedNoticeTypeText;
-  expect(selectedOptionText).toBe(data.noticeType);
+  expect(selectedOptionText).toBe("Accident");
 
   // click accident date
   await preregPage.clickAccidentDatePrereg();
 
-  const calendar = new CalendarPage(page);
-  await calendar.selectAccidentDate(
-    data.accidentYear,
-    data.accidentMonth,
-    data.accidentDay,
-  );
-  // Add accident time
+const calendar = new CalendarPage(page);
+
+// Log the data object to verify its contents
+console.log('Data:', data);
+console.log('Data keys:', Object.keys(data));
+
+// Read and parse Accident Date from Excel data
+if (data["Accident Date"]) {
+  const [month, day, year] = data["Accident Date"].split('/').map(String); // Convert to strings
+  await calendar.selectAccidentDate(year, month, day);
+} else {
+  throw new Error('Accident Date is undefined');
+}
+
+// Read and parse Accident Time from Excel data
+if (data["Accident Time"]) {
+  const [timeStr, period] = data["Accident Time"].split(' ');
+  const [hours, minutes, seconds] = timeStr.split(':').map(Number);
+  
+  // Convert to 24-hour if PM
+  let hour24 = hours;
+  if (period === 'PM' && hours !== 12) {
+    hour24 = hours + 12;
+  } else if (period === 'AM' && hours === 12) {
+    hour24 = 0;
+  }
 
   await preregPage.clickAccidentTime();
-  await timePage.selectTimeOption(
-    data.accidentHour,
-    data.accidentMinute,
-    data.accidentSecond,
-  );
+  await timePage.selectTimeOption(hour24, minutes, seconds);
+} else {
+  throw new Error('Accident Time is undefined');
+}
 
-  // Fill in identification type and number
-  await preregPage.selectIdentificationType(data.identificationType);
-  await preregPage.identificationTypeLabel.waitFor();
-  await preregPage.identificationTypeLabel.isVisible();
-  const selectedIdentificationTypeText =
-    await preregPage.getSelectedIdentificationTypeText();
-  expect(selectedIdentificationTypeText).toBe(data.identificationType);
+// Fill in identification type and number
+await preregPage.selectIdentificationType("New IC");
+await preregPage.identificationTypeLabel.waitFor();
+await preregPage.identificationTypeLabel.isVisible();
+const selectedIdentificationTypeText = await preregPage.getSelectedIdentificationTypeText();
+expect(selectedIdentificationTypeText).toBe("New IC");
 
-  await preregPage.fillIdentificationNo(data.identificationNo);
-  const filledIdentificationNo = await preregPage.getIdentificationNo();
-  expect(filledIdentificationNo).toBe(data.identificationNo);
+await preregPage.fillIdentificationNo(data["IC No."]);
+const filledIdentificationNo = await preregPage.getIdentificationNo();
+expect(filledIdentificationNo).toBe(data["IC No."]);
 
-  // Fill in employer code
-  await preregPage.fillEmployerCode(data.employerCode);
-  const filledEmployerCode = await preregPage.getEmployerCode();
-  await preregPage.employerCodeInput.click();
-  expect(filledEmployerCode).toBe(data.employerCode);
+// Fill in employer code
+await preregPage.fillEmployerCode(data["Employer Code"]);
+const filledEmployerCode = await preregPage.getEmployerCode();
+await preregPage.employerCodeInput.click();
+expect(filledEmployerCode).toBe(data["Employer Code"]);
 
   // Click search button
   await preregPage.clickSearchButton();
