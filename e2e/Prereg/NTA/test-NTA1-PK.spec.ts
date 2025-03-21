@@ -85,6 +85,7 @@ async function runTest(page: import('@playwright/test').Page, data: TestData) {
   await expect(
     page.locator('#baristaPageOut').contentFrame().locator('#previewPanel'),
   ).toContainText(constants.homePageText);
+  
   await expect(
     page
       .locator('#baristaPageOut')

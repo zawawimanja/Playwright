@@ -19,6 +19,7 @@ import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 import * as fs from 'fs';
 import * as path from 'path';
+import { validateConstants } from '../../../utils/validateConstants';
 import { readCSV } from '../../../helper/csvHelper'; // Import the CSV helper
 // filepath: /c:/Users/aaror/Downloads/Playwright/e2e/Prereg/S2 - ILAT-BI2PI/test-ILAT-PK.spec.ts
 
@@ -27,11 +28,43 @@ test.beforeEach(async ({ page }) => {
   await login(page, 'afzan.pks', 'u@T_afzan');
 });
 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
+// Load constants from JSON file
+const constants = JSON.parse(
+  fs.readFileSync(path.resolve(__dirname, '../../../constants.json'), 'utf8'),
+);
+
+validateConstants(constants);
+
 export let schemeRefValue: string;
 
 test('Prereg PK FOT', async ({ page }) => {
   const preregPage = new PreregistrationPage(page);
   const leftTabPage = new LeftTabPage(page);
+
+    await page.waitForLoadState('networkidle');
+    await expect(
+      page.locator('#baristaPageOut').contentFrame().locator('#formPreview'),
+    ).toBeVisible();
+  
+    await expect(
+      page
+        .locator('#baristaPageOut')
+        .contentFrame()
+        .getByRole('heading', { name: constants.homePageHeading }),
+    ).toBeVisible();
+    await expect(
+      page.locator('#baristaPageOut').contentFrame().locator('#previewPanel'),
+    ).toContainText(constants.homePageText);
+    
+    await expect(
+      page
+        .locator('#baristaPageOut')
+        .contentFrame()
+        .getByRole('img', { name: constants.socsoLogoAltText }),
+    ).toBeVisible();
 
   // Read data from CSV
   const __filename = fileURLToPath(import.meta.url);

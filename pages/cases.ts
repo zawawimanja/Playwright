@@ -19,28 +19,28 @@ export class CasesPage {
 
     switch (type) {
       case "ILAT-BI2PI":
-        filePath = "C:\\Users\\aaror\\Downloads\\Playwright\\e2e\\Prereg\\S2 - ILAT-BI2PI\\schemeRefValue.json";
+        filePath = path.join(process.cwd(), "e2e", "Prereg", "S2 - ILAT-BI2PI", "schemeRefValue.json");
         break;
       case "NTA":
-        filePath = "C:\\Users\\aaror\\Downloads\\Playwright\\e2e\\Prereg\\NTA\\schemeRefValue.json";
+        filePath = path.join(process.cwd(), "e2e", "Prereg", "NTA", "schemeRefValue.json");
         break;
       case "NTO":
-        filePath = "C:\\Users\\aaror\\Downloads\\Playwright\\e2e\\Prereg\\NTO\\schemeRefValue.json";
+        filePath = path.join(process.cwd(), "e2e", "Prereg", "NTO", "schemeRefValue.json");
         break;
       case "HUK":
-        filePath = "C:\\Users\\aaror\\Downloads\\Playwright\\e2e\\Prereg\\HUK\\schemeRefValue.json";
+        filePath = path.join(process.cwd(), "e2e", "Prereg", "HUK", "schemeRefValue.json");
         break;
       case "NTI":
-        filePath = "C:\\Users\\aaror\\Downloads\\Playwright\\e2e\\Prereg\\NTI\\schemeRefValue.json";
+        filePath = path.join(process.cwd(), "e2e", "Prereg", "NTI", "schemeRefValue.json");
         break;
       case "PKT":
-        filePath = "C:\\Users\\aaror\\Downloads\\Playwright\\e2e\\Prereg\\PKT\\schemeRefValue.json";
+        filePath = path.join(process.cwd(), "e2e", "Prereg", "PKT", "schemeRefValue.json");
         break;
       case "RPO":
-        filePath = "C:\\Users\\aaror\\Downloads\\Playwright\\e2e\\Prereg\\RPO\\schemeRefValue.json";
+        filePath = path.join(process.cwd(), "e2e", "Prereg", "RPO", "schemeRefValue.json");
         break;
       case "FOT":
-        filePath = "C:\\Users\\aaror\\Downloads\\Playwright\\e2e\\Prereg\\FOT\\schemeRefValue.json";
+        filePath = path.join(process.cwd(), "e2e", "Prereg", "FOT", "schemeRefValue.json");
         break;
     }
 

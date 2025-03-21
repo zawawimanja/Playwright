@@ -29,8 +29,8 @@ import { ButtonPage } from '../../../utils/button';
 
 test.beforeEach(async ({ page }) => {
   await page.setViewportSize({ width: 1920, height: 1080 });
-  await login(page, 'atilia.pks', 'u@T_atilia');
-  // await login(page, "nazira.pks", "u@T_nazira");
+ // await login(page, 'atilia.pks', 'u@T_atilia');
+   await login(page, "nazira.pks", "u@T_nazira");
 });
 
 test('Prereg SCO NTA', async ({ page }) => {
@@ -67,8 +67,8 @@ test('Prereg SCO NTA', async ({ page }) => {
 
       headerPage.clickUserProfile();
       headerPage.clickSignOut();
-      await login(page, 'nazira.pks', 'u@T_nazira');
-      //await login(page, "atilia.pks", "u@T_atilia");
+     // await login(page, 'nazira.pks', 'u@T_nazira');
+      await login(page, "atilia.pks", "u@T_atilia");
     }
   }
 

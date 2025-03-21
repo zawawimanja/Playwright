@@ -5,9 +5,7 @@
   "directories": {
     "test": "tests"
   },
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
+  "scripts": {},
   "keywords": [],
   "author": "",
   "license": "ISC",
@@ -15,8 +13,8 @@
   "type": "module",
   "devDependencies": {
     "@eslint/js": "^9.21.0",
-    "@playwright/test": "^1.50.1",
-    "@types/node": "^21.16.0",
+    "@playwright/test": "^1.51.1",
+    "@types/node": "^22.13.10",
     "@typescript-eslint/eslint-plugin": "^8.26.0",
     "@typescript-eslint/parser": "^8.26.0",
     "eslint": "^9.21.0",
