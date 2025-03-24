@@ -48,7 +48,7 @@ export class CalendarPage {
   }
 
   async selectAccidentDate(accidentYear: string, accidentMonth: string, accidentDay: string) {
-    let monthNumber = parseInt(accidentMonth, 10) ;
+    let monthNumber = parseInt(accidentMonth, 10)-1 ;
     const formattedMonth = monthNumber.toString();
 
     await this.page.frameLocator("#baristaPageOut").getByRole("combobox").nth(3).selectOption(accidentYear);

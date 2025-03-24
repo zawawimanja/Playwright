@@ -26,6 +26,7 @@ import { dirname } from 'path';
 import * as fs from 'fs';
 import * as path from 'path';
 import * as xlsx from 'xlsx';
+import { cityMappings } from '../../../mappings/cityMappings';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -40,20 +41,20 @@ validateConstants(constants);
 
 test.beforeEach(async ({ page }) => {
   await page.setViewportSize({ width: 1920, height: 1080 });
-  await login(page, 'afzan.pks', 'u@T_afzan');
+  await login(page, 'uat_selamat', 'u@T_selamat');
 });
 
 export let schemeRefValue: string;
 
 async function getTestData(rowIndex: number) {
-  const excelFilePath = path.resolve(__dirname, '../../../testData/testDataSikap.xlsx');
+  const excelFilePath = path.resolve(__dirname, '../../../testData/NTA.xlsx');
   const fileBuffer = fs.readFileSync(excelFilePath);
   const workbook = xlsx.read(fileBuffer, { type: 'buffer' });
   const sheetName = workbook.SheetNames[0];
   const sheet = workbook.Sheets[sheetName];
   
   // Modified options to properly read headers
-  const jsonData = xlsx.utils.sheet_to_json(sheet, { 
+  const jsonData: unknown[][] = xlsx.utils.sheet_to_json(sheet, { 
     raw: true,
     defval: null,
     blankrows: false,
@@ -61,53 +62,229 @@ async function getTestData(rowIndex: number) {
   });
 
   // Get headers from second row (index 1)
-  const headers = jsonData[1];
+  const headers: string[] = jsonData[1] as string[];
   // Get actual data row (add 3 to skip header rows and get actual data)
-  const rowData = jsonData[rowIndex + 3];
+  const rowData: (string | number | null)[] = jsonData[rowIndex + 2] as (string | number | null)[];
   
-  // Create object with proper headers and ensure string values
-  const data = {};
+  // Add this before the switch statement in getTestData function
+  const headerIndices = new Map<string, number>();
+  const duplicateHeadersWithData = new Set<string>();
+
   headers.forEach((header, index) => {
-    if (header) {
+    if (header && header.trim()) {
+      const trimmedHeader = header.trim();
       const value = rowData ? rowData[index] : null;
-      // Handle different data types
-      if (header.includes('Date') && typeof value === 'number') {
-        // Convert Excel date number to JavaScript Date
-        const date = new Date((value - 25569) * 86400 * 1000);
-        const month = date.getMonth() + 1;
-        const day = date.getDate();
-        const year = date.getFullYear();
-        data[header.trim()] = `${month}/${day}/${year}`;
-      } else if (header === 'Accident Time' && typeof value === 'number') {
-        // Convert Excel time decimal to HH:mm:ss format
-        const totalSeconds = Math.round(value * 86400); // Convert to seconds
-        let hours = Math.floor(totalSeconds / 3600);
-        const minutes = Math.floor((totalSeconds % 3600) / 60);
-        const seconds = totalSeconds % 60;
+      
+      if (headerIndices.has(trimmedHeader)) {
+        // If this is a duplicate header
+        const firstIndex = headerIndices.get(trimmedHeader)!;
+        const firstValue = rowData ? rowData[firstIndex] : null;
         
-        // Handle 12-hour format (Excel uses 24-hour format)
-        if (hours >= 24) {
-            hours = hours % 24;
+        // Only consider it a problem if both columns have data
+        if (value !== null && firstValue !== null) {
+          duplicateHeadersWithData.add(trimmedHeader);
+          console.log(`Duplicate header with data found: ${trimmedHeader}`);
+          console.log(`First occurrence (index ${firstIndex}): ${firstValue}`);
+          console.log(`Second occurrence (index ${index}): ${value}`);
         }
-        
-        // Convert to 12-hour format
-        const period = hours >= 12 ? 'PM' : 'AM';
-        hours = hours % 12;
-        hours = hours ? hours : 12; // Convert 0 to 12
-        
-        // Format as hh:mm:ss AM/PM
-        data[header.trim()] = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')} ${period}`;
       } else {
-        // Handle other values
-        data[header.trim()] = value !== null ? String(value) : null;
+        headerIndices.set(trimmedHeader, index);
       }
     }
   });
 
-  // Debug logging
-  console.log('Headers:', headers);
-  console.log('Actual Row Data:', rowData);
-  console.log('Mapped Data:', data);
+  if (duplicateHeadersWithData.size > 0) {
+    throw new Error(`Duplicate headers with data found: ${Array.from(duplicateHeadersWithData).join(', ')}`);
+  }
+
+  // Create object with proper headers and ensure string values
+  const data: { [key: string]: string | null } = {};
+  headers.forEach((header: string, index: number) => {
+    if (header) {
+      const value = rowData ? rowData[index] : null;
+      
+      switch (header.trim()) {
+        // Date fields
+        case 'Accident Date':
+        case 'Notice Date':
+        case 'First Date of MC':
+        case 'Last Date of MC':
+        case 'Date of MB':
+        case 'Certification By Employer - Date':
+          if (typeof value === 'number') {
+            const date = new Date((value - 25569) * 86400 * 1000);
+            data[header.trim()] = `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}`;
+          }
+          break;
+
+        case 'City':
+          console.log('\n=== City Data Processing ===');
+          console.log('Raw value:', value);
+          console.log('Header:', header);
+          console.log('Index:', headers.indexOf('City'));
+          data[header.trim()] = value ? String(value).trim() : null;
+          console.log('Processed value:', data[header.trim()]);
+          break;
+
+        // Number fields that need string conversion with padding
+        case 'IC No. OB':
+          data[header.trim()] = value ? String(value).padStart(12, '0') : null;
+          break;
+        case 'Mobile No':
+          data[header.trim()] = value ? String(value).padStart(10, '0') : null;
+          break;
+
+        // Code fields
+        case 'Employer Code':
+        case 'Employer Code Old':
+        case 'Bank Code':
+        case 'Other Code Value':
+          data[header.trim()] = value ? String(value) : null;
+          break;
+
+        // Numeric fields
+        case 'Est Salary 1':
+        case 'Est Salary 2':
+        case 'Est Salary 3':
+        case 'Est Salary 4':
+        case 'Est Salary 5':
+        case 'Est Salary 6':
+        case 'Peratus Taksiran (%)':
+          data[header.trim()] = value ? String(Number(value)) : '0';
+          break;
+
+        // Text fields
+        case 'Occupation':
+        case 'Sub-Occupation':
+        case 'Address1':
+        case 'Address2':
+        case 'Address3':
+        case 'Postcode':
+        case 'State':
+        case 'Email Address':
+        case 'Place of Accident':
+        case 'Bank Name':
+        case 'Bank Branch*':
+        case 'Bank Account No':
+        case 'Bank Account Type':
+          data[header.trim()] = value ? String(value) : null;
+          break;
+
+        // Boolean fields
+        case 'Is Accident Date a Working Day':
+          data[header.trim()] = value ? String(value).toUpperCase() : 'NO';
+          break;
+
+        // Fields that need specific validation
+        case 'Assessment Type':
+        case 'Payment Option':
+          data[header.trim()] = value ? String(value).trim() : null;
+          break;
+
+        // SOCSO Office fields - handle numeric codes
+        case 'Preferred SOCSO OfficeState*':
+        case 'Preferred SOCSO SOCSO Office*':
+          data[header.trim()] = value ? String(value) : null;
+          break;
+
+        // Bank related fields
+        case 'Bank Account No.':  // Changed to match Excel header exactly
+          // Use raw value directly without additional processing
+          data[header.trim()] = rowData[headers.indexOf('Bank Account No.')] ? 
+            String(rowData[headers.indexOf('Bank Account No.')]) : null;
+          break;
+
+        // Default case for any other fields
+        default:
+          data[header.trim()] = value !== null ? String(value) : null;
+      }
+    }
+  });
+
+  // Debug logging to verify data conversion
+  console.log('=== Data Processing ===');
+  console.log('Headers Processed:', headers.filter(h => h && h.trim() !== '').length);
+  console.log('Sample Data:', {
+    'IC No': data['IC No. OB'],
+    'Employer Code': data['Employer Code'],
+    'Accident Date': data['Accident Date'],
+    'Est Salary 1': data['Est Salary 1']
+  });
+
+  // Add this after data mapping in getTestData function
+  console.log('=== Mapped Data ===');
+  console.log('Headers with Values:');
+  Object.entries(data).forEach(([header, value]) => {
+    // Only log if value is not null, undefined, or empty string
+    if (value !== null && value !== undefined && value !== '') {
+      console.log(`${header}: ${value}`);
+    }
+  });
+
+  // Group data by types for better readability
+  console.log('\n=== Data by Type ===');
+  const logGroupedData = (group: string, fields: { [key: string]: string | null }) => {
+    const validData = Object.entries(fields)
+      .filter(([_, value]) => value !== null && value !== undefined && value !== '')
+      .reduce((acc, [key, value]) => ({ ...acc, [key]: value }), {});
+    
+    if (Object.keys(validData).length > 0) {
+      console.log(group + ':', validData);
+    }
+  };
+
+  logGroupedData('Dates', {
+    'Accident Date': data['Accident Date'],
+    'Notice Date': data['Notice Date'],
+    'First Date of MC': data['First Date of MC'],
+    'Last Date of MC': data['Last Date of MC']
+  });
+
+  logGroupedData('Personal Info', {
+    'IC No': data['IC No. OB'],
+    'Mobile No': data['Mobile No'],
+    'Occupation': data['Occupation']
+  });
+
+  console.log('Address Info:', {
+    'Address1': data['Address1'],
+    'Address2': data['Address2'],
+    'Address3': data['Address3'],
+    'Postcode': data['Postcode'],
+    'City': data['City'],
+    'State': data['State']
+  });
+
+  console.log('Bank Info:', {
+    'Bank Name': data['Bank Name'],
+    'Bank Account No': data['Bank Account No.'],  // Added period
+    'Bank Branch*': data['Bank Branch*'],
+    'Bank Account Type': data['Bank Account Type']
+  });
+
+  // Modify the logging to show what's actually in the data object
+  console.log('=== Raw Data Check ===');
+  console.log('City value:', rowData[headers.indexOf('City')]);
+  console.log('State value:', rowData[headers.indexOf('State')]);
+  console.log('Bank Account No value:', rowData[headers.indexOf('Bank Account No.')]);
+
+  // Add debug logging specifically for Bank Account No
+  console.log('=== Bank Account Debug ===');
+  console.log('Raw index:', headers.indexOf('Bank Account No.'));
+  console.log('Raw value:', rowData[headers.indexOf('Bank Account No.')]);
+  console.log('Processed value:', data['Bank Account No.']);
+
+  // Add debug logging for City processing
+  console.log('=== City Processing Debug ===');
+  console.log('Raw City value:', rowData[headers.indexOf('City')]);
+  console.log('Processed City value:', data['City']);
+
+  // Add verification after processing
+  console.log('\n=== City Data Verification ===');
+  console.log('Final City value:', data['City']);
+  console.log('City in data object:', Object.keys(data).includes('City'));
+
+ 
 
   return data;
 }
@@ -146,6 +323,7 @@ async function runTest(page: import('@playwright/test').Page, data: any) {
   await expect(leftTabPage.preregistrationLink).toBeVisible();
   leftTabPage.clickPreregistration();
 
+  await page.waitForLoadState('networkidle');
   await expect(
     page
       .locator('#baristaPageOut')
@@ -187,10 +365,6 @@ async function runTest(page: import('@playwright/test').Page, data: any) {
 
 const calendar = new CalendarPage(page);
 
-// Log the data object to verify its contents
-console.log('Data:', data);
-console.log('Data keys:', Object.keys(data));
-
 // Read and parse Accident Date from Excel data
 if (data["Accident Date"]) {
   const [month, day, year] = data["Accident Date"].split('/').map(String); // Convert to strings
@@ -199,24 +373,12 @@ if (data["Accident Date"]) {
   throw new Error('Accident Date is undefined');
 }
 
-// Read and parse Accident Time from Excel data
-if (data["Accident Time"]) {
-  const [timeStr, period] = data["Accident Time"].split(' ');
-  const [hours, minutes, seconds] = timeStr.split(':').map(Number);
-  
-  // Convert to 24-hour if PM
-  let hour24 = hours;
-  if (period === 'PM' && hours !== 12) {
-    hour24 = hours + 12;
-  } else if (period === 'AM' && hours === 12) {
-    hour24 = 0;
-  }
-
   await preregPage.clickAccidentTime();
-  await timePage.selectTimeOption(hour24, minutes, seconds);
-} else {
-  throw new Error('Accident Time is undefined');
-}
+
+  await timePage.selectTimeOption(
+   "17","00","00"
+  );
+
 
 // Fill in identification type and number
 await preregPage.selectIdentificationType("New IC");
@@ -225,15 +387,19 @@ await preregPage.identificationTypeLabel.isVisible();
 const selectedIdentificationTypeText = await preregPage.getSelectedIdentificationTypeText();
 expect(selectedIdentificationTypeText).toBe("New IC");
 
-await preregPage.fillIdentificationNo(data["IC No."]);
+await preregPage.fillIdentificationNo(data["IC No. OB"]);
 const filledIdentificationNo = await preregPage.getIdentificationNo();
-expect(filledIdentificationNo).toBe(data["IC No."]);
+expect(filledIdentificationNo).toBe(data["IC No. OB"]);
 
-// Fill in employer code
-await preregPage.fillEmployerCode(data["Employer Code"]);
-const filledEmployerCode = await preregPage.getEmployerCode();
-await preregPage.employerCodeInput.click();
-expect(filledEmployerCode).toBe(data["Employer Code"]);
+// Fill in employer code with validation
+if (data["Employer Code"]) {
+  await preregPage.fillEmployerCode(data["Employer Code"]);
+  const filledEmployerCode = await preregPage.getEmployerCode();
+  await preregPage.employerCodeInput.click();
+  expect(filledEmployerCode).toBe(data["Employer Code"]);
+} else {
+  throw new Error('Employer Code is undefined');
+}
 
   // Click search button
   await preregPage.clickSearchButton();
@@ -254,11 +420,11 @@ expect(filledEmployerCode).toBe(data["Employer Code"]);
   const remarksPage = new RemarksPage(page1);
   await remarksPage.remarksButton.waitFor();
   await expect(remarksPage.remarksButton).toBeVisible();
-  await expect(remarksPage.sectionTabs).toContainText(constants.remarksText);
+  await expect(remarksPage.sectionTabs).toContainText(constants.remarks);
   remarksPage.clickRemarksButton();
 
   await remarksPage.addRemarksButton.click();
-  await remarksPage.textbox.fill('test');
+  await remarksPage.textbox.fill(constants.remarksText);
   await remarksPage.saveRemarksButton.click();
 
   const insuredPersonInfoPage = new InsuredPersonInfoPage(page1);
@@ -274,63 +440,176 @@ expect(filledEmployerCode).toBe(data["Employer Code"]);
   );
   await insuredPersonInfoPage.clickInsuredPersonInfoButton();
   await insuredPersonInfoPage.noticeAndBenefitClaimFormReceivedDateInput.click();
-  await calendarPage.selectDateInsuredPersonPage(
-    data.accidentYear,
-    data.accidentMonth,
-    data.accidentDay,
-  );
-  await insuredPersonInfoPage.fillOccupation(constants.occupation);
-  await insuredPersonInfoPage.fillAddress1(constants.address1);
-  await insuredPersonInfoPage.fillAddress(2, constants.address2);
-  await insuredPersonInfoPage.fillAddress(3, constants.address3);
-  await insuredPersonInfoPage.selectState(constants.state);
-  await insuredPersonInfoPage.selectCity(constants.city);
-  await insuredPersonInfoPage.fillPostcode(constants.postcode);
-  await insuredPersonInfoPage.selectNationality(constants.nationality);
+
+
+  if (data["Notice Date"]) {
+    const [month, day, year] = data["Notice Date"].split('/').map(String); // Convert to strings
+    await calendarPage.selectDateInsuredPersonPage(year, month, day);
+  } else {
+    throw new Error('Accident Date is undefined');
+  }
+  
+
+  // Use Excel data instead of constants
+  //occupation based 34
+  if (data["Occupation(Based on Form 34)"]) {
+    await insuredPersonInfoPage.fillOccupation(data["Occupation(Based on Form 34)"]);
+  }
+  //occupation
+
+  await page1.getByLabel('Occupation', { exact: true }).selectOption('1000013');
+  //sub occupation
+
+  await page1.getByLabel('Sub-Occupation', { exact: true }).selectOption('1001239');
+  //suboccupation list
+
+  await page1.getByLabel('Sub-Occupation List').selectOption('1004526');
+
+  if (data["Address1"]) {
+    await insuredPersonInfoPage.fillAddress1(data["Address1"]);
+  }
+  if (data["Address2"]) {
+    await insuredPersonInfoPage.fillAddress(2, data["Address2"]);
+  }
+  if (data["Address3"]) {
+    await insuredPersonInfoPage.fillAddress(3, data["Address3"]);
+  }
+    if (data["State"]) {
+    await insuredPersonInfoPage.selectState(data["State"]);
+  } else {
+  //johor -710
+  await insuredPersonInfoPage.selectState("200710");
+ 
+  }
+  // In the runTest function, modify the city selection section
+  if (data["City"]) {
+    console.log('\n=== City Selection Debug ===');
+    console.log('Raw City from data:', data["City"]);
+    console.log('City exists in mappings:', data["City"].trim().toUpperCase() in cityMappings);
+    console.log('Available city keys:', Object.keys(cityMappings));
+    
+    const cityName = data["City"].trim().toUpperCase();
+    console.log('Looking up:', cityName);
+    console.log('Found in mappings:', cityMappings[cityName]);
+    
+    const cityCode = cityMappings[cityName];
+    if (cityCode) {
+        console.log('Using city code:', cityCode);
+        await insuredPersonInfoPage.selectCity(cityCode);
+    } else {
+        console.log('City not found in mappings:', cityName);
+        console.log('Falling back to default code 201059');
+        await insuredPersonInfoPage.selectCity("201059");
+    }
+} else {
+    console.log('\n=== Missing City Data ===');
+    console.log('Data object keys:', Object.keys(data));
+    console.log('City value:', data["City"]);
+    console.log('Raw data:', data);
+}
+  if (data["Postcode"]) {
+    await insuredPersonInfoPage.fillPostcode(data["Postcode"]);
+  }
+await insuredPersonInfoPage.selectNationality('201749');
+await page1.getByRole('textbox', { name: 'Email Address' }).fill('uat@barista.com');
+ await page1.getByRole('textbox', { name: 'Mobile No.' }).fill('019-23455433');
 
   const employerInfoPage = new EmployerInfoPage(page1);
   await employerInfoPage.clickEmployerInfoButton();
 
-  // Add Reference Notice Information
-
+  // Handle Accident Information
   const accidentInformationPage = new AccidentInformationPage(page1);
   await accidentInformationPage.clickAccidentInformationButton();
-  await accidentInformationPage.fillAccidentHappened(constants.accidentInjury);
-  await accidentInformationPage.fillAccidentInjury(constants.accidentInjury);
+await page1.getByLabel('Place of Accident').selectOption('10002');
 
+
+await page1.getByLabel('When did the Accident').selectOption('10106');
+  if (data["How did the Accident Happened?"]) {
+    await accidentInformationPage.fillAccidentHappened(data["How did the Accident Happened?"]);
+  }
+  if (data["How did the Accident Happened?"]) {
+    await accidentInformationPage.fillAccidentInjury(data["How did the Accident Happened?"]);
+  }
+
+  await page1.getByLabel('Is Accident Date a Working').selectOption('1');
+
+
+  // Handle Medical Certificate
   const medicalCertificatePage = new MedicalCertificatePage(page1);
   await medicalCertificatePage.clickMedicalCertificateButton();
+  
+  if (data["Name and Address of Clinic/Hospital"]) {
+    await medicalCertificatePage.addRecord();
+    await medicalCertificatePage.enterClinicHospitalName(data["Name and Address of Clinic/Hospital"]);
+  }
 
-  // 1st mc
-  await medicalCertificatePage.addRecord();
-  await medicalCertificatePage.enterClinicHospitalName('kl');
+  if (data["First Date of MC"] && data["Last Date of MC"]) {
+    await calendarPage.mcDate().nth(1).click();
+    const [mcStartMonth, mcStartDay, mcStartYear] = data["First Date of MC"].split('/');
+    await calendarPage.selectDateInsuredPersonPage(mcStartYear, mcStartMonth, mcStartDay);
 
-  // await page1.getByRole("textbox").nth(1).click();
-  await calendarPage.mcDate().nth(1).click();
-  await calendarPage.selectDateInsuredPersonPage('2023', '7', '1');
-
-  // await page1.getByRole("textbox").nth(2).click();
-  await calendarPage.mcDate().nth(2).click();
-  await calendarPage.selectDateMCEndDate('2023', '7', '15');
+    await calendarPage.mcDate().nth(2).click();
+    const [mcEndMonth, mcEndDay, mcEndYear] = data["Last Date of MC"].split('/');
+    await calendarPage.selectDateMCEndDate(mcEndYear, mcEndMonth, mcEndDay);
+  }
+  
   await medicalCertificatePage.submitButton().click();
 
   const wagesInfoPage = new WagesInfoPage(page1);
   await wagesInfoPage.clickWagesInfoButton();
+  
+  await page1.getByLabel('Is Wages Paid on the Day of').selectOption('Yes');
 
-  const preferredSOCSOOfficePage = new PreferredSOCSOOfficePage(page1);
-  await preferredSOCSOOfficePage.clickPreferredSOCSOOfficeButton();
-  await preferredSOCSOOfficePage.selectSOCSOState(constants.socsoState);
-  await preferredSOCSOOfficePage.selectSOCSOOffice(constants.socsoOffice);
+await page1.getByRole('button', { name: 'Preferred SOCSO Office' }).click();
+await page1.getByLabel('State*').selectOption('200710');
+await page1.getByLabel('SOCSO Office*').selectOption('200402');
 
+
+ // Update SOCSO office section to use Excel data if available
+  // const preferredSOCSOOfficePage = new PreferredSOCSOOfficePage(page1);
+  // await preferredSOCSOOfficePage.clickPreferredSOCSOOfficeButton();
+  // await preferredSOCSOOfficePage.selectSOCSOState('200710'); // Default state code
+  // await preferredSOCSOOfficePage.selectSOCSOOffice('200402'); // Default office code
+//   if (data["Preferred SOCSO OfficeState*"]) {
+//    // await preferredSOCSOOfficePage.selectSOCSOState(data["Preferred SOCSO OfficeState*"]);
+//     await preferredSOCSOOfficePage.selectSOCSOState('200710'); // Default state code
+//   } else {
+// //701 kl
+
+//     await preferredSOCSOOfficePage.selectSOCSOState('200710'); // Default state code
+//   }
+//   if (data["Preferred SOCSO SOCSO Office*"]) {
+//    // await preferredSOCSOOfficePage.selectSOCSOOffice(data["Preferred SOCSO SOCSO Office*"]);
+//     await preferredSOCSOOfficePage.selectSOCSOOffice('200402'); // Default office code
+//   } else {
+//     //419 -kl
+    
+//     await preferredSOCSOOfficePage.selectSOCSOOffice('200402'); // Default office code
+//   }
+
+  // Update certification section to use Excel data
   const certificationByEmployerPage = new CertificationByEmployerPage(page1);
   await certificationByEmployerPage.clickCertificationByEmployerButton();
-  await certificationByEmployerPage.fillName(constants.employerName);
-  await certificationByEmployerPage.fillDesignation(
-    constants.employerDesignation,
-  );
-  await certificationByEmployerPage.calendar.click();
-  await calendarPage.selectDateInsuredPersonPage('2021', '8', '11');
+  if (data["Certification By Employer - Name"]) {
+    await certificationByEmployerPage.fillName(data["Certification By Employer - Name"]);
+  } else {
+    await certificationByEmployerPage.fillName(constants.employerName);
+  }
+  if (data["Certification By Employer - Designation"]) {
+    await certificationByEmployerPage.fillDesignation(data["Certification By Employer - Designation"]);
+  } else {
+    await certificationByEmployerPage.fillDesignation(constants.employerDesignation);
+  }
 
+  if (data["Certification By Employer - Date"]) {
+    const [month, day, year] = data["Certification By Employer - Date"].split('/').map(String); // Convert to strings
+    await certificationByEmployerPage.calendar.click();
+    await calendarPage.selectDateInsuredPersonPage(year, month, day);
+  }
+
+
+
+  // Update bank information section to use Excel data
   const bankInformationPage = new BankInformationPage(page1);
   await bankInformationPage.clickBankInformationButton();
 
@@ -338,16 +617,23 @@ expect(filledEmployerCode).toBe(data["Employer Code"]);
   await expect(bankInformationPage.accountNoSelect).toBeVisible();
   await bankInformationPage.accountNoSelect.click();
 
-  if (data.EFT === 'Yes') {
-    await bankInformationPage.selectAccountNo(constants.bankAccountYes);
-    await bankInformationPage.selectBankLocation(constants.bankLocation);
-    await bankInformationPage.selectBankNameAccident(
-      constants.bankNameAccident,
-    );
-    await bankInformationPage.selectBankAccountType(constants.bankAccountType);
-    await bankInformationPage.fillBankBranch(constants.bankBranch);
-    await bankInformationPage.fillBankAccountNo(constants.bankAccountNo);
+  if (data["Bank Location"] === "Local") {
+    await bankInformationPage.selectAccountNo("Yes");
+    await bankInformationPage.selectBankLocation("Local");
+    if (data["Bank Name"]) {
+      await bankInformationPage.selectBankNameAccident(data["Bank Name"]);
+    }
+    if (data["Bank Account Type"]) {
+      await bankInformationPage.selectBankAccountType(data["Bank Account Type"]);
+    }
+    if (data["Bank Branch*"]) {
+      await bankInformationPage.fillBankBranch(data["Bank Branch*"]);
+    }
+    if (data["Bank Account No."]) {
+      await bankInformationPage.fillBankAccountNo(data["Bank Account No."]);
+    }
   } else {
+    // Keep existing bankruptcy flow since it's a special case
     await bankInformationPage.selectAccountNo('No');
     await page1.getByLabel(constants.reasonLabel).selectOption('207301');
     await page1.getByLabel('Insolvency Search').selectOption('1');
@@ -399,7 +685,7 @@ expect(filledEmployerCode).toBe(data["Employer Code"]);
 }
 
 test.only('Prereg PK NTA EFT MC - Test Case 1', async ({ page }) => {
-  const data = await getTestData(0); // Use the first row of data
+  const data = await getTestData(57); // Use the first row of data
   await runTest(page, data);
 });
 

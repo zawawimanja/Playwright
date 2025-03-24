@@ -97,7 +97,7 @@ test('Prereg MB ILAT', async ({ page }) => {
 
   const calendarPage = new CalendarPage(page4);
   calendarPage.clickDate('Session DateILAT');
-  await calendarPage.selectDateInsuredPersonPage('2023', '1', '20');
+  await calendarPage.selectDateInsuredPersonPage('2023', '8', '1');
   //result
   await mbSessionPage.setResultILat('9608101');
   //els
