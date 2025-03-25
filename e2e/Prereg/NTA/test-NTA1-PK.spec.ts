@@ -27,6 +27,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import * as xlsx from 'xlsx';
 import { cityMappings } from '../../../mappings/cityMappings';
+import { countryBankMappings } from '../../../mappings/countryBankMappings';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -52,9 +53,9 @@ async function getTestData(rowIndex: number) {
   const workbook = xlsx.read(fileBuffer, { type: 'buffer' });
   const sheetName = workbook.SheetNames[0];
   const sheet = workbook.Sheets[sheetName];
-  
+
   // Modified options to properly read headers
-  const jsonData: unknown[][] = xlsx.utils.sheet_to_json(sheet, { 
+  const jsonData: unknown[][] = xlsx.utils.sheet_to_json(sheet, {
     raw: true,
     defval: null,
     blankrows: false,
@@ -65,44 +66,14 @@ async function getTestData(rowIndex: number) {
   const headers: string[] = jsonData[1] as string[];
   // Get actual data row (add 3 to skip header rows and get actual data)
   const rowData: (string | number | null)[] = jsonData[rowIndex + 2] as (string | number | null)[];
-  
-  // Add this before the switch statement in getTestData function
-  const headerIndices = new Map<string, number>();
-  const duplicateHeadersWithData = new Set<string>();
 
-  headers.forEach((header, index) => {
-    if (header && header.trim()) {
-      const trimmedHeader = header.trim();
-      const value = rowData ? rowData[index] : null;
-      
-      if (headerIndices.has(trimmedHeader)) {
-        // If this is a duplicate header
-        const firstIndex = headerIndices.get(trimmedHeader)!;
-        const firstValue = rowData ? rowData[firstIndex] : null;
-        
-        // Only consider it a problem if both columns have data
-        if (value !== null && firstValue !== null) {
-          duplicateHeadersWithData.add(trimmedHeader);
-          console.log(`Duplicate header with data found: ${trimmedHeader}`);
-          console.log(`First occurrence (index ${firstIndex}): ${firstValue}`);
-          console.log(`Second occurrence (index ${index}): ${value}`);
-        }
-      } else {
-        headerIndices.set(trimmedHeader, index);
-      }
-    }
-  });
-
-  if (duplicateHeadersWithData.size > 0) {
-    throw new Error(`Duplicate headers with data found: ${Array.from(duplicateHeadersWithData).join(', ')}`);
-  }
 
   // Create object with proper headers and ensure string values
   const data: { [key: string]: string | null } = {};
   headers.forEach((header: string, index: number) => {
     if (header) {
       const value = rowData ? rowData[index] : null;
-      
+
       switch (header.trim()) {
         // Date fields
         case 'Accident Date':
@@ -167,6 +138,9 @@ async function getTestData(rowIndex: number) {
         case 'Bank Branch*':
         case 'Bank Account No':
         case 'Bank Account Type':
+        case  'Bank Swift Code':
+        case 'Bank Address':
+          case 'Is Malaysia Citizen?*':
           data[header.trim()] = value ? String(value) : null;
           break;
 
@@ -190,8 +164,14 @@ async function getTestData(rowIndex: number) {
         // Bank related fields
         case 'Bank Account No.':  // Changed to match Excel header exactly
           // Use raw value directly without additional processing
-          data[header.trim()] = rowData[headers.indexOf('Bank Account No.')] ? 
+          data[header.trim()] = rowData[headers.indexOf('Bank Account No.')] ?
             String(rowData[headers.indexOf('Bank Account No.')]) : null;
+          break;
+
+          case 'Bank Account No./IBAN No.*':  // Changed to match Excel header exactly
+          // Use raw value directly without additional processing
+          data[header.trim()] = rowData[headers.indexOf('Bank Account No./IBAN No.*')] ?
+            String(rowData[headers.indexOf('Bank Account No./IBAN No.*')]) : null;
           break;
 
         // Default case for any other fields
@@ -227,7 +207,7 @@ async function getTestData(rowIndex: number) {
     const validData = Object.entries(fields)
       .filter(([_, value]) => value !== null && value !== undefined && value !== '')
       .reduce((acc, [key, value]) => ({ ...acc, [key]: value }), {});
-    
+
     if (Object.keys(validData).length > 0) {
       console.log(group + ':', validData);
     }
@@ -284,7 +264,7 @@ async function getTestData(rowIndex: number) {
   console.log('Final City value:', data['City']);
   console.log('City in data object:', Object.keys(data).includes('City'));
 
- 
+
 
   return data;
 }
@@ -308,7 +288,7 @@ async function runTest(page: import('@playwright/test').Page, data: any) {
   await expect(
     page.locator('#baristaPageOut').contentFrame().locator('#previewPanel'),
   ).toContainText(constants.homePageText);
-  
+
   await expect(
     page
       .locator('#baristaPageOut')
@@ -363,43 +343,43 @@ async function runTest(page: import('@playwright/test').Page, data: any) {
   // click accident date
   await preregPage.clickAccidentDatePrereg();
 
-const calendar = new CalendarPage(page);
+  const calendar = new CalendarPage(page);
 
-// Read and parse Accident Date from Excel data
-if (data["Accident Date"]) {
-  const [month, day, year] = data["Accident Date"].split('/').map(String); // Convert to strings
-  await calendar.selectAccidentDate(year, month, day);
-} else {
-  throw new Error('Accident Date is undefined');
-}
+  // Read and parse Accident Date from Excel data
+  if (data["Accident Date"]) {
+    const [month, day, year] = data["Accident Date"].split('/').map(String); // Convert to strings
+    await calendar.selectAccidentDate(year, month, day);
+  } else {
+    throw new Error('Accident Date is undefined');
+  }
 
   await preregPage.clickAccidentTime();
 
   await timePage.selectTimeOption(
-   "17","00","00"
+    "18", "00", "00"
   );
 
 
-// Fill in identification type and number
-await preregPage.selectIdentificationType("New IC");
-await preregPage.identificationTypeLabel.waitFor();
-await preregPage.identificationTypeLabel.isVisible();
-const selectedIdentificationTypeText = await preregPage.getSelectedIdentificationTypeText();
-expect(selectedIdentificationTypeText).toBe("New IC");
+  // Fill in identification type and number
+  await preregPage.selectIdentificationType("New IC");
+  await preregPage.identificationTypeLabel.waitFor();
+  await preregPage.identificationTypeLabel.isVisible();
+  const selectedIdentificationTypeText = await preregPage.getSelectedIdentificationTypeText();
+  expect(selectedIdentificationTypeText).toBe("New IC");
 
-await preregPage.fillIdentificationNo(data["IC No. OB"]);
-const filledIdentificationNo = await preregPage.getIdentificationNo();
-expect(filledIdentificationNo).toBe(data["IC No. OB"]);
+  await preregPage.fillIdentificationNo(data["IC No. OB"]);
+  const filledIdentificationNo = await preregPage.getIdentificationNo();
+  expect(filledIdentificationNo).toBe(data["IC No. OB"]);
 
-// Fill in employer code with validation
-if (data["Employer Code"]) {
-  await preregPage.fillEmployerCode(data["Employer Code"]);
-  const filledEmployerCode = await preregPage.getEmployerCode();
-  await preregPage.employerCodeInput.click();
-  expect(filledEmployerCode).toBe(data["Employer Code"]);
-} else {
-  throw new Error('Employer Code is undefined');
-}
+  // Fill in employer code with validation
+  if (data["Employer Code"]) {
+    await preregPage.fillEmployerCode(data["Employer Code"]);
+    const filledEmployerCode = await preregPage.getEmployerCode();
+    await preregPage.employerCodeInput.click();
+    expect(filledEmployerCode).toBe(data["Employer Code"]);
+  } else {
+    throw new Error('Employer Code is undefined');
+  }
 
   // Click search button
   await preregPage.clickSearchButton();
@@ -448,7 +428,7 @@ if (data["Employer Code"]) {
   } else {
     throw new Error('Accident Date is undefined');
   }
-  
+
 
   // Use Excel data instead of constants
   //occupation based 34
@@ -474,12 +454,12 @@ if (data["Employer Code"]) {
   if (data["Address3"]) {
     await insuredPersonInfoPage.fillAddress(3, data["Address3"]);
   }
-    if (data["State"]) {
+  if (data["State"]) {
     await insuredPersonInfoPage.selectState(data["State"]);
   } else {
-  //johor -710
-  await insuredPersonInfoPage.selectState("200710");
- 
+    //johor -710
+    await insuredPersonInfoPage.selectState("200710");
+
   }
   // In the runTest function, modify the city selection section
   if (data["City"]) {
@@ -487,32 +467,32 @@ if (data["Employer Code"]) {
     console.log('Raw City from data:', data["City"]);
     console.log('City exists in mappings:', data["City"].trim().toUpperCase() in cityMappings);
     console.log('Available city keys:', Object.keys(cityMappings));
-    
+
     const cityName = data["City"].trim().toUpperCase();
     console.log('Looking up:', cityName);
     console.log('Found in mappings:', cityMappings[cityName]);
-    
+
     const cityCode = cityMappings[cityName];
     if (cityCode) {
-        console.log('Using city code:', cityCode);
-        await insuredPersonInfoPage.selectCity(cityCode);
+      console.log('Using city code:', cityCode);
+      await insuredPersonInfoPage.selectCity(cityCode);
     } else {
-        console.log('City not found in mappings:', cityName);
-        console.log('Falling back to default code 201059');
-        await insuredPersonInfoPage.selectCity("201059");
+      console.log('City not found in mappings:', cityName);
+      console.log('Falling back to default code 201059');
+      await insuredPersonInfoPage.selectCity("201059");
     }
-} else {
+  } else {
     console.log('\n=== Missing City Data ===');
     console.log('Data object keys:', Object.keys(data));
     console.log('City value:', data["City"]);
     console.log('Raw data:', data);
-}
+  }
   if (data["Postcode"]) {
     await insuredPersonInfoPage.fillPostcode(data["Postcode"]);
   }
-await insuredPersonInfoPage.selectNationality('201749');
-await page1.getByRole('textbox', { name: 'Email Address' }).fill('uat@barista.com');
- await page1.getByRole('textbox', { name: 'Mobile No.' }).fill('019-23455433');
+  await insuredPersonInfoPage.selectNationality('201749');
+  await page1.getByRole('textbox', { name: 'Email Address' }).fill('uat@barista.com');
+  await page1.getByRole('textbox', { name: 'Mobile No.' }).fill('019-23455433');
 
   const employerInfoPage = new EmployerInfoPage(page1);
   await employerInfoPage.clickEmployerInfoButton();
@@ -520,10 +500,10 @@ await page1.getByRole('textbox', { name: 'Email Address' }).fill('uat@barista.co
   // Handle Accident Information
   const accidentInformationPage = new AccidentInformationPage(page1);
   await accidentInformationPage.clickAccidentInformationButton();
-await page1.getByLabel('Place of Accident').selectOption('10002');
+  await page1.getByLabel('Place of Accident').selectOption('10002');
 
 
-await page1.getByLabel('When did the Accident').selectOption('10106');
+  await page1.getByLabel('When did the Accident').selectOption('10106');
   if (data["How did the Accident Happened?"]) {
     await accidentInformationPage.fillAccidentHappened(data["How did the Accident Happened?"]);
   }
@@ -537,7 +517,7 @@ await page1.getByLabel('When did the Accident').selectOption('10106');
   // Handle Medical Certificate
   const medicalCertificatePage = new MedicalCertificatePage(page1);
   await medicalCertificatePage.clickMedicalCertificateButton();
-  
+
   if (data["Name and Address of Clinic/Hospital"]) {
     await medicalCertificatePage.addRecord();
     await medicalCertificatePage.enterClinicHospitalName(data["Name and Address of Clinic/Hospital"]);
@@ -552,40 +532,40 @@ await page1.getByLabel('When did the Accident').selectOption('10106');
     const [mcEndMonth, mcEndDay, mcEndYear] = data["Last Date of MC"].split('/');
     await calendarPage.selectDateMCEndDate(mcEndYear, mcEndMonth, mcEndDay);
   }
-  
+
   await medicalCertificatePage.submitButton().click();
 
   const wagesInfoPage = new WagesInfoPage(page1);
   await wagesInfoPage.clickWagesInfoButton();
-  
+
   await page1.getByLabel('Is Wages Paid on the Day of').selectOption('Yes');
 
-await page1.getByRole('button', { name: 'Preferred SOCSO Office' }).click();
-await page1.getByLabel('State*').selectOption('200710');
-await page1.getByLabel('SOCSO Office*').selectOption('200402');
+  await page1.getByRole('button', { name: 'Preferred SOCSO Office' }).click();
+  await page1.getByLabel('State*').selectOption('200710');
+  await page1.getByLabel('SOCSO Office*').selectOption('200402');
 
 
- // Update SOCSO office section to use Excel data if available
+  // Update SOCSO office section to use Excel data if available
   // const preferredSOCSOOfficePage = new PreferredSOCSOOfficePage(page1);
   // await preferredSOCSOOfficePage.clickPreferredSOCSOOfficeButton();
   // await preferredSOCSOOfficePage.selectSOCSOState('200710'); // Default state code
   // await preferredSOCSOOfficePage.selectSOCSOOffice('200402'); // Default office code
-//   if (data["Preferred SOCSO OfficeState*"]) {
-//    // await preferredSOCSOOfficePage.selectSOCSOState(data["Preferred SOCSO OfficeState*"]);
-//     await preferredSOCSOOfficePage.selectSOCSOState('200710'); // Default state code
-//   } else {
-// //701 kl
+  //   if (data["Preferred SOCSO OfficeState*"]) {
+  //    // await preferredSOCSOOfficePage.selectSOCSOState(data["Preferred SOCSO OfficeState*"]);
+  //     await preferredSOCSOOfficePage.selectSOCSOState('200710'); // Default state code
+  //   } else {
+  // //701 kl
 
-//     await preferredSOCSOOfficePage.selectSOCSOState('200710'); // Default state code
-//   }
-//   if (data["Preferred SOCSO SOCSO Office*"]) {
-//    // await preferredSOCSOOfficePage.selectSOCSOOffice(data["Preferred SOCSO SOCSO Office*"]);
-//     await preferredSOCSOOfficePage.selectSOCSOOffice('200402'); // Default office code
-//   } else {
-//     //419 -kl
-    
-//     await preferredSOCSOOfficePage.selectSOCSOOffice('200402'); // Default office code
-//   }
+  //     await preferredSOCSOOfficePage.selectSOCSOState('200710'); // Default state code
+  //   }
+  //   if (data["Preferred SOCSO SOCSO Office*"]) {
+  //    // await preferredSOCSOOfficePage.selectSOCSOOffice(data["Preferred SOCSO SOCSO Office*"]);
+  //     await preferredSOCSOOfficePage.selectSOCSOOffice('200402'); // Default office code
+  //   } else {
+  //     //419 -kl
+
+  //     await preferredSOCSOOfficePage.selectSOCSOOffice('200402'); // Default office code
+  //   }
 
   // Update certification section to use Excel data
   const certificationByEmployerPage = new CertificationByEmployerPage(page1);
@@ -632,7 +612,49 @@ await page1.getByLabel('SOCSO Office*').selectOption('200402');
     if (data["Bank Account No."]) {
       await bankInformationPage.fillBankAccountNo(data["Bank Account No."]);
     }
-  } else {
+    await bankInformationPage.selectBankAccountType(data["Bank Account Type"]);
+   
+  } else if (data["Bank Location"] === "Overseas") {
+    await page1.getByLabel('Account No.*', { exact: true }).selectOption('1');
+
+
+    await page1.getByLabel('Bank Location*').selectOption('204102');
+
+    // await page1.getByRole('textbox', { name: 'Bank Name*' }).fill('Bank Rakyat Indonesia');
+    await page1.getByRole('textbox', { name: 'Bank Name*' }).fill(data["Bank Name"]);
+
+    // await page1.getByRole('textbox', { name: 'Bank Account No./IBAN No.*' }).fill('1412535254');
+    await page1.getByRole('textbox', { name: 'Bank Account No./IBAN No.*' }).fill(data["Bank Account No."]);
+
+    const country = data["Country"].trim().toUpperCase();
+    console.log('Looking up:', country);
+    console.log('Found in mappings:', countryBankMappings[country]);
+
+
+
+          // await page1.getByLabel('Country*', { exact: true }).selectOption('2126099');
+    const countryCode = countryBankMappings[country];
+    if (countryCode) {
+      console.log('Using country code:', countryCode);
+      await page1.getByLabel('Country*', { exact: true }).selectOption(countryCode);
+    } else {
+      console.log('Country not found in mappings:', country);
+      console.log('Falling back to default code 201059');
+
+      await page1.getByLabel('Country*', { exact: true }).selectOption('2126099');
+    } 
+
+    await page1.getByLabel('Is Malaysia Citizen?*').selectOption('Yes');
+
+    // await page1.getByRole('textbox', { name: 'Bank Swift Code*' }).fill('BRINIDJAXXX');
+    await page1.getByRole('textbox', { name: 'Bank Swift Code*' }).fill(data["Bank Swift Code"]);
+
+    // await page1.getByRole('textbox', { name: 'Bank Address*' }).fill('BRI I BUILDING, JALAN JENDERAL SUDIRMAN 44-46');
+    await page1.getByRole('textbox', { name: 'Bank Address*' }).fill(data["Bank Adress"]);
+
+  
+  
+  }else {
     // Keep existing bankruptcy flow since it's a special case
     await bankInformationPage.selectAccountNo('No');
     await page1.getByLabel(constants.reasonLabel).selectOption('207301');
@@ -685,7 +707,7 @@ await page1.getByLabel('SOCSO Office*').selectOption('200402');
 }
 
 test.only('Prereg PK NTA EFT MC - Test Case 1', async ({ page }) => {
-  const data = await getTestData(57); // Use the first row of data
+  const data = await getTestData(41); // Use the first row of data
   await runTest(page, data);
 });
 
