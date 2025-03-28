@@ -44,10 +44,10 @@ export class PreferredSOCSOOfficePage {
    * @param {string} option - The value of the option to select
    */
   async selectSOCSOOffice(option) {
-    await this.socsoOfficeSelect.selectOption("200419");
+    await this.socsoOfficeSelect.selectOption(option);
   }
 
   async selectSOCSOState(option) {
-    await this.socsoOfficeState.selectOption("200701");
+    await this.socsoOfficeState.selectOption(option);
   }
 }

@@ -3,6 +3,8 @@ interface CityMapping {
 }
 
 export const cityMappings: CityMapping = {
+
+  'KUALA LUMPUR': '201460',
   'AMPANG': '201372',
   'BANDAR BARU BANGI': '201065',
   'BANDAR PUNCAK ALAM': '201339',

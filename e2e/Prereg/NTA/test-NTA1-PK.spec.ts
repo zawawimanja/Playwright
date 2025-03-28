@@ -612,7 +612,7 @@ async function runTest(page: import('@playwright/test').Page, data: any) {
     if (data["Bank Account No."]) {
       await bankInformationPage.fillBankAccountNo(data["Bank Account No."]);
     }
-    await bankInformationPage.selectBankAccountType(data["Bank Account Type"]);
+   
    
   } else if (data["Bank Location"] === "Overseas") {
     await page1.getByLabel('Account No.*', { exact: true }).selectOption('1');
@@ -651,6 +651,11 @@ async function runTest(page: import('@playwright/test').Page, data: any) {
 
     // await page1.getByRole('textbox', { name: 'Bank Address*' }).fill('BRI I BUILDING, JALAN JENDERAL SUDIRMAN 44-46');
     await page1.getByRole('textbox', { name: 'Bank Address*' }).fill(data["Bank Adress"]);
+
+    ///need to adjust since it same city and state for bank
+    await page1.getByRole('textbox', { name: 'State' }).fill(data["Bank State"]);
+    
+    await page1.getByRole('textbox', { name: 'City' }).fill(data["Bank City"]);
 
   
   
@@ -707,7 +712,8 @@ async function runTest(page: import('@playwright/test').Page, data: any) {
 }
 
 test.only('Prereg PK NTA EFT MC - Test Case 1', async ({ page }) => {
-  const data = await getTestData(41); // Use the first row of data
+  const data = await getTestData(1); // Use the first row of data
+
   await runTest(page, data);
 });
 

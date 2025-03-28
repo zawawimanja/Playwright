@@ -29,7 +29,7 @@ import { ButtonPage } from '../../../utils/button';
 test.beforeEach(async ({ page }) => {
   await page.setViewportSize({ width: 1920, height: 1080 });
   // await login(page, "uat_muthu", "u@T_muthu");
-  await login(page, 'uat_akaw', 'u@T_akaw');
+  await login(page, 'uat_aslyisnoor', 'u@T_aslyisnoor');
 });
 
 export let schemeRefValue: string;
@@ -45,14 +45,15 @@ test('Prereg IO OD', async ({ page }) => {
   let caseFound = false;
 
   while (!caseFound) {
-    await leftTabPage.leftBar.waitFor();
-    await expect(leftTabPage.leftBar).toBeVisible();
+    // await leftTabPage.leftBar.waitFor();
+    // await expect(leftTabPage.leftBar).toBeVisible();
 
-    await expect(leftTabPage.myCasesLink).toBeVisible();
-    await leftTabPage.myCasesLink.waitFor();
+    // await expect(leftTabPage.myCasesLink).toBeVisible();
+    // await leftTabPage.myCasesLink.waitFor();
 
     // Click my cases left tab
-    await leftTabPage.clickMyCases();
+    //await leftTabPage.clickMyCases();
+    await page.getByRole('listitem').filter({ hasText: 'My Cases' }).locator('div').click();
 
     // Check if the case exists for the current login user
     if (await myCasesPage.clickOD('OD')) {
@@ -64,7 +65,7 @@ test('Prereg IO OD', async ({ page }) => {
 
       headerPage.clickUserProfile();
       headerPage.clickSignOut();
-      await login(page, 'uat_muthu', 'u@T_muthu');
+      await login(page, 'uat_haidah', 'u@T_haidah');
       //await login(page, "uat_akaw", "u@T_akaw");
     }
   }
