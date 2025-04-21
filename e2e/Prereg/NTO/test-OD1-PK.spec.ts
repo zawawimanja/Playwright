@@ -46,7 +46,7 @@ export let schemeRefValue: string;
 
 test.beforeEach(async ({ page }) => {
   await page.setViewportSize({ width: 1920, height: 1080 });
-  await login(page, 'uat_selamat', 'u@T_selamat');
+  await login(page, 'afzan.pks', 'u@T_afzan');
 });
 
 
@@ -504,6 +504,8 @@ async function runTest(page: import('@playwright/test').Page, data: any) {
 
   await insuredPersonInfoPage.selectNationality('201749');
   await expect(insuredPersonInfoPage.NationalitySelect).toHaveValue('201749');
+
+  
 
   const employerInfoPage = new EmployerInfoPage(page1);
   await employerInfoPage.clickEmployerInfoButton();

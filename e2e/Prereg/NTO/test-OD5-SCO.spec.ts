@@ -29,6 +29,9 @@ import { ButtonPage } from "../../../utils/button";
 
 test.beforeEach(async ({ page }) => {
   await page.setViewportSize({ width: 1920, height: 1080 });
+  // await login(page, "uat_faliza", "u@T_faliza");
+  await login(page, 'atilia.pks', 'u@T_atilia');
+  await login(page, "nazira.pks", "u@T_nazira");
   await login(page, "uat_faliza", "u@T_faliza");
 });
 
@@ -70,7 +73,9 @@ test("Prereg SCO OD", async ({ page }) => {
 
       headerPage.clickUserProfile();
       headerPage.clickSignOut();
-      await login(page, "uat_k.gowri", "u@T_k.gowri");
+     // await login(page, "uat_k.gowri", "u@T_k.gowri");
+     await login(page, 'nazira.pks', 'u@T_nazira');
+     await login(page, "atilia.pks", "u@T_atilia");
     }
   }
 

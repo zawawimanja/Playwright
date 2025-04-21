@@ -26,11 +26,12 @@ import { SubmitPage } from '../../../pages/submit';
 import { MyCasesPage } from '../../../pages/mycases';
 import { HeaderPage } from '../../../pages/header';
 import { ButtonPage } from '../../../utils/button';
+import { SchemeRefPage } from '../../../pages/scheme_ref_page';
 
 test.beforeEach(async ({ page }) => {
   await page.setViewportSize({ width: 1920, height: 1080 });
- // await login(page, 'atilia.pks', 'u@T_atilia');
-  await login(page, "nazira.pks", "u@T_nazira");
+  await login(page, 'atilia.pks', 'u@T_atilia');
+ // await login(page, "nazira.pks", "u@T_nazira");
    //await login(page, "uat_faliza", "u@T_faliza");
 });
 
@@ -69,8 +70,8 @@ test('Prereg SCO NTA', async ({ page }) => {
 
       headerPage.clickUserProfile();
       headerPage.clickSignOut();
-     // await login(page, 'nazira.pks', 'u@T_nazira');
-     await login(page, "atilia.pks", "u@T_atilia");
+     await login(page, 'nazira.pks', 'u@T_nazira');
+    // await login(page, "atilia.pks", "u@T_atilia");
      // await login(page, "uat_k.gowri", "u@T_k.gowri");
     }
   }
@@ -179,9 +180,11 @@ test('Prereg SCO NTA', async ({ page }) => {
   const page3Promise = page2.waitForEvent('popup');
   const page3 = await page3Promise;
 
-  // Wait for the element to be present
-  await page3.getByLabel('Scheme Ref No:').waitFor();
+  const schemeRefPage = new SchemeRefPage(page3);
+
+  // Wait for the Scheme Reference Number field
+  await schemeRefPage.waitForSchemeRefNo();
 
   // Perform other actions as needed
-  await page3.getByRole('button', { name: 'Close' }).click();
+  await schemeRefPage.clickCloseButton();
 });
