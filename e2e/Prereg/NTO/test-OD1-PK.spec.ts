@@ -306,14 +306,10 @@ async function runTest(page: import('@playwright/test').Page, data: any) {
   ).toBeVisible();
 
   await page.waitForTimeout(5000);
-  // await leftTabPage.leftBar.waitFor();
-  // await expect(leftTabPage.leftBar).toBeVisible();
 
-  await expect(leftTabPage.preregistrationLink).toBeVisible();
-  // When click on the PreRegisteration tab
-  //leftTabPage.clickPreregistration();
-  await page.locator('#sidebarMenu div').filter({ hasText: 'Pre-Registration' }).first().click();
-  await page.waitForLoadState('networkidle');
+  leftTabPage.clickPreregistration();
+ 
+    await page.waitForLoadState('networkidle');
 
   await expect(
     page
@@ -403,12 +399,13 @@ async function runTest(page: import('@playwright/test').Page, data: any) {
 
 
   // Click the "Submit" button to proceed to
-  await preregPage.clickClaimFormSubmissionByListButton();
+ // await preregPage.clickClaimFormSubmissionByListButton();
   await preregPage.clickSearchButton();
 
   const pagePromise = page.waitForEvent('popup');
   await page.waitForLoadState('networkidle');
-  await preregPage.clickNextButton();
+
+  await preregPage.clickNewClaimButton();
   const page1 = await pagePromise;
 
   const draftPage = new DraftPage(page1);

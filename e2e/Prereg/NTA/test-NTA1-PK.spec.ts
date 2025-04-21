@@ -385,7 +385,7 @@ async function runTest(page: import('@playwright/test').Page, data: any) {
 
   const pagePromise = page.waitForEvent('popup');
   await page.waitForLoadState('networkidle');
-  //await preregPage.clickNextButton();
+
   await preregPage.clickNewClaimButton();
   const page1 = await pagePromise;
 
