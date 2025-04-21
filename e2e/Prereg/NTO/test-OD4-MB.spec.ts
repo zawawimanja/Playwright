@@ -26,9 +26,9 @@ import { HeaderPage } from '../../../pages/header';
 
 test.beforeEach(async ({ page }) => {
   await page.setViewportSize({ width: 1920, height: 1080 });
-  // await login(page, "hilmi.pks", "u@T_hilmi");
+   await login(page, "hilmi.pks", "u@T_hilmi");
  //await login(page, 'uat_ismail',	'u@T_ismail');
-   await login(page, 'uat_norhaniza',	'u@T_norhaniza');
+   //await login(page, 'uat_norhaniza',	'u@T_norhaniza');
 
 
 });
@@ -69,8 +69,8 @@ test('Prereg MB OD', async ({ page }) => {
 
       headerPage.clickUserProfile();
       headerPage.clickSignOut();
-      // await login(page, "aslam.pks", "u@T_aslam");
-      await login(page, 'uat_aminah', 'u@T_aminah');
+       await login(page, "aslam.pks", "u@T_aslam");
+     // await login(page, 'uat_aminah', 'u@T_aminah');
     }
   }
 
