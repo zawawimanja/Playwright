@@ -20,7 +20,7 @@ import * as path from 'path';
 
 test.beforeEach(async ({ page }) => {
   await page.setViewportSize({ width: 1920, height: 1080 });
-  await login(page, 'afzan.pks', 'u@T_afzan');
+  await login(page, 'uat_selamat', 'u@T_selamat');
 });
 
 export let schemeRefValue: string;
@@ -38,23 +38,29 @@ test('Prereg PK RPO', async ({ page }) => {
   const testData = await readCSV(csvFilePath);
   const data = testData[0]; // Use the first row of data
 
-  await leftTabPage.leftBar.waitFor();
-  await expect(leftTabPage.leftBar).toBeVisible();
+  // await leftTabPage.leftBar.waitFor();
+  // await expect(leftTabPage.leftBar).toBeVisible();
 
-  leftTabPage.clickCreateRevision();
+  //leftTabPage.clickCreateRevision();
+
+  await page.getByRole('listitem').filter({ hasText: 'Create Revision' }).locator('div').click();
 
   await preregPage.selectRevisionType('HUK Payment Option');
 
   await preregPage.setSearchByOption('IC');
 
-  await preregPage.enterIdentificationNo('980910025925');
+  await preregPage.enterIdentificationNo('761226075563');
 
   await preregPage.clickSearchButton();
   await preregPage.clickCreateRevisionButton();
 
-  const pagePromise = page.waitForEvent('popup');
+  const page1Promise = page.waitForEvent('popup');
+  await page.locator('iframe[name="baristaPageOut"]').contentFrame().getByRole('button', { name: 'Create Revision' }).click();
+  const page1 = await page1Promise;
 
-  const page1 = await pagePromise;
+  // const pagePromise = page.waitForEvent('popup');
+
+  // const page1 = await pagePromise;
 
   const draftPage = new DraftPage(page);
 
@@ -69,9 +75,9 @@ test('Prereg PK RPO', async ({ page }) => {
   await expect(remarksPage.remarksButton).toBeVisible();
   await expect(remarksPage.sectionTabs).toContainText('Remarks');
   await remarksPage.remarksButton.waitFor();
-  await remarksPage.addRemarksButton.click();
-  await remarksPage.textbox.fill('test');
-  await remarksPage.saveRemarksButton.click();
+  // await remarksPage.addRemarksButton.click();
+  // await remarksPage.textbox.fill('test');
+  // await remarksPage.saveRemarksButton.click();
 
   //add Revision Information
   await page1.getByRole('button', { name: 'New Registration' }).waitFor();
@@ -88,12 +94,12 @@ test('Prereg PK RPO', async ({ page }) => {
   //periodical
   await page1.getByLabel('Payment Option*').selectOption('92003');
 
-  //calendar.selectDateInsuredPersonPage("2024", "7", "7");
 
   await page1.getByLabel('Payment Option Received Date*').click();
-  await page1.getByRole('combobox').nth(2).selectOption('2024');
-  await page1.getByRole('combobox').nth(1).selectOption('8');
-  await page1.getByRole('cell', { name: '18' }).click();
+await page1.getByRole('textbox', { name: 'Payment Option Received Date*' }).click();
+await page1.getByRole('combobox').nth(2).selectOption('2019');
+await page1.getByRole('combobox').nth(1).selectOption('9');
+await page1.getByRole('link', { name: '7', exact: true }).click();
 
   const supportingDocumentPage = new SupportingDocumentPage(page1);
   await supportingDocumentPage.clickSupportingDocumentButton();

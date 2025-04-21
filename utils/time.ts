@@ -11,9 +11,8 @@ export class TimePage {
     return this.page.frameLocator('#baristaPageOut');
   }
 
-  private get timeComboBox() {
-    return this.baristaPageOut.locator('dd').filter({ hasText: '12 am01 am02 am03 am04 am05' }).getByRole('combobox');
-  }
+
+  
 
   async selectTimeOption(hour: string,minutes: string,second: string,) {
     await this.timeComboBox.selectOption(hour);
@@ -22,12 +21,17 @@ export class TimePage {
 
   }
 
+  
+  private get timeComboBox() {
+    return this.baristaPageOut.locator('dd').filter({ hasText: '12 am01 am02 am03 am04 am05' }).getByRole('combobox');
+  }
+
   private get timeComboBox2() {
-    return this.baristaPageOut.getByRole('combobox').nth(3);
+    return this.baristaPageOut.locator('#ui-datepicker-div').getByRole('combobox').nth(1);
   }
 
   private get timeComboBox3() {
-    return this.baristaPageOut.getByRole('combobox').nth(4);
+    return this.baristaPageOut.locator('#ui-datepicker-div').getByRole('combobox').nth(2);
   }
 
     async selectTimeOption2(option: string) {

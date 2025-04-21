@@ -44,6 +44,8 @@ export class WagesInfoPage {
     await this.acceptwagesInfoOD.nth(i).selectOption(text);
   }
 
+  
+
   async selectAllEnabledWagesOptions(text) {
     const count = await this.acceptwagesInfo.count(); // Get the number of dropdowns
     console.log(`Dropdown count: ${count}`);

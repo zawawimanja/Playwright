@@ -139,6 +139,16 @@ export class PreregistrationPage {
 
   async clickSearchButton() {
     await this.searchButton.click();
+
+  }
+
+  async clickNewClaimButton() {
+
+
+    await this.page.locator('iframe[name="baristaPageOut"]').contentFrame().getByRole('button', { name: 'New Claim' }).click();
+
+
+
   }
 
   async clickCreateRevisionButton() {

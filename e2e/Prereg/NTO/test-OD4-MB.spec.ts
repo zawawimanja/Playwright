@@ -27,7 +27,10 @@ import { HeaderPage } from '../../../pages/header';
 test.beforeEach(async ({ page }) => {
   await page.setViewportSize({ width: 1920, height: 1080 });
   // await login(page, "hilmi.pks", "u@T_hilmi");
-  await login(page, 'aslam.pks', 'u@T_aslam');
+ //await login(page, 'uat_ismail',	'u@T_ismail');
+   await login(page, 'uat_norhaniza',	'u@T_norhaniza');
+
+
 });
 
 export let schemeRefValue: string;
@@ -44,14 +47,17 @@ test('Prereg MB OD', async ({ page }) => {
   let caseFound = false;
 
   while (!caseFound) {
-    await leftTabPage.leftBar.waitFor();
-    await expect(leftTabPage.leftBar).toBeVisible();
+    // await leftTabPage.leftBar.waitFor();
+    // await expect(leftTabPage.leftBar).toBeVisible();
 
-    await expect(leftTabPage.myCasesLink).toBeVisible();
-    await leftTabPage.myCasesLink.waitFor();
+    // await expect(leftTabPage.myCasesLink).toBeVisible();
+    // await leftTabPage.myCasesLink.waitFor();
 
     // Click my cases left tab
-    await leftTabPage.clickMyCases();
+    // await leftTabPage.clickMyCases();
+    await page.getByRole('listitem').filter({ hasText: 'My Cases' }).locator('div').click();
+
+
 
     // Check if the case exists for the current login user
     if (await myCasesPage.clickOD('MB')) {
@@ -64,7 +70,7 @@ test('Prereg MB OD', async ({ page }) => {
       headerPage.clickUserProfile();
       headerPage.clickSignOut();
       // await login(page, "aslam.pks", "u@T_aslam");
-      await login(page, 'hilmi.pks', 'u@T_hilmi');
+      await login(page, 'uat_aminah', 'u@T_aminah');
     }
   }
 
@@ -108,7 +114,7 @@ test('Prereg MB OD', async ({ page }) => {
 
   //session date
   calendarPage.clickDate('Session Date');
-  await calendarPage.selectDateInsuredPersonPage('2023', '1', '30');
+  await calendarPage.selectDateInsuredPersonPage('2019', '11', '5');
 
   //disease 5 blank default
   await expect(page3.getByText('Disease is in Schedule')).toBeVisible();
@@ -136,7 +142,7 @@ test('Prereg MB OD', async ({ page }) => {
   await mbSessionPage.selectAssessmentType('Final');
 
   //check additional assesment for session assesment
-  await mbSessionPage.setsessionAssesment('25');
+  await mbSessionPage.setsessionAssesment('5');
   //await expect(mbSessionPage.sessionAssesmentAdditionalAssessment.getByRole("textbox")).toHaveValue("25");
 
   //Get  assessment type value
@@ -154,7 +160,7 @@ test('Prereg MB OD', async ({ page }) => {
   }
 
   // //jd result no default
-  mbSessionPage.selectJDResult('No');
+  mbSessionPage.selectJDResult('Yes');
 
   if (await mbSessionPage.additionalAssesment.isVisible()) {
     value = await mbSessionPage.sessionAssesmentAdditionalAssessment
@@ -167,6 +173,7 @@ test('Prereg MB OD', async ({ page }) => {
   }
   console.log(value + ' value');
 
+  await page3.locator('#ctrlField1028 div').click();
   //els
   if (value === '100') {
     // Perform actions if the value is "100"

@@ -135,7 +135,7 @@ test.only('Prereg PK ILAT MC EFT', async ({ page }) => {
   await insuredPersonInfoPage.clickInsuredPersonInfoButton();
   await insuredPersonInfoPage.noticeAndBenefitClaimFormReceivedDateInput.click();
 
-  await calendarPage.selectDateInsuredPersonPage('2023', '1', '1');
+  await calendarPage.selectDateInsuredPersonPage('2023', '7', '1');
   await insuredPersonInfoPage.fillOccupationILAT('CS');
 
   await insuredPersonInfoPage.fillAddress1('Taman Abadi');
@@ -150,15 +150,19 @@ test.only('Prereg PK ILAT MC EFT', async ({ page }) => {
   await invalidtyInformation.clickInvalidityInformation();
   await invalidtyInformation.selectInsuredPersonEmployment('No');
   await page1.getByLabel('Date of Cessation of').click();
-  await calendarPage.selectDateInsuredPersonPage('2022', '5', '31');
+  await calendarPage.selectDateInsuredPersonPage('2023', '7', '1');
 
   const wagesInfoPage = new WagesInfoPage(page1);
   await wagesInfoPage.clickWagesInfoButton();
 
   const preferredSOCSOOfficePage = new PreferredSOCSOOfficePage(page1);
   await preferredSOCSOOfficePage.clickPreferredSOCSOOfficeButton();
-  preferredSOCSOOfficePage.selectSOCSOState('200701');
-  await preferredSOCSOOfficePage.selectSOCSOOffice('200419');
+  //johor
+  // preferredSOCSOOfficePage.selectSOCSOState('200701');
+  // await preferredSOCSOOfficePage.selectSOCSOOffice('200419');
+
+  preferredSOCSOOfficePage.selectSOCSOState('200714');
+  await preferredSOCSOOfficePage.selectSOCSOOffice('200507');
 
   const bankInformationPage = new BankInformationPage(page1);
   await bankInformationPage.clickBankInformationButton();

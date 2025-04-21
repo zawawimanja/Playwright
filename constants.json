@@ -7,7 +7,8 @@
   "searchInsuredPersonHeading": "Search Insured Person &",
   "searchInsuredPersonText": "Search Insured Person & Employer Registration Status",
   "noticeTypeText": "Notice Type",
-  "remarksText": "Remarks",
+  "remarks": "Remarks",
+  "remarksText": "PK - NTA (SIT Weekly Payment)",
   "insuredPersonInfoText": "Insured Person Information",
   "reasonLabel": "Reason*",
   "schemeRefNoLabel": "Scheme Ref No:",
@@ -30,4 +31,5 @@
   "bankAccountType": "204401",
   "bankBranch": "KL",
   "bankAccountNo": "12345678"
+
 }

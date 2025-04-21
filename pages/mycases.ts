@@ -18,24 +18,35 @@ export class MyCasesPage {
     return this.page.frameLocator('#baristaPageOut');
   }
 
-  async clickAccident(type: string): Promise<boolean> {
+async clickAccident(type: string, isFirstAttempt: boolean = true): Promise<boolean> {
     let locator;
 
-    // Choose the locator based on the type
     switch (type) {
       case 'SCO':
         locator = this.page
-
-          .locator('#baristaPageOut')
-          .contentFrame()
-          .locator('#APWorkCenter')
-          .contentFrame()
-
-          .locator(
-            `//tr[td[a[contains(text(), '${this.casespage.casesCreated}')]]]/td[contains(@title, 'Accident Notice SCO')]`,
-          );
-
-        console.log(`Locator: ${locator}`);
+            .locator('#baristaPageOut')
+            .contentFrame()
+            .locator('#APWorkCenter')
+            .contentFrame()
+            .locator(
+              `//tr[td[a[contains(text(), '${this.casespage.casesCreated}')]]]/td[contains(@title, 'Accident Notice SCO')]`,
+            );
+  
+          console.log(`Locator: ${locator}`);
+         try {
+          await locator.click({ timeout: 5000 });
+          console.log('Case found and clicked.');
+          return true;
+        } catch (error) {
+          if (isFirstAttempt) {
+            console.log('Case not found on the current page. Navigating to the next page.');
+            await this.page.locator('iframe[name="baristaPageOut"]').contentFrame().locator('#APWorkCenter').contentFrame().getByRole('link', { name: '2' }).click();
+            return this.clickAccident(type, false);
+          } else {
+            console.log('Case not found on page 2.');
+            return false;
+          }
+        }
         break;
 
       case 'HUK SCO':
