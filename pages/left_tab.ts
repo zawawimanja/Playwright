@@ -10,11 +10,7 @@ export class LeftTabPage {
   }
 
   async clickPreregistration() {
-    await this.page
-      .locator("div")
-      .filter({ hasText: /^Pre-Registration$/ })
-      .nth(1)
-      .click();
+    await this.page.locator('#sidebarMenu div').filter({ hasText: 'Pre-Registration' }).first().click();
   }
 
   async clickMyCases() {
@@ -50,6 +46,7 @@ export class LeftTabPage {
   }
 
   get myCasesLink() {
+   
     return this.page.getByRole("link", { name: "My Cases" });
   }
 

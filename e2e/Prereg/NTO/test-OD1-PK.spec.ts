@@ -80,15 +80,18 @@ async function getTestData(rowIndex: number) {
 
       switch (header.trim()) {
         // Date fields
-        case 'Accident Date':
         case 'Notice Date':
         case 'First Date of MC':
         case 'Last Date of MC':
         case 'Date of MB':
         case 'Certification By Employer - Date':
           if (typeof value === 'number') {
+            console.log("Converting date (number):", value);
             const date = new Date((value - 25569) * 86400 * 1000);
             data[header.trim()] = `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}`;
+          } else if (typeof value === 'string') {
+            console.log("Date is a string:", value); // ADD THIS LINE
+            data[header.trim()] = value; // Assuming the date string is already in the correct format
           }
           break;
 
@@ -437,12 +440,14 @@ async function runTest(page: import('@playwright/test').Page, data: any) {
 
   await page1.waitForTimeout(5000);
   await insuredPersonInfoPage.noticeAndBenefitClaimFormReceivedDateInput.click();
+  console.log("Notice Date from Excel:", data["Notice Date"]); // ADD THIS LINE
+
 
   if (data["Notice Date"]) {
     const [month, day, year] = data["Notice Date"].split('/').map(String); // Convert to strings
-    await calendarPage.selectDateInsuredPersonPage(year, month, day);
+    await calendarPage.selectDateInsuredPersonPage(year, day, month);
   } else {
-    throw new Error('Accident Date is undefined');
+    throw new Error('Notice Date is undefined');
   }
 
   await page1.getByLabel('Gender*').selectOption('200601');
@@ -665,6 +670,6 @@ async function runTest(page: import('@playwright/test').Page, data: any) {
 
 
 test.only('Prereg PK NTO EFT MC - Test Case 1', async ({ page }) => {
-  const data = await getTestData(39); // Use the first row of data
+  const data = await getTestData(7); // Use the first row of data
   await runTest(page, data);
 });

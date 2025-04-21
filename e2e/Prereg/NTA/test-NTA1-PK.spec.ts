@@ -42,7 +42,8 @@ validateConstants(constants);
 
 test.beforeEach(async ({ page }) => {
   await page.setViewportSize({ width: 1920, height: 1080 });
-  await login(page, 'uat_selamat', 'u@T_selamat');
+ // await login(page, 'uat_selamat', 'u@T_selamat');
+  await login(page, 'afzan.pks', 'u@T_afzan');
 });
 
 export let schemeRefValue: string;
@@ -297,10 +298,8 @@ async function runTest(page: import('@playwright/test').Page, data: any) {
   ).toBeVisible();
 
   await page.waitForLoadState('networkidle');
-  await leftTabPage.leftBar.waitFor();
-  await expect(leftTabPage.leftBar).toBeVisible();
 
-  await expect(leftTabPage.preregistrationLink).toBeVisible();
+  
   leftTabPage.clickPreregistration();
 
   await page.waitForLoadState('networkidle');
@@ -356,7 +355,7 @@ async function runTest(page: import('@playwright/test').Page, data: any) {
   await preregPage.clickAccidentTime();
 
   await timePage.selectTimeOption(
-    "18", "00", "00"
+    "17", "00", "00"
   );
 
 
@@ -386,7 +385,8 @@ async function runTest(page: import('@playwright/test').Page, data: any) {
 
   const pagePromise = page.waitForEvent('popup');
   await page.waitForLoadState('networkidle');
-  await preregPage.clickNextButton();
+  //await preregPage.clickNextButton();
+  await preregPage.clickNewClaimButton();
   const page1 = await pagePromise;
 
   const draftPage = new DraftPage(page1);
@@ -418,6 +418,8 @@ async function runTest(page: import('@playwright/test').Page, data: any) {
   await expect(page1.locator('#sectionTabs')).toContainText(
     constants.insuredPersonInfoText,
   );
+
+  await page1.waitForTimeout(5000);
   await insuredPersonInfoPage.clickInsuredPersonInfoButton();
   await insuredPersonInfoPage.noticeAndBenefitClaimFormReceivedDateInput.click();
 
@@ -511,6 +513,11 @@ async function runTest(page: import('@playwright/test').Page, data: any) {
     await accidentInformationPage.fillAccidentInjury(data["How did the Accident Happened?"]);
   }
 
+  //mode transport
+  await accidentInformationPage.selectModeOfTransport('10301');
+  //cause accident
+  await accidentInformationPage.selectCauseofAccident('10602');
+
   await page1.getByLabel('Is Accident Date a Working').selectOption('1');
 
 
@@ -541,31 +548,12 @@ async function runTest(page: import('@playwright/test').Page, data: any) {
   await page1.getByLabel('Is Wages Paid on the Day of').selectOption('Yes');
 
   await page1.getByRole('button', { name: 'Preferred SOCSO Office' }).click();
-  await page1.getByLabel('State*').selectOption('200710');
-  await page1.getByLabel('SOCSO Office*').selectOption('200402');
+  //selangor
+  // await page1.getByLabel('State*').selectOption('200710');
+  // await page1.getByLabel('SOCSO Office*').selectOption('200402');
 
-
-  // Update SOCSO office section to use Excel data if available
-  // const preferredSOCSOOfficePage = new PreferredSOCSOOfficePage(page1);
-  // await preferredSOCSOOfficePage.clickPreferredSOCSOOfficeButton();
-  // await preferredSOCSOOfficePage.selectSOCSOState('200710'); // Default state code
-  // await preferredSOCSOOfficePage.selectSOCSOOffice('200402'); // Default office code
-  //   if (data["Preferred SOCSO OfficeState*"]) {
-  //    // await preferredSOCSOOfficePage.selectSOCSOState(data["Preferred SOCSO OfficeState*"]);
-  //     await preferredSOCSOOfficePage.selectSOCSOState('200710'); // Default state code
-  //   } else {
-  // //701 kl
-
-  //     await preferredSOCSOOfficePage.selectSOCSOState('200710'); // Default state code
-  //   }
-  //   if (data["Preferred SOCSO SOCSO Office*"]) {
-  //    // await preferredSOCSOOfficePage.selectSOCSOOffice(data["Preferred SOCSO SOCSO Office*"]);
-  //     await preferredSOCSOOfficePage.selectSOCSOOffice('200402'); // Default office code
-  //   } else {
-  //     //419 -kl
-
-  //     await preferredSOCSOOfficePage.selectSOCSOOffice('200402'); // Default office code
-  //   }
+await page1.getByLabel('State*').selectOption('200701');
+await page1.getByLabel('SOCSO Office*').selectOption('200419');
 
   // Update certification section to use Excel data
   const certificationByEmployerPage = new CertificationByEmployerPage(page1);
@@ -586,8 +574,6 @@ async function runTest(page: import('@playwright/test').Page, data: any) {
     await certificationByEmployerPage.calendar.click();
     await calendarPage.selectDateInsuredPersonPage(year, month, day);
   }
-
-
 
   // Update bank information section to use Excel data
   const bankInformationPage = new BankInformationPage(page1);
@@ -629,8 +615,6 @@ async function runTest(page: import('@playwright/test').Page, data: any) {
     const country = data["Country"].trim().toUpperCase();
     console.log('Looking up:', country);
     console.log('Found in mappings:', countryBankMappings[country]);
-
-
 
           // await page1.getByLabel('Country*', { exact: true }).selectOption('2126099');
     const countryCode = countryBankMappings[country];
@@ -712,7 +696,7 @@ async function runTest(page: import('@playwright/test').Page, data: any) {
 }
 
 test.only('Prereg PK NTA EFT MC - Test Case 1', async ({ page }) => {
-  const data = await getTestData(1); // Use the first row of data
+  const data = await getTestData(7); // Use the first row of data
 
   await runTest(page, data);
 });

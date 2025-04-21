@@ -27,8 +27,8 @@ import { HeaderPage } from '../../../pages/header';
 test.beforeEach(async ({ page }) => {
   await page.setViewportSize({ width: 1920, height: 1080 });
   // await login(page, "hilmi.pks", "u@T_hilmi");
- await login(page, 'uat_ismail',	'u@T_ismail');
-  // await login(page, 'uat_norhaniza',	'u@T_norhaniza');
+ //await login(page, 'uat_ismail',	'u@T_ismail');
+   await login(page, 'uat_norhaniza',	'u@T_norhaniza');
 
 
 });
@@ -114,7 +114,7 @@ test('Prereg MB OD', async ({ page }) => {
 
   //session date
   calendarPage.clickDate('Session Date');
-  await calendarPage.selectDateInsuredPersonPage('2019', '3', '5');
+  await calendarPage.selectDateInsuredPersonPage('2019', '11', '5');
 
   //disease 5 blank default
   await expect(page3.getByText('Disease is in Schedule')).toBeVisible();
