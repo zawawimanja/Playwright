@@ -672,7 +672,7 @@ await page1.getByLabel('SOCSO Office*').selectOption('200419');
   await previewSubmissionPage.clickPreviewSubmissionButton();
   await previewSubmissionPage.clickShowPreviewButton();
 
-  //await previewSubmissionPage.clickSubmitButton();
+  await previewSubmissionPage.clickSubmitButton();
 
   const buttonPage = new ButtonPage(page1);
   buttonPage.clickYes();
@@ -705,7 +705,7 @@ await page1.getByLabel('SOCSO Office*').selectOption('200419');
 }
 
 test.only('Prereg PK NTA EFT MC - Test Case 1', async ({ page }) => {
-  const data = await getTestData(9); // Use the first row of data
+  const data = await getTestData(0); // Use the first row of data
 
   await runTest(page, data);
 });

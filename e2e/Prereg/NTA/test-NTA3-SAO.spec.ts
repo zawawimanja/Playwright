@@ -27,8 +27,8 @@ import { HeaderPage } from "../../../pages/header";
 import { ButtonPage } from "../../../utils/button";
 test.beforeEach(async ({ page }) => {
   await page.setViewportSize({ width: 1920, height: 1080 });
- // await login(page, "roliana.pks", "u@T_roliana");
-  await login(page, "uat_ali", "u@T_ali");
+  await login(page, "roliana.pks", "u@T_roliana");
+ // await login(page, "uat_ali", "u@T_ali");
  // await login(page, "uat_sukri", "u@T_sukri");
 });
 
@@ -46,11 +46,7 @@ test("Prereg SAO NTA", async ({ page }) => {
   let caseFound = false;
 
   while (!caseFound) {
-    // await leftTabPage.leftBar.waitFor();
-    // await expect(leftTabPage.leftBar).toBeVisible();
 
-    // await expect(leftTabPage.myCasesLink).toBeVisible();
-    // await leftTabPage.myCasesLink.waitFor();
 
     // // Click my cases left tab
     // await leftTabPage.clickMyCases();
@@ -66,8 +62,8 @@ test("Prereg SAO NTA", async ({ page }) => {
 
       headerPage.clickUserProfile();
       headerPage.clickSignOut();
-     //  await login(page, "uat_ali", "u@T_ali");
-      await login(page, "roliana.pks", "u@T_roliana");
+       await login(page, "uat_ali", "u@T_ali");
+    //  await login(page, "roliana.pks", "u@T_roliana");
       //await login(page, 'uat_redzuan', 'u@T_redzuan');
     }
   }
@@ -159,6 +155,9 @@ test("Prereg SAO NTA", async ({ page }) => {
   await previewSubmissionPage.clickShowPreviewButton();
 
   await previewSubmissionPage.clickSubmitButton();
+  const buttonPage = new ButtonPage(page2);
+  buttonPage.clickYes();
+  // await previewSubmissionPage.clickYesButton();
 
   const page3Promise = page2.waitForEvent("popup");
   const page3 = await page3Promise;
