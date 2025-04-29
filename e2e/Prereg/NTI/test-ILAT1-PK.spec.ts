@@ -21,6 +21,10 @@ import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 import * as fs from 'fs';
 import * as path from 'path';
+import { validateConstants } from '../../../utils/validateConstants';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 test.beforeEach(async ({ page }) => {
   await page.setViewportSize({ width: 1920, height: 1080 });
@@ -28,6 +32,14 @@ test.beforeEach(async ({ page }) => {
 });
 //test
 export let schemeRefValue: string;
+
+// Load constants from JSON file
+const constants = JSON.parse(
+  fs.readFileSync(path.resolve(__dirname, '../../../constants.json'), 'utf-8'),
+);
+
+// Validate constants
+validateConstants(constants);
 
 test.only('Prereg PK ILAT MC EFT', async ({ page }) => {
   const preregPage = new PreregistrationPage(page);
@@ -38,48 +50,68 @@ test.only('Prereg PK ILAT MC EFT', async ({ page }) => {
   const __dirname = dirname(__filename);
   const csvFilePath = path.resolve(__dirname, '../../../testData/testData.csv'); // Path to CSV file
   const testData = await readCSV(csvFilePath);
-  const data = testData[0]; // U
+  const data = testData[1]; // U
   await page.waitForLoadState('networkidle');
 
-  await leftTabPage.leftBar.waitFor();
-  await expect(leftTabPage.leftBar).toBeVisible();
+  await page.waitForLoadState('networkidle');
+  await expect(
+    page.locator('#baristaPageOut').contentFrame().locator('#formPreview'),
+  ).toBeVisible();
 
-  // User Click Pre-Registration
-  await expect(leftTabPage.preregistrationLink).toBeVisible();
+  await expect(
+    page
+      .locator('#baristaPageOut')
+      .contentFrame()
+      .getByRole('heading', { name: constants.homePageHeading }),
+  ).toBeVisible();
+  await expect(
+    page.locator('#baristaPageOut').contentFrame().locator('#previewPanel'),
+  ).toContainText(constants.homePageText);
+
+  await expect(
+    page
+      .locator('#baristaPageOut')
+      .contentFrame()
+      .getByRole('img', { name: constants.socsoLogoAltText }),
+  ).toBeVisible();
+
+  await page.waitForLoadState('networkidle');
+
+  
   leftTabPage.clickPreregistration();
 
-  await expect(
-    page
-      .locator('#baristaPageOut')
-      .contentFrame()
-      .getByRole('heading', { name: 'Pre-Registration' }),
-  ).toBeVisible();
-  await expect(
-    page.locator('#baristaPageOut').contentFrame().locator('h2'),
-  ).toContainText('Pre-Registration');
+   await page.waitForLoadState('networkidle');
+    await expect(
+      page
+        .locator('#baristaPageOut')
+        .contentFrame()
+        .getByRole('heading', { name: constants.preRegistrationHeading }),
+    ).toBeVisible();
+    await expect(
+      page.locator('#baristaPageOut').contentFrame().locator('h2'),
+    ).toContainText(constants.preRegistrationText);
+  
+    await expect(
+      page
+        .locator('#baristaPageOut')
+        .contentFrame()
+        .getByRole('heading', { name: constants.searchInsuredPersonHeading }),
+    ).toBeVisible();
+    await expect(
+      page.locator('#baristaPageOut').contentFrame().locator('#Heading31'),
+    ).toContainText(constants.searchInsuredPersonText);
+  
+    await expect(
+      page
+        .locator('#baristaPageOut')
+        .contentFrame()
+        .locator('#ctrlField596')
+        .getByText(constants.noticeTypeText),
+    ).toBeVisible();
+    await expect(
+      page.locator('#baristaPageOut').contentFrame().locator('#ctrlField596'),
+    ).toContainText(constants.noticeTypeText);
 
-  await expect(
-    page
-      .locator('#baristaPageOut')
-      .contentFrame()
-      .getByRole('heading', { name: 'Search Insured Person &' }),
-  ).toBeVisible();
-  await expect(
-    page.locator('#baristaPageOut').contentFrame().locator('#Heading31'),
-  ).toContainText('Search Insured Person & Employer Registration Status');
-
-  await expect(
-    page
-      .locator('#baristaPageOut')
-      .contentFrame()
-      .locator('#ctrlField596')
-      .getByText('Notice Type'),
-  ).toBeVisible();
-  await expect(
-    page.locator('#baristaPageOut').contentFrame().locator('#ctrlField596'),
-  ).toContainText('Notice Type');
-
-  await page.waitForLoadState('networkidle');
 
   await preregPage.noticeTypePreRegSelect.waitFor({ state: 'visible' });
   await preregPage.selectNoticeTypePreRegOption('ILAT');
@@ -111,10 +143,13 @@ test.only('Prereg PK ILAT MC EFT', async ({ page }) => {
     data.noticeAndBenefitClaimForm,
   );
 
-  await preregPage.clickClaimFormSubmissionByListButton();
+  // Click search button
   await preregPage.clickSearchButton();
+
+
   const pagePromise = page.waitForEvent('popup');
-  await preregPage.clickNextButton();
+  await preregPage.clickNewClaimButton();
+
   const page1 = await pagePromise;
   await page1.waitForLoadState('networkidle');
   const draftPage = new DraftPage(page1);
@@ -158,11 +193,11 @@ test.only('Prereg PK ILAT MC EFT', async ({ page }) => {
   const preferredSOCSOOfficePage = new PreferredSOCSOOfficePage(page1);
   await preferredSOCSOOfficePage.clickPreferredSOCSOOfficeButton();
   //johor
-  // preferredSOCSOOfficePage.selectSOCSOState('200701');
-  // await preferredSOCSOOfficePage.selectSOCSOOffice('200419');
+  preferredSOCSOOfficePage.selectSOCSOState('200701');
+  await preferredSOCSOOfficePage.selectSOCSOOffice('200419');
 
-  preferredSOCSOOfficePage.selectSOCSOState('200714');
-  await preferredSOCSOOfficePage.selectSOCSOOffice('200507');
+  // preferredSOCSOOfficePage.selectSOCSOState('200714');
+  // await preferredSOCSOOfficePage.selectSOCSOOffice('200507');
 
   const bankInformationPage = new BankInformationPage(page1);
   await bankInformationPage.clickBankInformationButton();

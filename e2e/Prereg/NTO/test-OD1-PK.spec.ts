@@ -271,14 +271,8 @@ async function getTestData(rowIndex: number) {
   console.log('Final City value:', data['City']);
   console.log('City in data object:', Object.keys(data).includes('City'));
 
-
-
   return data;
 }
-
-
-
-
 
 async function runTest(page: import('@playwright/test').Page, data: any) {
   const preregPage = new PreregistrationPage(page);
