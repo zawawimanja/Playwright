@@ -47,8 +47,7 @@ async clickAccident(type: string, isFirstAttempt: boolean = true): Promise<boole
             return false;
           }
         }
-        break;
-
+        
       case 'HUK SCO':
         locator = this.page
           .frameLocator('#baristaPageOut')
@@ -308,25 +307,39 @@ async clickAccident(type: string, isFirstAttempt: boolean = true): Promise<boole
     }
   }
 
-  async clickILAT(type: string): Promise<boolean> {
+  async clickILAT(type: string, isFirstAttempt: boolean = true): Promise<boolean> {
     let locator;
 
     // Choose the locator based on the type
     switch (type) {
-      case 'SCO':
+ 
+
+        case 'SCO':
         locator = this.page
-
-          .locator('#baristaPageOut')
-          .contentFrame()
-          .locator('#APWorkCenter')
-          .contentFrame()
-
-          .locator(
-            `//tr[td[a[contains(text(), '${this.casespage.casesCreated}')]]]/td[contains(@title, 'SCO IO Form')]`,
-          );
-
-        console.log(`Locator: ${locator}`);
-        break;
+            .locator('#baristaPageOut')
+            .contentFrame()
+            .locator('#APWorkCenter')
+            .contentFrame()
+            .locator(
+              `//tr[td[a[contains(text(), '${this.casespage.casesCreated}')]]]/td[contains(@title, 'Invalidity Notice SCO IO')]`,
+            );
+  
+          console.log(`Locator: ${locator}`);
+         try {
+          await locator.click({ timeout: 5000 });
+          console.log('Case found and clicked.');
+          return true;
+        } catch (error) {
+          if (isFirstAttempt) {
+            console.log('Case not found on the current page. Navigating to the next page.');
+            await this.page.locator('iframe[name="baristaPageOut"]').contentFrame().locator('#APWorkCenter').contentFrame().getByRole('link', { name: '2' }).click();
+            return this.clickILAT(type, false);
+          } else {
+            console.log('Case not found on page 2.');
+            return false;
+          }
+        }
+        
 
       case 'SAO':
         locator = this.page
@@ -352,7 +365,7 @@ async clickAccident(type: string, isFirstAttempt: boolean = true): Promise<boole
           .contentFrame()
 
           .locator(
-            `//tr[td[a[contains(text(), '${this.casespage.casesCreated}')]]]/td[contains(@title, 'Invalidity Notice SAO')]`,
+            `//tr[td[a[contains(text(), '${this.casespage.casesCreated}')]]]/td[contains(@title, 'Invalidity SAO')]`,
           );
 
         console.log(`Locator: ${locator}`);

@@ -28,8 +28,8 @@ import { ButtonPage } from '../../../utils/button';
 
 test.beforeEach(async ({ page }) => {
   await page.setViewportSize({ width: 1920, height: 1080 });
-  // await login(page, "uat_muthu", "u@T_muthu");
-  await login(page, 'uat_aslyisnoor', 'u@T_aslyisnoor');
+  await login(page, "uat_muthu", "u@T_muthu");
+  // await login(page, 'uat_aslyisnoor', 'u@T_aslyisnoor');
 });
 
 export let schemeRefValue: string;
@@ -65,8 +65,8 @@ test('Prereg IO OD', async ({ page }) => {
 
       headerPage.clickUserProfile();
       headerPage.clickSignOut();
-      await login(page, 'uat_haidah', 'u@T_haidah');
-      //await login(page, "uat_akaw", "u@T_akaw");
+      // await login(page, 'uat_haidah', 'u@T_haidah');
+      await login(page, "uat_akaw", "u@T_akaw");
     }
   }
 

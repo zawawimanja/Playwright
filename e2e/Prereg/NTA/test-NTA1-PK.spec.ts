@@ -385,7 +385,7 @@ async function runTest(page: import('@playwright/test').Page, data: any) {
 
   const pagePromise = page.waitForEvent('popup');
   await page.waitForLoadState('networkidle');
-  //await preregPage.clickNextButton();
+
   await preregPage.clickNewClaimButton();
   const page1 = await pagePromise;
 
@@ -544,8 +544,10 @@ async function runTest(page: import('@playwright/test').Page, data: any) {
 
   const wagesInfoPage = new WagesInfoPage(page1);
   await wagesInfoPage.clickWagesInfoButton();
+  
 
   await page1.getByLabel('Is Wages Paid on the Day of').selectOption('Yes');
+
 
   await page1.getByRole('button', { name: 'Preferred SOCSO Office' }).click();
   //selangor
@@ -591,6 +593,7 @@ await page1.getByLabel('SOCSO Office*').selectOption('200419');
     }
     if (data["Bank Account Type"]) {
       await bankInformationPage.selectBankAccountType(data["Bank Account Type"]);
+    
     }
     if (data["Bank Branch*"]) {
       await bankInformationPage.fillBankBranch(data["Bank Branch*"]);
@@ -650,7 +653,13 @@ await page1.getByLabel('SOCSO Office*').selectOption('200419');
     await page1.getByLabel('Insolvency Search').selectOption('1');
     await page1.getByLabel('Insolvency State').selectOption('200701');
     await page1.getByLabel('Insolvency Branch').selectOption('806005');
-  }
+
+    // Residing Overseas
+    await page1.getByLabel('Reason*').selectOption('207302'); 
+    // Permanent Representative
+    await page1.getByLabel('Reason*').selectOption('207303'); 
+
+      }
 
   const confirmationOfInsuredPage = new ConfirmationOfInsuredPage(page1);
   await confirmationOfInsuredPage.clickConfirmationOfInsuredButton();
@@ -696,8 +705,11 @@ await page1.getByLabel('SOCSO Office*').selectOption('200419');
 }
 
 test.only('Prereg PK NTA EFT MC - Test Case 1', async ({ page }) => {
-  const data = await getTestData(7); // Use the first row of data
-
+  // Read current row from counter
+  const counterPath = path.resolve(__dirname, 'counter.json');
+  const counter = JSON.parse(fs.readFileSync(counterPath, 'utf-8'));
+  
+  const data = await getTestData(counter.currentRow); // Use counter value instead of hard-coded 1
   await runTest(page, data);
 });
 

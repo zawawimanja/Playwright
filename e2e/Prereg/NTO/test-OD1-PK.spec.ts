@@ -46,7 +46,7 @@ export let schemeRefValue: string;
 
 test.beforeEach(async ({ page }) => {
   await page.setViewportSize({ width: 1920, height: 1080 });
-  await login(page, 'uat_selamat', 'u@T_selamat');
+  await login(page, 'afzan.pks', 'u@T_afzan');
 });
 
 
@@ -271,14 +271,8 @@ async function getTestData(rowIndex: number) {
   console.log('Final City value:', data['City']);
   console.log('City in data object:', Object.keys(data).includes('City'));
 
-
-
   return data;
 }
-
-
-
-
 
 async function runTest(page: import('@playwright/test').Page, data: any) {
   const preregPage = new PreregistrationPage(page);
@@ -306,14 +300,10 @@ async function runTest(page: import('@playwright/test').Page, data: any) {
   ).toBeVisible();
 
   await page.waitForTimeout(5000);
-  // await leftTabPage.leftBar.waitFor();
-  // await expect(leftTabPage.leftBar).toBeVisible();
 
-  await expect(leftTabPage.preregistrationLink).toBeVisible();
-  // When click on the PreRegisteration tab
-  //leftTabPage.clickPreregistration();
-  await page.locator('#sidebarMenu div').filter({ hasText: 'Pre-Registration' }).first().click();
-  await page.waitForLoadState('networkidle');
+  leftTabPage.clickPreregistration();
+ 
+    await page.waitForLoadState('networkidle');
 
   await expect(
     page
@@ -403,12 +393,13 @@ async function runTest(page: import('@playwright/test').Page, data: any) {
 
 
   // Click the "Submit" button to proceed to
-  await preregPage.clickClaimFormSubmissionByListButton();
+ // await preregPage.clickClaimFormSubmissionByListButton();
   await preregPage.clickSearchButton();
 
   const pagePromise = page.waitForEvent('popup');
   await page.waitForLoadState('networkidle');
-  await preregPage.clickNextButton();
+
+  await preregPage.clickNewClaimButton();
   const page1 = await pagePromise;
 
   const draftPage = new DraftPage(page1);
@@ -504,6 +495,8 @@ async function runTest(page: import('@playwright/test').Page, data: any) {
 
   await insuredPersonInfoPage.selectNationality('201749');
   await expect(insuredPersonInfoPage.NationalitySelect).toHaveValue('201749');
+
+  
 
   const employerInfoPage = new EmployerInfoPage(page1);
   await employerInfoPage.clickEmployerInfoButton();

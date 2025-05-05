@@ -42,14 +42,9 @@ test("Prereg SCO ILAT", async ({ page }) => {
   let caseFound = false;
 
   while (!caseFound) {
-    await leftTabPage.leftBar.waitFor();
-    await expect(leftTabPage.leftBar).toBeVisible();
 
-    await expect(leftTabPage.myCasesLink).toBeVisible();
-    await leftTabPage.myCasesLink.waitFor();
+    await page.getByRole('listitem').filter({ hasText: 'My Cases' }).locator('div').click();
 
-    // Click my cases left tab
-    await leftTabPage.clickMyCases();
 
     // Check if the case exists for the current login user
     if (await myCasesPage.clickILAT("SCO")) {
