@@ -705,8 +705,11 @@ await page1.getByLabel('SOCSO Office*').selectOption('200419');
 }
 
 test.only('Prereg PK NTA EFT MC - Test Case 1', async ({ page }) => {
-  const data = await getTestData(0); // Use the first row of data
-
+  // Read current row from counter
+  const counterPath = path.resolve(__dirname, 'counter.json');
+  const counter = JSON.parse(fs.readFileSync(counterPath, 'utf-8'));
+  
+  const data = await getTestData(counter.currentRow); // Use counter value instead of hard-coded 1
   await runTest(page, data);
 });
 

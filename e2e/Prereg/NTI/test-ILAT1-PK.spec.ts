@@ -170,7 +170,7 @@ test.only('Prereg PK ILAT MC EFT', async ({ page }) => {
   await insuredPersonInfoPage.clickInsuredPersonInfoButton();
   await insuredPersonInfoPage.noticeAndBenefitClaimFormReceivedDateInput.click();
 
-  await calendarPage.selectDateInsuredPersonPage('2023', '7', '1');
+  await calendarPage.selectDateInsuredPersonPage('2024', '12', '28');
   await insuredPersonInfoPage.fillOccupationILAT('CS');
 
   await insuredPersonInfoPage.fillAddress1('Taman Abadi');
@@ -185,7 +185,7 @@ test.only('Prereg PK ILAT MC EFT', async ({ page }) => {
   await invalidtyInformation.clickInvalidityInformation();
   await invalidtyInformation.selectInsuredPersonEmployment('No');
   await page1.getByLabel('Date of Cessation of').click();
-  await calendarPage.selectDateInsuredPersonPage('2023', '7', '1');
+  await calendarPage.selectDateInsuredPersonPage('2004', '1', '1');
 
   const wagesInfoPage = new WagesInfoPage(page1);
   await wagesInfoPage.clickWagesInfoButton();
