@@ -38,11 +38,32 @@ export class MBSessionPage {
     return this.page.locator("#ctrlField1040");
   }
 
+  private get uidatepicker() {
+    return this.page.locator("#ui-datepicker-div");
+  }
+  
+  async selectMorbidDate(year: string, month: string, day: string) {
+    console.log("year", year);
+    console.log("month", month);
+    console.log("day", day);
+    let monthNumber = parseInt(month, 10) - 1;
+    const formattedMonth = monthNumber.toString();
+    await this.uidatepicker.getByRole("combobox").nth(1).selectOption(year);
+    await this.uidatepicker.getByRole("combobox").first().selectOption(formattedMonth);
+
+    await this.page.getByRole("link", { name: day, exact: true }).click();
+  }
+
+  async getMorbidDateElement() {
+    // Replace 'your-morbid-date-selector' with the actual selector for the morbid date input
+    return this.page.locator("#ctrlField1043").getByRole("textbox")
+  }
+
   get sessionVenueHUK() {
     return this.page.locator("#ctrlField1053");
   }
 
-  async selectSessionVenue(type) {
+  async selectSessionVenue(type: "OD" | "ILAT" | "HUK") {
     if (type === "OD") {
       await this.sessionVenue.getByRole("combobox").selectOption("708056");
     } else if (type === "ILAT") {
@@ -64,7 +85,7 @@ export class MBSessionPage {
     return this.page.locator("#ctrlField1032");
   }
 
-  async selectELS(string) {
+  async selectELS(string: string) {
     await this.ELS.getByRole("combobox").selectOption(string);
   }
 
@@ -100,7 +121,7 @@ export class MBSessionPage {
     return this.page.locator('[id^="ILATSF1Result-"]');
   }
 
-  async setResultILat(text) {
+  async setResultILat(text: string) {
     await this.resultILAT.selectOption(text);
   }
 
@@ -120,7 +141,7 @@ export class MBSessionPage {
     return this.page.locator("#ctrlField1049");
   }
 
-  async setremark(string) {
+  async setremark(string: string) {
     await this.remark.getByRole("textbox").fill(string);
   }
 
@@ -144,7 +165,7 @@ export class MBSessionPage {
     return this.page.locator('[id^="HUKSF1AssessmentType-"]');
   }
 
-  async selectAssessmentType(type) {
+  async selectAssessmentType(type: "Provisional" | "Final") {
     if (type === "Provisional") {
       await this.assessmentType.getByRole("combobox").selectOption("Provisional");
     } else {
@@ -152,7 +173,7 @@ export class MBSessionPage {
     }
   }
 
-  async selectAssessmentTypeHUK(type) {
+  async selectAssessmentTypeHUK(type: "Provisional" | "Final") {
     if (type === "Provisional") {
       await this.assessmentTypeHUK.selectOption("Provisional");
     } else {
@@ -172,11 +193,11 @@ export class MBSessionPage {
     return this.page.locator('[id^="HUKSF1SessionAssessment-"]');
   }
 
-  async setsessionAssesment(value) {
+  async setsessionAssesment(value: string) {
     await this.sessionAssesmentAdditionalAssessment.getByRole("textbox").fill(value);
   }
 
-  async setsessionAssesmentHUK(value) {
+  async setsessionAssesmentHUK(value: string) {
     await this.sessionAssesmentAdditionalAssessmentHUK.fill(value);
   }
 
@@ -188,7 +209,7 @@ export class MBSessionPage {
     return this.page.locator("#ctrlField1031");
   }
 
-  async selectJDResult(string) {
+  async selectJDResult(string: string) {
     await this.jdResult.getByRole("combobox").selectOption(string);
   }
 }
