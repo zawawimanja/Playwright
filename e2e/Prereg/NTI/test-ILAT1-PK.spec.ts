@@ -50,7 +50,7 @@ test.only('Prereg PK ILAT MC EFT', async ({ page }) => {
   const __dirname = dirname(__filename);
   const csvFilePath = path.resolve(__dirname, '../../../testData/testData.csv'); // Path to CSV file
   const testData = await readCSV(csvFilePath);
-  const data = testData[1]; // U
+  const data = testData[0]; // change this for other ob
   await page.waitForLoadState('networkidle');
 
   await page.waitForLoadState('networkidle');
@@ -143,9 +143,8 @@ test.only('Prereg PK ILAT MC EFT', async ({ page }) => {
     data.noticeAndBenefitClaimForm,
   );
 
-  // Click search button
-  await preregPage.clickSearchButton();
 
+  await preregPage.clickSearchButton();
 
   const pagePromise = page.waitForEvent('popup');
   await preregPage.clickNewClaimButton();
@@ -170,7 +169,7 @@ test.only('Prereg PK ILAT MC EFT', async ({ page }) => {
   await insuredPersonInfoPage.clickInsuredPersonInfoButton();
   await insuredPersonInfoPage.noticeAndBenefitClaimFormReceivedDateInput.click();
 
-  await calendarPage.selectDateInsuredPersonPage('2024', '12', '28');
+  await calendarPage.selectDateInsuredPersonPage('1981', '1', '1');
   await insuredPersonInfoPage.fillOccupationILAT('CS');
 
   await insuredPersonInfoPage.fillAddress1('Taman Abadi');
@@ -185,7 +184,7 @@ test.only('Prereg PK ILAT MC EFT', async ({ page }) => {
   await invalidtyInformation.clickInvalidityInformation();
   await invalidtyInformation.selectInsuredPersonEmployment('No');
   await page1.getByLabel('Date of Cessation of').click();
-  await calendarPage.selectDateInsuredPersonPage('2004', '1', '1');
+  await calendarPage.selectDateInsuredPersonPage('1990', '1', '1');
 
   const wagesInfoPage = new WagesInfoPage(page1);
   await wagesInfoPage.clickWagesInfoButton();

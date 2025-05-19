@@ -26,8 +26,8 @@ import { WagesInfoPage } from '../../../pages/wages_info';
 import { ButtonPage } from '../../../utils/button';
 test.beforeEach(async ({ page }) => {
   await page.setViewportSize({ width: 1920, height: 1080 });
-  //await login(page, "hilmi.pks", "u@T_hilmi");
-  await login(page, 'aslam.pks', 'u@T_aslam');
+  await login(page, "hilmi.pks", "u@T_hilmi");
+  //await login(page, 'aslam.pks', 'u@T_aslam');
 });
 
 test('Prereg MB ILAT', async ({ page }) => {
@@ -54,8 +54,8 @@ test('Prereg MB ILAT', async ({ page }) => {
 
       headerPage.clickUserProfile();
       headerPage.clickSignOut();
-      await login(page, 'hilmi.pks', 'u@T_hilmi');
-      // await login(page, "aslam.pks", "u@T_aslam");
+    // await login(page, 'hilmi.pks', 'u@T_hilmi');
+       await login(page, "aslam.pks", "u@T_aslam");
     }
   }
 
@@ -76,7 +76,7 @@ test('Prereg MB ILAT', async ({ page }) => {
 
   const page3Promise = page2.waitForEvent('popup');
   await page.waitForLoadState('networkidle');
-  await page2.getByLabel('Invalidity Decision*').selectOption('Yes');
+ // await page2.getByLabel('Invalidity Decision*').selectOption('Yes');
   await page2.getByRole('button', { name: 'New' }).click();
 
   const page4 = await page3Promise;
@@ -93,11 +93,32 @@ test('Prereg MB ILAT', async ({ page }) => {
   calendarPage.clickDate('Session DateILAT');
   await calendarPage.selectDateInsuredPersonPage('2023', '8', '1');
   //result
+
   await mbSessionPage.setResultILat('9608101');
   //els
   // await page4.locator("#ctrlField1044").getByRole("combobox").selectOption("Yes");
   //recommendation for rehab
   //await page4.locator("#ILATSF1RecommendationForRehab-bea1-46656-b97e-24ab").selectOption("Yes");
+
+//morbid date for bi and >60
+const calendarPage1 = new CalendarPage(page4);
+
+const morbidDateElement = await mbSessionPage.getMorbidDateElement(); // You'll need to add this method
+if (await morbidDateElement.isVisible()) {
+  calendarPage1.clickDate('Morbid Date');
+//   await page4.locator('#ui-datepicker-div').getByRole('combobox').nth(1).selectOption('1980');
+
+// await page4.locator('#ui-datepicker-div').getByRole('combobox').first().selectOption('1');
+
+// await page4.getByRole('link', { name: '1', exact: true }).click();
+
+await calendarPage1.selectDateInsuredPersonPage('1990', '1', '1');
+
+    console.log('Morbid date was enabled and selected');
+} else {
+    console.log('Morbid date input is disabled - skipping selection');
+}
+
 
   const button = new ButtonPage(page4);
   await button.clickOK();

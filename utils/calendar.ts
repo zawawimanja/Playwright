@@ -28,6 +28,8 @@ export class CalendarPage {
       await this.page.locator("#ctrlField1021").getByRole("textbox").click();
     } else if (type === "Provisional Date") {
       await this.page.locator("#ctrlField1030").getByRole("textbox").click();
+    } else if (type === "Morbid Date") {
+      await this.page.locator("#ctrlField1043").getByRole("textbox").click();
     } else if (type === "Session DateILAT") {
       await this.page.locator("#ctrlField1041").getByRole("textbox").click();
     } else if (type === "Session DateHUK") {
@@ -39,10 +41,6 @@ export class CalendarPage {
 
   async selectDateInsuredPersonPage(year: string, month: string, day: string) {
 
-
-
-
-
     console.log("year", year);
     console.log("month", month);
     console.log("day", day);
@@ -51,11 +49,9 @@ export class CalendarPage {
 
     await this.uidatepicker.getByRole("combobox").nth(1).selectOption(year);
     await this.uidatepicker.getByRole("combobox").first().selectOption(formattedMonth);
+await this.page.getByRole("link", { name: day, exact: true }).click();
 
-    //+1
 
-
-    await this.page.getByRole("link", { name: day, exact: true }).click();
   }
 
   async selectAccidentDate(accidentYear: string, accidentMonth: string, accidentDay: string) {
@@ -65,12 +61,6 @@ export class CalendarPage {
     await this.page.frameLocator("#baristaPageOut").getByRole("combobox").nth(4).selectOption(accidentYear);
     await this.page.frameLocator("#baristaPageOut").getByRole("combobox").nth(3).selectOption(formattedMonth);
     await this.page.frameLocator("#baristaPageOut").getByRole("link", { name: accidentDay, exact: true }).click();
-
-  // await page.locator('iframe[name="baristaPageOut"]').contentFrame().getByRole('combobox').nth(4).selectOption('2021');
-
-  // await page.locator('iframe[name="baristaPageOut"]').contentFrame().getByRole('combobox').nth(3).selectOption('4');
-
-  // await page.locator('iframe[name="baristaPageOut"]').contentFrame().getByRole('link', { name: '5', exact: true }).click();
   
   }
 
