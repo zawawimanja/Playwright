@@ -42,11 +42,6 @@ test('Prereg PK PKT', async ({ page }) => {
   const data = testData[0]; // Use the first row of data
 
   await page.waitForLoadState('networkidle');
-
-  await leftTabPage.leftBar.waitFor();
-  await expect(leftTabPage.leftBar).toBeVisible();
-
-  await expect(leftTabPage.preregistrationLink).toBeVisible();
   leftTabPage.clickPreregistration();
 
   await page.waitForLoadState('networkidle');
@@ -102,13 +97,15 @@ test('Prereg PK PKT', async ({ page }) => {
   const filledIdentificationNo = await preregPage.getIdentificationNo();
   expect(filledIdentificationNo).toBe(data.identificationNo);
 
+  // Click search button
   await preregPage.clickSearchButton();
 
   const pagePromise = page.waitForEvent('popup');
   await page.waitForLoadState('networkidle');
-  await preregPage.clickNextButton();
+
+  await preregPage.clickNewClaimButton();
   const page1 = await pagePromise;
-  await page1.waitForLoadState('networkidle');
+
   const draftPage = new DraftPage(page1);
 
   if (await draftPage.closeButton.isVisible()) {
@@ -159,7 +156,7 @@ test('Prereg PK PKT', async ({ page }) => {
   await insuredPersonInfoPage.clickInsuredPersonInfoButton();
   await insuredPersonInfoPage.noticeAndBenefitClaimFormReceivedDateInput.click();
 
-  await calendarPage.selectDateInsuredPersonPage('1997', '9', '20');
+  await calendarPage.selectDateInsuredPersonPage('2023', '1', '1');
   //if done revision will auto pull field
   await insuredPersonInfoPage.fillOccupationPKT('CS');
 

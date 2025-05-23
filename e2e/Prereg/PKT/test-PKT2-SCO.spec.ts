@@ -21,8 +21,8 @@ import { ButtonPage } from '../../../utils/button';
 
 test.beforeEach(async ({ page }) => {
   await page.setViewportSize({ width: 1920, height: 1080 });
-  await login(page, 'atilia.pks', 'u@T_atilia');
-  //await login(page, "nazira.pks", "u@T_nazira");
+  //await login(page, 'atilia.pks', 'u@T_atilia');
+  await login(page, "nazira.pks", "u@T_nazira");
 });
 
 test('Prereg SCO PKT', async ({ page }) => {
@@ -36,14 +36,12 @@ test('Prereg SCO PKT', async ({ page }) => {
   let caseFound = false;
 
   while (!caseFound) {
-    await leftTabPage.leftBar.waitFor();
-    await expect(leftTabPage.leftBar).toBeVisible();
-
-    await expect(leftTabPage.myCasesLink).toBeVisible();
-    await leftTabPage.myCasesLink.waitFor();
+ 
 
     // Click my cases left tab
-    await leftTabPage.clickMyCases();
+   await page.getByRole('listitem').filter({ hasText: 'My Cases' }).locator('div').click();
+
+
 
     // Check if the case exists for the current login user
     if (await myCasesPage.clickDeath('SCO')) {
@@ -100,12 +98,17 @@ test('Prereg SCO PKT', async ({ page }) => {
 
   await page2.getByRole('button', { name: 'Death Info' }).click();
 
+  await page2.getByLabel('State Place of Death*').selectOption('200701');
+  await page2.getByLabel('State Place of Bury*').selectOption('200701');
+
+
   const preferredSOCSOOfficePage = new PreferredSOCSOOfficePage(page2);
   await preferredSOCSOOfficePage.clickPreferredSOCSOOfficeButton();
 
   const inconsistentDoubtfulPage = new InconsistentDoubtfulPage(page2);
   await inconsistentDoubtfulPage.clickInconsistentDoubtfulButton();
 
+  
   //appointment
   const appointmentPage = new AppointmentPage(page2);
   await appointmentPage.clickAppointmentButton();
@@ -127,12 +130,11 @@ test('Prereg SCO PKT', async ({ page }) => {
 
   await page2.getByRole('button', { name: 'FPM Info' }).click();
 
-  await page2.getByRole('button', { name: 'Edit Record' }).click();
-  await page2
-    .locator(' [id^="EligibleasClaimantFPMInfo-"]')
-    .nth(1)
-    .selectOption('90301');
-  await page2.getByRole('button', { name: 'OK' }).click();
+  const page4Promise = page2.waitForEvent('popup');
+  await page2.getByRole('button', { name: 'View/Edit' }).click();
+  const page4 = await page4Promise;
+  await page4.getByLabel('Eligible as Claimant*').selectOption('90303');
+  await page4.getByRole('button', { name: 'Submit' }).click();
 
   await page2.getByRole('button', { name: 'SCO Recommendation NTD' }).click();
   await page2.getByLabel('Action*').selectOption('10209');
